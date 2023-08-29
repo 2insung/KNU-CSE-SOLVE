@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: ${datasource-url}
+    username: ${datasource-username}
+    password: ${datasource-password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  session:
+    store-type: jdbc
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        id:
+          new_generator_mappings: false
+        format_sql: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        ddl-auto: none
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${oauth-client-id}
+            client-secret: ${oauth-client-secret}
+            scope:
+              - profile
+              - email
+
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${mail-username}
+    password: ${mail-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+            trust: smtp.gmail.com
+
+  redis:
+    host: ${redis-host}
+    port: ${redis-port}
