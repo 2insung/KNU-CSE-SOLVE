@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${datasource-url-prod}
-    username: ${datasource-username_prod}
-    password: ${datasource-password_prod}
+    url: ${DATASOURCE_URL_PROD}
+    username: ${DATASOURCE_USERNAME_PROD}
+    password: ${DATASOURCE_PASSWORD_PROD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   session:
@@ -29,8 +29,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${oauth-client-id_prod}
-            client-secret: ${oauth-client-secret_prod}
+            client-id: ${OAUTH_CLIENT_ID_PROD}
+            client-secret: ${OAUTH_CLIENT_SECRET_PROD}
             scope:
               - profile
               - email
@@ -38,8 +38,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 465
-    username: ${mail-username_prod}
-    password: ${mail-password_prod}
+    username: ${MAIL_USERNAME_PROD}
+    password: ${MAIL_PASSWORD_PROD}
     properties:
       mail:
         smtp:
@@ -51,5 +51,5 @@ spring:
             trust: smtp.gmail.com
 
   redis:
-    host: ${redis-host_prod}
-    port: ${redis-port_prod}
+    host: ${REDIS_HOST_PROD}
+    port: ${REDIS_PORT_PROD}
