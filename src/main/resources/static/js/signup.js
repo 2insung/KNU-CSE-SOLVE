@@ -1,23 +1,72 @@
 var token = $("meta[name='_csrf']").attr("content")
+document.addEventListener("DOMContentLoaded", function() {
+    var signUpForm = document.getElementById("signupForm")
 
-function sendEmail(){
-    var inputValue = $("#username").val()
-    $.ajax({
-        url: `/email?username=${inputValue}`,
-        type: "GET",
+    signUpForm.addEventListener("submit", function (event){
+        var username = $("#username").val()
+        var password = $("#password").val()
 
-        success: function (data){
-            $("#code").text("인증 번호가 발송됐습니다.")
-        },
-        error: function (error){
-            alert("인증번호 발송에 실패했습니다.");
+        if(username === ""){
+            $("#errorMessage").css("display", "block");
+            $("#errorMessage").text("이메일을 입력해주세요.")
+            event.preventDefault()
+            return
         }
 
+        if(password === ""){
+            $("#errorMessage").css("display", "block");
+            $("#errorMessage").text("비밀번호를 입력해주세요.")
+            event.preventDefault();
+            return;
+        }
+
+    })
+});
+
+function domInitialize(){
+    $("#confirm").css("display", "none")
+    $("#confirm").text("")
+    $("#code").val(null)
+    $("#notSubmitButton").css("display","block")
+    $("#submitButton").css("display","none")
+    $("#inputCodeDiv").css("display", "block")
+    $("#inputUserInfo").css("display", "block")
+    $("#confirmCode").css("display", "none")
+}
+
+function sendEmail(){
+    var inputUsername = $("#username").val()
+    var inputPassword = $("#password").val()
+    var inputPasswordConfirm = $("#passwordConfirm").val()
+
+    if(inputPassword !== inputPasswordConfirm){
+        $("#errorMessage").css("display", "block");
+        $("#errorMessage").text("비밀번호를 올바르게 입력해주세요.")
+        return
+    }
+
+    $("#confirmButton").text("이메일 전송 중..")
+    $.ajax({
+        url: `/email?username=${inputUsername}`,
+        type: "GET",
+        success: function (data){
+            $("#inputUserInfo").css("display", "none")
+            $("#confirmCode").css("display", "block")
+            $("#code").text("인증 번호가 발송됐습니다.")
+            $("#codeUsername").text(inputUsername)
+        },
+        error: function (error){
+            $("#errorMessage").css("display", "block");
+            $("#errorMessage").text("알 수 없는 에러입니다.")
+        },
+        complete: function (){
+            $("#confirmButton").text("이메일 인증하기")
+        }
     })
 }
 
 function checkCode() {
-    var inputCode = $("#inputCode").val()
+    var inputCode = $("#code").val()
     var inputEmail = $("#username").val()
     $.ajax(
         {
@@ -33,14 +82,20 @@ function checkCode() {
             },
             success: function (data){
                 if (data){
-                    $("#confirm").text("인증 성공입니다..")
+                    $("#confirm").css("display", "block")
+                    $("#confirm").text("인증 성공입니다.")
+                    $("#notSubmitButton").css("display","none")
+                    $("#submitButton").css("display","block")
+                    $("#inputCodeDiv").css("display", "none")
                 }
                 else{
-                    $("#confirm").text("다시 시도해라")
+                    $("#confirm").css("display", "block")
+                    $("#confirm").text("인증 실패입니다. 다시 시도해주세요.")
                 }
             },
             error: function (error){
-                alert("뭔가 이상함");
+                $("#errorMessage").css("display", "block");
+                $("#errorMessage").text("알 수 없는 에러입니다.")
             }
         }
     )
