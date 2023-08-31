@@ -3,6 +3,7 @@ package com.project.web.service;
 import com.project.web.controller.dto.SignUpRequestDto;
 import com.project.web.controller.dto.SignUpResponseDto;
 import com.project.web.domain.Member;
+import com.project.web.exception.SignUpException;
 import com.project.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +19,10 @@ public class SignUpService {
     @Transactional
     public SignUpResponseDto signup(SignUpRequestDto signUpRequestDto){
         if (memberRepository.existsByUsername(signUpRequestDto.getUsername())){
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new SignUpException("usernameException", "이미 가입되어 있는 유저입니다.");
         }
         if(memberRepository.existsByNickname(signUpRequestDto.getNickname())){
-            throw new RuntimeException("이미 존재하는 닉네임입니다.");
+            throw new SignUpException("nicknameException", "이미 존재하는 닉네임입니다.");
         }
         Member member = signUpRequestDto.toMember(passwordEncoder);
         memberRepository.save(member);
