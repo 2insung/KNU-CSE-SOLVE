@@ -4,16 +4,16 @@
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-5" href="/index">WebProject</a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-lg-5" id="sidebarToggle" href="#!"><i
             class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
-    <div class="d-md-inline-block ms-auto me-0 me-md-3 my-2 my-md-0">
+    <div class="d-md-inline-block ms-auto me-md-5">
         <a th:unless="${status}" class="btn btn-primary" href="/login">
             Login
         </a>
-        <div class="text-white" th:if="${status}" th:text="${nickname} + '님, 환영합니다.'"></div>
     </div>
-    <ul th:if="${status}" class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <ul th:if="${status}" class="navbar-nav ms-auto ms-md-0 me-3 me-lg-5 align-items-center">
+        <div class="text-white me-lg-3" th:text="${nickname} + '님, 환영합니다.'"></div>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
