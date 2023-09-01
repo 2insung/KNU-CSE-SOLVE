@@ -1,27 +1,4 @@
 var token = $("meta[name='_csrf']").attr("content")
-document.addEventListener("DOMContentLoaded", function() {
-    var signUpForm = document.getElementById("signupForm")
-
-    signUpForm.addEventListener("submit", function (event){
-        var username = $("#username").val()
-        var password = $("#password").val()
-
-        if(username === ""){
-            $("#errorMessage").css("display", "block");
-            $("#errorMessage").text("이메일을 입력해주세요.")
-            event.preventDefault()
-            return
-        }
-
-        if(password === ""){
-            $("#errorMessage").css("display", "block");
-            $("#errorMessage").text("비밀번호를 입력해주세요.")
-            event.preventDefault();
-            return;
-        }
-
-    })
-});
 
 function domInitialize(){
     $("#confirm").css("display", "none")
@@ -36,24 +13,61 @@ function domInitialize(){
 
 function sendEmail(){
     var inputUsername = $("#username").val()
+    var inputNickname = $("#nickname").val()
     var inputPassword = $("#password").val()
     var inputPasswordConfirm = $("#passwordConfirm").val()
+
+    if(inputNickname === ""){
+        $("#errorMessage").css("display", "block");
+        $("#errorMessage").text("닉네임을 입력해주세요.")
+        return
+    }
+
+    if(inputUsername === ""){
+        $("#errorMessage").css("display", "block");
+        $("#errorMessage").text("이메일을 입력해주세요.")
+        return
+    }
+
+    if(inputPassword === ""){
+        $("#errorMessage").css("display", "block");
+        $("#errorMessage").text("비밀번호를 입력해주세요.")
+        return;
+    }
 
     if(inputPassword !== inputPasswordConfirm){
         $("#errorMessage").css("display", "block");
         $("#errorMessage").text("비밀번호를 올바르게 입력해주세요.")
         return
     }
-
     $("#confirmButton").text("이메일 전송 중..")
     $.ajax({
-        url: `/email?username=${inputUsername}`,
-        type: "GET",
+        url: "/check",
+        type: "POST",
+        data: {
+            nickname : inputNickname,
+            username : inputUsername
+        },
+        beforeSend: function(xhr) {
+            // CSRF 토큰 값을 헤더에 추가
+            xhr.setRequestHeader("X-CSRF-TOKEN", token);
+        },
         success: function (data){
-            $("#inputUserInfo").css("display", "none")
-            $("#confirmCode").css("display", "block")
-            $("#code").text("인증 번호가 발송됐습니다.")
-            $("#codeUsername").text(inputUsername)
+            if(data === "InvalidNickname"){
+                $("#errorMessage").css("display", "block");
+                $("#errorMessage").text("중복된 닉네임입니다.")
+            }
+            else if(data === "InvalidUsername"){
+                $("#errorMessage").css("display", "block");
+                $("#errorMessage").text("중복된 이메일입니다.")
+            }
+            else{
+                $("#errorMessage").css("display", "none");
+                $("#inputUserInfo").css("display", "none")
+                $("#confirmCode").css("display", "block")
+                $("#code").text("인증 번호가 발송됐습니다.")
+                $("#codeUsername").text(inputUsername)
+            }
         },
         error: function (error){
             $("#errorMessage").css("display", "block");
@@ -64,6 +78,9 @@ function sendEmail(){
         }
     })
 }
+
+
+
 
 function checkCode() {
     var inputCode = $("#code").val()
@@ -87,6 +104,7 @@ function checkCode() {
                     $("#notSubmitButton").css("display","none")
                     $("#submitButton").css("display","block")
                     $("#inputCodeDiv").css("display", "none")
+                    $("#code").val(null)
                 }
                 else{
                     $("#confirm").css("display", "block")

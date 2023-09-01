@@ -28,4 +28,14 @@ public class SignUpService {
         memberRepository.save(member);
         return SignUpResponseDto.of(member);
     }
+
+    @Transactional(readOnly = true)
+    public Boolean checkNickname(String nickname){
+        return !memberRepository.existsByNickname(nickname);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean checkUsername(String username){
+        return !memberRepository.existsByUsername(username);
+    }
 }
