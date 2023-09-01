@@ -1,20 +1,17 @@
 package com.project.web.handler;
 
 import com.project.web.exception.SignUpException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class SignUpExceptionHandler {
     @ExceptionHandler(SignUpException.class)
-    public ResponseEntity<Map<String, String>> handleSignUpException(SignUpException exception){
-        Map<String, String> errors = new HashMap<>();
-        errors.put(exception.getErrorKey(), exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    public ModelAndView handleSignUpException(SignUpException exception){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("error", exception.getMessage());
+        modelAndView.setViewName("500");
+        return modelAndView;
     }
 }
