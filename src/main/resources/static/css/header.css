@@ -1,0 +1,59 @@
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, a, em, img, strong, b, u, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, embed, figure, figcaption, footer, header, nav, section, summary, audio, video, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    background: transparent;
+    font-style: normal;
+}
+
+.wpHeader {
+    vertical-align: baseline;
+    background: transparent;
+    font-style: normal;
+}
+
+.wpHead {
+    position: relative;
+    width: 1200px;
+    height: 105px;
+    margin: 0 auto;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.wpLogo {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    bottom: 30px;
+    text-align: center;
+}
+
+.wpLoginButton {
+    position: absolute;
+    right: 0;
+    bottom: 30px;
+    padding: 5px 15px;
+    border: none;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+}
+
+.headerNavWrapper{
+    min-width: 1200px;
+    position: relative;
+    background-color: #0ed299;
+    border: 1px solid #0ed299;
+    border-width: 1px 0 1px 0;
+}
+
+.headerNav{
+    height: 44px;
+    margin: 0 auto;
+}
