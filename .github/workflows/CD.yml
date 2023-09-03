@@ -39,6 +39,10 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ${{secrets.AWS_REGION}}
 
+      - name: Create deploy directory
+        run: mkdir -p ./deploy
+        shell: bash
+
       - name: Copy script
         run: cp ./scripts/*.sh ./deploy
 
