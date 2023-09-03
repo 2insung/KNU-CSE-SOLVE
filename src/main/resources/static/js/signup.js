@@ -101,7 +101,6 @@ function checkCode() {
                 if (data){
                     $("#confirm").css("display", "block")
                     $("#confirm").text("인증 성공입니다.")
-                    $("#notSubmitButton").css("display","none")
                     $("#submitButton").css("display","block")
                     $("#inputCodeDiv").css("display", "none")
                     $("#code").val(null)
