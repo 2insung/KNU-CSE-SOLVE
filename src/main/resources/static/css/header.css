@@ -26,8 +26,8 @@ h1 {
 }
 
 .wpLogoProfile{
-    width: 30px;  /* 원하는 크기로 변경 가능 */
-    height: 30px; /* 원하는 크기로 변경 가능 */
+    width: 25px;  /* 원하는 크기로 변경 가능 */
+    height: 25px; /* 원하는 크기로 변경 가능 */
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #e2e2e2; /* 2px 너비의 검은색 테두리 추가 */
