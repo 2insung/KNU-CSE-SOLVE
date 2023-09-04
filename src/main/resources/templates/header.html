@@ -3,9 +3,20 @@
 <header th:fragment="headerFragment" class="wpHeader">
     <div class="wpHead">
         <h1 class="wpLogo">
-            Web Project
+            <a href="/">Web Project</a>
         </h1>
-        <button class="wpLoginButton">Login</button>
+        <div class="wpLogoRight">
+            <span th:unless="${status}" class="wpLogoRightText">로그인 하세요.</span>
+            <span th:if="${status}" th:text="${nickname} + '님, 환영합니다.'" class="wpLogoRightText"></span>
+            <a th:unless="${status}" href="/login">
+                <button class="wpLoginButton">Login</button>
+            </a>
+            <a th:if="${status}">
+                <div class="wpLogoProfile">
+                    <img src="img/tempProfile.jpg">
+                </div>
+            </a>
+        </div>
     </div>
     <div class="headerNavWrapper">
         <nav class="headerNav">
