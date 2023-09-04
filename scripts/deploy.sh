@@ -4,8 +4,8 @@
 # 1. env variable
 source ./projectVariable.sh
 source ./prodVariable.sh
+echo ${DATASOURCE_URL_PROD} >> ${HOME}/deploy.log
 echo "1. env variable setting complete" >> ${HOME}/deploy.log
-echo $PROJECT_NAME >> ${HOME}/deploy.log
 
 
 # 2. cron delete
