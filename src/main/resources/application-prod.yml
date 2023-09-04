@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   session:
-    store-type: jdbc
+    store-type: redis
 
   jpa:
     database: mysql

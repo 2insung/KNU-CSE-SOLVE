@@ -1,13 +1,9 @@
 #!/bin/bash
 
 # 1. env variable
-source ./home/ec2-user/WebProject/scripts/projectVariable.sh 2>> ${HOME}/deploy-error.log
-source ./home/ec2-user/WebProject/scripts/prodVariable.sh 2>> ${HOME}/deploy-error.log
+source ~/.bash_profile
 echo "1. env variable setting complete"
 
-echo ${PROJECT_PID} >> ${HOME}/deploy-log.log
-echo ${JAR_PATH} >> ${HOME}/deploy-log.log
-echo ${PROJECT_NAME} >> ${HOME}/deploy-log.log
 
 # 2. cron delete
 touch crontab_delete
@@ -37,7 +33,7 @@ echo "6. start server complete"
 
 # 7. cron registration
 touch crontab_new
-echo "* * * * * ${HOME}/${PROJECT_NAME}/scripts/check-and-restart.sh" 1>>crontab_new
+echo "* * * * * ${HOME}/check-and-restart.sh" 1>>crontab_new
 # register the others..
 crontab crontab_new
 rm crontab_new
