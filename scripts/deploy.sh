@@ -27,14 +27,14 @@ else
 fi
 
 
-# 6. start jar
+# 4. start jar
 nohup java -jar -Dspring.profiles.active=prod ${JAR_PATH} 1>${HOME}/log.out 2>${HOME}/err.out &
-echo "6. start server complete"
+echo "4. start server complete"
 
-# 7. cron registration
+# 5. cron registration
 touch crontab_new
 echo "* * * * * ${HOME}/check-and-restart.sh" 1>>crontab_new
 # register the others..
 crontab crontab_new
 rm crontab_new
-echo "7. registration complete"
+echo "5. registration complete"
