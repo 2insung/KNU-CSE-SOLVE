@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Current directory: $(pwd)" >> ${HOME}/deploy.log
 
 # 1. env variable
 source ./projectVariable.sh 2>> ${HOME}/deploy-error.log
