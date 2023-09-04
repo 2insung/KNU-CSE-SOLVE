@@ -1,25 +1,52 @@
 #!/bin/bash
-BUILD_JAR=$(ls /home/ec2-user/action/build/libs/*.jar)
-JAR_NAME=$(basename $BUILD_JAR)
-echo "> build 파일명: $JAR_NAME" >> /home/ec2-user/action/deploy.log
 
-echo "> build 파일 복사" >> /home/ec2-user/action/deploy.log
-DEPLOY_PATH=/home/ec2-user/action/
-cp $BUILD_JAR $DEPLOY_PATH
 
-echo "> 현재 실행중인 애플리케이션 pid 확인" >> /home/ec2-user/action/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+# 1. env variable
+source ./projectVariable.sh
+source ./prodVariable.sh
+echo "1. env variable setting complete"
 
-if [ -z $CURRENT_PID ]
-then
-  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다." >> /home/ec2-user/action/deploy.log
+
+# 2. cron delete
+touch crontab_delete
+crontab crontab_delete
+rm crontab_delete
+echo "2. cron delete complete"
+
+# 3. server checking
+if [ -n "${PROJECT_PID}" ]; then
+        kill -9 ${PROJECT_PID}
+        echo "3. project kill complete"
 else
-  echo "> kill -15 $CURRENT_PID"
-  kill -15 $CURRENT_PID
-  sleep 5
+        sudo yum -y update 1>/dev/null
+        echo "3-1. yum update complete"
+
+        sudo yum -y install java-11-amazon-corretto.x86_64
+        echo "3-2. jdk install complete"
+
+        sudo timedatectl set-timezone Asia/Seoul
+        echo "3-3. timezone setting complete"
 fi
 
-DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/action/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ec2-user/deploy.log 2>/home/ec2-user/action/deploy_err.log &
 
+# 4. gradlew +x
+chmod u+x ${HOME}/${PROJECT_NAME}/gradlew
+echo "4. gradlew u+x complete"
+
+# 5. build
+cd ${HOME}/${PROJECT_NAME}
+./gradlew clean build
+echo "5. gradlew build complete"
+
+
+# 6. start jar
+nohup java -jar -Dspring.profiles.active=prod ${JAR_PATH} 1>${HOME}/log.out 2>${HOME}/err.out &
+echo "6. start server complete"
+
+# 7. cron registration
+touch crontab_new
+echo "* * * * * ${HOME}/${PROJECT_NAME}/scripts/check-and-restart.sh" 1>>crontab_new
+# register the others..
+crontab crontab_new
+rm crontab_new
+echo "7. registration complete"
