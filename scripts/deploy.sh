@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 1. env variable
-source ./home/ec2-user/WebProject/scripts/projectVariable.sh
-source ./home/ec2-user/WebProject/scripts/prodVariable.sh
+source ./home/ec2-user/WebProject/scripts/projectVariable.sh 2>> ${HOME}/deploy-error.log
+source ./home/ec2-user/WebProject/scripts/prodVariable.sh 2>> ${HOME}/deploy-error.log
 echo "1. env variable setting complete"
 
 
