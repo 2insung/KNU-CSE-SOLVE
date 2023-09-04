@@ -2,8 +2,8 @@
 
 
 # 1. env variable
-source ./projectVariable.sh
-source ./prodVariable.sh
+source ./projectVariable.sh || echo "Failed to source projectVariable.sh" >> ${HOME}/deploy.log
+source ./prodVariable.sh || echo "Failed to source prodVariable.sh" >> ${HOME}/deploy.log
 echo ${DATASOURCE_URL_PROD} >> ${HOME}/deploy.log
 echo "1. env variable setting complete" >> ${HOME}/deploy.log
 
