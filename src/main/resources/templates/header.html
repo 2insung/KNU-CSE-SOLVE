@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="headerFragment" class="wpHeader">
-    <div class="wpHead">
-        <h1 class="wpLogo">
-            <a href="/">Web Project</a>
+<header th:fragment="headerFragment">
+    <div class="head">
+        <h1 class="logo">
+            <a href="/index">Web Project</a>
         </h1>
-        <div class="wpLogoRight">
-            <span th:unless="${status}" class="wpLogoRightText">로그인 하세요.</span>
-            <span th:if="${status}" th:text="${nickname} + '님, 환영합니다.'" class="wpLogoRightText"></span>
+        <div class="headRight">
+            <span th:unless="${status}" class="loginStatus">로그인 하세요.</span>
+            <span th:if="${status}" th:text="${nickname} + '님, 환영합니다.'" class="loginStatus"></span>
             <a th:unless="${status}" href="/login">
-                <button class="wpLoginButton">Login</button>
+                <button class="loginButton">Login</button>
             </a>
-            <a th:if="${status}">
-                <div class="wpLogoProfile">
-                    <img src="img/tempProfile.jpg">
+            <div class="dropDown" th:if="${status}">
+                <a onclick="toggleDropdown()">
+                    <div class="userProfile">
+                        <img src="img/tempProfile.jpg">
+                    </div>
+                </a>
+                <div class="dropDownContent" id="dropdownMenu">
+                    <a href="#">마이페이지</a>
+                    <form th:action="@{/logout}" th:method="post">
+                        <button type="submit">로그아웃</button>
+                    </form>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
     <div class="headerNavWrapper">
-        <nav class="headerNav">
+        <nav>
         </nav>
     </div>
 </header>

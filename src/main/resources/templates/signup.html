@@ -14,56 +14,61 @@
     <script th:src="@{/js/signup.js}"></script>
 </head>
 <body>
-<main id="container">
-    <div class="signup">
+<main>
+    <div id="container">
         <article>
             <section>
-                <div class="signupWrapper">
-                    <div class="signupForm">
+                <div class="signup">
+                    <div class="signupWrapper">
                         <div class="inner">
                             <div class="title">
                                 회원가입
                             </div>
-                            <form class="signupForm" th:action="@{/signup}" method="post">
+                            <form th:action="@{/signup}" method="post">
                                 <div id="inputUserInfo">
                                     <fieldset>
                                         <div class="errorWrapper">
                                             <p id="errorMessage" style="display: none"></p>
                                         </div>
                                         <div>
-                                            <input class="int inputNickname" id="nickname" name="nickname" type="text"
+                                            <input id="nickname" name="nickname" type="text"
                                                    placeholder="Nickname"/>
-                                            <input class="int inputUsername" id="username" name="username" type="text"
+                                            <input id="username" name="username" type="text"
                                                    placeholder="name@example.com"/>
-                                            <input class="int inputPassword" id="password" name="password"
+                                            <input id="password" name="password"
                                                    type="password" placeholder="Create a password"/>
-                                            <input class="int inputPasswordConfirm" id="passwordConfirm"
+                                            <input id="passwordConfirm"
                                                    name="passwordConfirm" type="password"
                                                    placeholder="Confirm password"/>
                                         </div>
-                                        <button type="button" class="signupFormButton" id="confirmButton" onclick="sendEmail()">이메일 인증하기</button>
-                                        <div class="signupOption">
+                                        <button type="button" class="signupFormButton" id="sendEmailButton"
+                                                onclick="sendEmail()">이메일 인증하기
+                                        </button>
+                                        <div class="optionWrapper">
                                             이미 회원이라면? <a href="/login">로그인 하기</a>
                                         </div>
                                     </fieldset>
                                 </div>
                                 <div id="confirmCode" style="display: none">
-                                    <div class="titleConfirm">
+                                    <div class="confirmCodeTitle">
                                         <h2>이메일 인증</h2>
-                                    </div>
-                                    <div class="please">
                                         <p><span id="codeUsername"></span>으로 전송된 인증 코드를 입력해주세요.</p>
                                     </div>
-                                    <div class="confirmDiv">
-                                        <p id="confirm" style="display: none"></p>
+                                    <div class="checkCodeResultWrapper">
+                                        <p id="checkCodeResult" style="display: none"></p>
                                     </div>
-                                    <div id="inputCodeDiv" class="row align-items-center">
+                                    <div id="inputCodeWrapper">
                                         <div>
-                                            <input class="int inputCode" id="code" name="code" type="text" placeholder="Code"/>
+                                            <input id="code" name="code" type="text"
+                                                   placeholder="Code"/>
                                         </div>
-                                        <button type="button" id="checkButton" onclick="checkCode()" class="signupFormButton">확인</button>
+                                        <button type="button" id="checkButton" onclick="checkCode()"
+                                                class="signupFormButton">확인
+                                        </button>
                                     </div>
-                                    <button type="submit" id="submitButton" class="signupFormButton" style="display: none">회원가입 하기</button>
+                                    <button type="submit" id="submitButton" class="signupFormButton"
+                                            style="display: none">회원가입 하기
+                                    </button>
                                 </div>
                             </form>
                         </div>

@@ -29,27 +29,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        return (web) -> web.ignoring()
-                .antMatchers("/h2-console/**", "/favicon.ico");
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
                 .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                 .and()
+
+
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
+
+
                 .sessionManagement()
                 .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::changeSessionId)
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
+
+
                 .authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
+
+
                 .formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -58,17 +60,22 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/index")
                 .failureHandler(userLoginFailureHandler)
                 .and()
+
                 .logout()
                 .logoutUrl("/logout")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("SESSION")
                 .and()
+
                 .oauth2Login()
                 .loginPage("/login")
                 .defaultSuccessUrl("/index")
                 .failureUrl("/login")
                 .userInfoEndpoint()
                 .userService(customOauth2UserService);
+
+
+
 
         return http.build();
     }

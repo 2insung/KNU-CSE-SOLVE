@@ -13,12 +13,12 @@
     <script th:src="@{/js/login.js}"></script>
 </head>
 <body>
-<main id="container">
-    <div class="login">
+<main>
+    <div id="container">
         <article>
             <section>
-                <div class="loginWrapper">
-                    <div class="loginForm">
+                <div class="login">
+                    <div class="loginWrapper">
                         <div class="inner">
                             <div class="title">
                                 로그인
@@ -32,30 +32,28 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <input class="int inputUsername" id="username" name="username" type="text"
+                                        <input id="username" name="username" type="text"
                                                placeholder="name@example.com"/>
-                                        <input class="int inputPassword" id="password" name="password" type="password"
+                                        <input id="password" name="password" type="password"
                                                placeholder="Password"/>
                                     </div>
                                     <button type="submit" class="loginFormButton">로그인</button>
-                                    <div class="formCheckBox">
+                                    <div class="checkBoxWrapper">
                                         <span>
-                                            <input type="checkbox" id="checkSaveId" name="checkSaveId"/>
-                                            <label id="checkBoxLabel" for="checkSaveId"></label>
-                                            <label for="checkSaveId">로그인 상태 유지</label>
+                                            <input type="checkbox" id="maintainLoginStatus" name="maintainLoginStatus"/>
+                                            <label id="checkBoxLabel" for="maintainLoginStatus"></label>
+                                            <label for="maintainLoginStatus">로그인 상태 유지</label>
                                         </span>
                                     </div>
-                                    <div class="loginOption">
+                                    <div class="optionWrapper">
                                         <a href="/signup">회원가입</a>
                                         <a>비밀번호 찾기</a>
                                     </div>
                                 </fieldset>
                             </form>
-                            <div class="oauthForm">
-                                <form th:action="@{/oauth2/authorization/google}">
-                                    <button type="submit" class="loginFormButton">구글로 로그인</button>
-                                </form>
-                            </div>
+                            <form class="oauthLoginForm" th:action="@{/oauth2/authorization/google}">
+                                <button type="submit" class="loginFormButton">구글로 로그인</button>
+                            </form>
                         </div>
                     </div>
                 </div>
