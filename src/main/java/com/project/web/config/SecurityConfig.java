@@ -1,6 +1,7 @@
 package com.project.web.config;
 
 import com.project.web.service.CustomOauth2UserService;
+import com.project.web.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomOauth2UserService customOauth2UserService;
+    private final CustomUserDetailsService customUserDetailsService;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -30,7 +32,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
+        http
+                .csrf()
                 .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
                 .and()
 
@@ -60,6 +63,15 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/index")
                 .failureHandler(userLoginFailureHandler)
                 .and()
+
+
+                .rememberMe()
+                .rememberMeParameter("remember")
+                .tokenValiditySeconds(60 * 60 * 24 * 7)
+                .alwaysRemember(false)
+                .userDetailsService(customUserDetailsService)
+                .and()
+
 
                 .logout()
                 .logoutUrl("/logout")
