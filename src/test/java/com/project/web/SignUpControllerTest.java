@@ -1,7 +1,7 @@
 package com.project.web;
 
-import com.project.web.controller.dto.SignUpRequestDto;
-import com.project.web.controller.dto.SignUpResponseDto;
+import com.project.web.controller.dto.signup.SignUpRequestDto;
+import com.project.web.controller.dto.signup.SignUpResponseDto;
 import com.project.web.service.SignUpService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class SignUpControllerTest {
     @Autowired
     private MockMvc mockMvc;

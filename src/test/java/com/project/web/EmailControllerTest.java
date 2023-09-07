@@ -1,6 +1,6 @@
 package com.project.web;
 
-import com.project.web.service.EmailService;
+import com.project.web.service.SmtpEmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +21,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class EmailControllerTest {
     @MockBean
-    private EmailService emailService;
+    private SmtpEmailService smtpEmailService;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void email_get_테스트() throws Exception {
-        String email = "test@test.com";
-        String code = "aaaaaa";
-        when(emailService.sendSimpleMessage(email)).thenReturn(code);
-        mockMvc.perform(get("/email")
-                        .param("username", email))
-                .andExpect(status().isOk())
-                .andExpect(content().string(code));
-    }
-
-    @Test
     public void checkCode_Post_테스트_true() throws Exception {
         String email = "test@test.com";
         String code = "aaaaaa";
-        when(emailService.checkCode(email, code)).thenReturn(true);
+        when(smtpEmailService.checkCode(email, code)).thenReturn(true);
 
         mockMvc.perform(post("/checkCode")
                         .param("email", email)
@@ -58,7 +46,7 @@ public class EmailControllerTest {
     public void checkCode_Post_테스트_false() throws Exception {
         String email = "test@test.com";
         String code = "aaaaaa";
-        when(emailService.checkCode(email, code)).thenReturn(false);
+        when(smtpEmailService.checkCode(email, code)).thenReturn(false);
 
         mockMvc.perform(post("/checkCode")
                         .param("email", email)

@@ -1,7 +1,7 @@
 package com.project.web;
 
-import com.project.web.controller.dto.SignUpRequestDto;
-import com.project.web.controller.dto.SignUpResponseDto;
+import com.project.web.controller.dto.signup.SignUpRequestDto;
+import com.project.web.controller.dto.signup.SignUpResponseDto;
 import com.project.web.repository.MemberRepository;
 import com.project.web.service.SignUpService;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("test")
 public class SignUpServiceTest {
     @Autowired
     private SignUpService signUpService;

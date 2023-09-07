@@ -12,7 +12,7 @@ import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 30)
+@EnableRedisHttpSession
 @EnableRedisRepositories
 public class RedisConfig {
     @Value("${spring.redis.host}")
@@ -22,12 +22,12 @@ public class RedisConfig {
     private Integer redisPort;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory(){
+    public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);
     }
 
     @Bean
-    public RedisTemplate<?,?> redisTemplate(){
+    public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory((redisConnectionFactory()));
         return redisTemplate;

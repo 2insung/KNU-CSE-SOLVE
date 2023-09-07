@@ -1,6 +1,6 @@
 package com.project.web;
 
-import com.project.web.controller.dto.PrincipalDetails;
+import com.project.web.controller.dto.auth.PrincipalDetails;
 import com.project.web.domain.Authority;
 import com.project.web.domain.Member;
 import com.project.web.service.CustomUserDetailsService;
@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 public class SpringSecurityLoginTest {
     @Autowired
     private MockMvc mockMvc;

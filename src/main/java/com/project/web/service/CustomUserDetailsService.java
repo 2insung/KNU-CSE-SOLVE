@@ -1,6 +1,6 @@
 package com.project.web.service;
 
-import com.project.web.controller.dto.PrincipalDetails;
+import com.project.web.controller.dto.auth.PrincipalDetails;
 import com.project.web.domain.Member;
 import com.project.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

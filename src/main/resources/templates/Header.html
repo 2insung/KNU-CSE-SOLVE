@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="headerFragment">
+    <div class="head">
+        <h1 class="logo">
+            <a href="/">Web Project</a>
+        </h1>
+        <div class="headRight">
+            <span th:unless="${isLogin}" class="loginStatus">로그인 하세요.</span>
+            <span th:if="${isLogin}" th:text="${nickname} + '님, 환영합니다.'" class="loginStatus"></span>
+            <a th:unless="${isLogin}" href="/login-page">
+                <button class="loginButton">Login</button>
+            </a>
+            <div class="dropDown" th:if="${isLogin}">
+                <a onclick="toggleDropdown()">
+                    <div class="userProfile">
+                        <img src="/img/tempProfile.jpg">
+                    </div>
+                </a>
+                <div class="dropDownContent" id="dropdownMenu">
+                    <a th:href="@{/my-page/{n}(n=${nickname})}">마이페이지</a>
+                    <form th:action="@{/private/logout}" th:method="post">
+                        <button type="submit">로그아웃</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headerNavWrapper">
+        <nav>
+        </nav>
+    </div>
+</header>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>메인 페이지</title>
+    <link href="css/Common.css" rel="stylesheet"/>
+    <link href="css/Header.css" rel="stylesheet"/>
+    <link href="css/RootPage.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/RootPage.js}"></script>
+    <script th:src="@{/js/Header.js}"></script>
+</head>
+<body>
+<div th:replace="Header :: headerFragment"></div>
+</body>
+</html>

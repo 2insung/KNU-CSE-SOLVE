@@ -1,5 +1,6 @@
 package com.project.web;
 
+import com.project.web.service.SmtpEmailService;
 import com.project.web.service.RedisService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,21 +12,27 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RedisServiceTest {
-
+public class SmtpEmailServiceTest {
+    @Autowired
+    private SmtpEmailService smtpEmailService;
     @Autowired
     private RedisService redisService;
 
     @Test
-    public void Redis_동작_테스트(){
+    public void checkCode_테스트_true(){
         String email = "test@test.com";
-        String code = "aaaaa";
+        String code = "aaaaaa";
+        redisService.setDataExpire(email, code, 60*30L);
 
-        redisService.setDataExpire(email, code, 60*60L);
+        Assertions.assertTrue(smtpEmailService.checkCode(email,code));
+    }
 
-        Assertions.assertTrue(redisService.existData("test@test.com"));
-        Assertions.assertFalse(redisService.existData("impossible"));
-        Assertions.assertEquals(redisService.getData(email), "aaaaa");
+    @Test
+    public void checkCode_테스트_false(){
+        String email = "test@test.com";
+        String code = "aaaaaa";
+        redisService.setDataExpire(email, code, 60*30L);
 
+        Assertions.assertFalse(smtpEmailService.checkCode(email,"bbbbbb"));
     }
 }

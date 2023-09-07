@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>회원가입</title>
+    <link href="css/Common.css" rel="stylesheet"/>
+    <link href="css/SignUpPage.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/SignUpPage.js}"></script>
+</head>
+<body>
+<div id="errorBox" style="display: none;">
+    <div id="errorBoxCode"></div>
+    <hr>
+    <div id="errorBoxMessage"></div>
+</div>
+<div id="container">
+    <main>
+        <article>
+            <section>
+                <div class="signup">
+                    <div class="signupWrapper">
+                        <div class="inner">
+                            <div class="title">
+                                회원가입
+                            </div>
+                            <form th:action="@{/public/signup}" method="post">
+                                <div id="inputUserInfo">
+                                    <fieldset>
+                                        <div class="errorWrapper">
+                                            <p id="errorMessage"></p>
+                                        </div>
+                                        <div>
+                                            <input id="nickname" name="nickname" type="text"
+                                                   placeholder="Nickname"/>
+                                            <input id="username" name="username" type="text"
+                                                   placeholder="name@example.com"/>
+                                            <input id="password" name="password"
+                                                   type="password" placeholder="Create a password"/>
+                                            <input id="passwordConfirm"
+                                                   name="passwordConfirm" type="password"
+                                                   placeholder="Confirm password"/>
+                                        </div>
+                                        <button type="button" class="signupFormButton" id="sendEmailButton"
+                                                onclick="sendEmail()">이메일 인증하기
+                                        </button>
+                                        <div class="optionWrapper">
+                                            이미 회원이라면? <a href="/login-page">로그인 하기</a>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div id="confirmCode" style="display: none">
+                                    <div class="confirmCodeTitle">
+                                        <h2>이메일 인증</h2>
+                                        <p><span id="codeUsername"></span>으로 전송된 인증 코드를 입력해주세요.</p>
+                                    </div>
+                                    <div class="checkCodeResultWrapper">
+                                        <p id="checkCodeResult" style="display: none"></p>
+                                    </div>
+                                    <div id="inputCodeWrapper">
+                                        <div>
+                                            <input id="code" name="code" type="text"
+                                                   placeholder="Code"/>
+                                        </div>
+                                        <button type="button" id="checkButton" onclick="checkCode()"
+                                                class="signupFormButton">확인
+                                        </button>
+                                    </div>
+                                    <button type="submit" id="submitButton" class="signupFormButton"
+                                            style="display: none">회원가입 하기
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+</div>
+</body>
+</html>

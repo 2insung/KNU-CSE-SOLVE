@@ -1,7 +1,7 @@
 package com.project.web.controller;
 
-import com.project.web.controller.dto.SignUpRequestDto;
-import com.project.web.service.EmailService;
+import com.project.web.controller.dto.signup.SignUpRequestDto;
+import com.project.web.service.SmtpEmailService;
 import com.project.web.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,37 +13,39 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class SignUpController {
     private final SignUpService signUpService;
-    private final EmailService emailService;
-    @GetMapping("/signup")
-    public ModelAndView SignUp(){
-        ModelAndView modelAndView = new ModelAndView("signup");
-        return modelAndView;
-    }
+    private final SmtpEmailService smtpEmailService;
 
-    @PostMapping("/signup")
+    @PostMapping("/public/signup")
     public ModelAndView signup(@ModelAttribute SignUpRequestDto signUpRequestDto){
         signUpService.signup(signUpRequestDto);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/login");
+        modelAndView.setViewName("redirect:/login-page");
         return modelAndView;
     }
 
-    @PostMapping("/check")
-    public ResponseEntity<String> check(@RequestParam(name="nickname") String nickname,
+    @PostMapping("/public/signup/send-email")
+    public ResponseEntity<String> sendEmail(@RequestParam(name="nickname") String nickname,
                                          @RequestParam(name="username") String username) throws Exception{
-        Boolean isVaildNickname = signUpService.checkNickname(nickname);
-        Boolean isValidUsername = signUpService.checkUsername(username);
+        Boolean isExistingNickname = signUpService.checkExistingNickname(nickname);
+        Boolean isExistingUsername = signUpService.checkExistingUsername(username);
 
-        if(!isVaildNickname){
+        if(!isExistingNickname){
             return ResponseEntity.ok("InvalidNickname");
         }
 
-        if(!isValidUsername){
+        if(!isExistingUsername){
             return ResponseEntity.ok("InvalidUsername");
         }
 
-        String code = emailService.sendSimpleMessage(username);
+        String code = smtpEmailService.sendMessage(username);
         return ResponseEntity.ok(code);
+    }
+
+    @PostMapping("/public/signup/check-code")
+    public ResponseEntity<Boolean> checkCode(
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "code") String code) {
+        return ResponseEntity.ok(smtpEmailService.checkCode(email, code));
     }
 
 }

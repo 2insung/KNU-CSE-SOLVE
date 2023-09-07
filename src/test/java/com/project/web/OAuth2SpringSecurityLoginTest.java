@@ -1,7 +1,7 @@
 package com.project.web;
 
-import com.project.web.controller.dto.OAuthAttributes;
-import com.project.web.controller.dto.PrincipalDetails;
+import com.project.web.controller.dto.auth.OAuthAttributes;
+import com.project.web.controller.dto.auth.PrincipalDetails;
 import com.project.web.domain.Member;
 import com.project.web.repository.MemberRepository;
 import com.project.web.service.CustomOauth2UserService;
@@ -25,7 +25,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles("test")
 public class OAuth2SpringSecurityLoginTest {
     @MockBean
     private MemberRepository memberRepository;
@@ -61,7 +60,6 @@ public class OAuth2SpringSecurityLoginTest {
         assertEquals("test@example.com", result.getAttribute("email"));
         verify(memberRepository,times(1)).save(any(Member.class));
     }
-
 
 
 }
