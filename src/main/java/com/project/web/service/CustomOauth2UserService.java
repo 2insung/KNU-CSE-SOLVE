@@ -3,6 +3,8 @@ package com.project.web.service;
 import com.project.web.controller.dto.auth.OAuthAttributes;
 import com.project.web.controller.dto.auth.PrincipalDetails;
 import com.project.web.domain.Member;
+import com.project.web.domain.MemberAuth;
+import com.project.web.repository.MemberAuthRepository;
 import com.project.web.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    @Autowired
+    private MemberAuthRepository memberAuthRepository;
     @Autowired
     private MemberRepository memberRepository;
 
@@ -37,19 +41,21 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     public OAuth2User loadUserByAttributes(OAuthAttributes attributes) {
-        return memberRepository.findByUsername(attributes.getEmail())
-                .map(member -> createDefaultOAuth2User(member, attributes))
+        return memberAuthRepository.findByUsername(attributes.getEmail())
+                .map(memberAuth -> createDefaultOAuth2User(memberAuth, attributes))
                 .orElseGet(() -> signUpDefaultOAuth2User(attributes));
     }
 
-    public OAuth2User createDefaultOAuth2User(Member member, OAuthAttributes attributes) {
-        return new PrincipalDetails(member, attributes.getAttributes());
+    public OAuth2User createDefaultOAuth2User(MemberAuth memberAuth, OAuthAttributes attributes) {
+        return new PrincipalDetails(memberAuth, attributes.getAttributes());
     }
 
     public OAuth2User signUpDefaultOAuth2User(OAuthAttributes attributes) {
-        Member member = attributes.toEntity();
+        Member member = attributes.toMember();
+        MemberAuth memberAuth = attributes.toMemberAuth(member);
         memberRepository.save(member);
-        return new PrincipalDetails(member, attributes.getAttributes());
+        memberAuthRepository.save(memberAuth);
+        return new PrincipalDetails(memberAuth, attributes.getAttributes());
     }
 
 

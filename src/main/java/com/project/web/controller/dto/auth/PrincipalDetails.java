@@ -1,6 +1,7 @@
 package com.project.web.controller.dto.auth;
 
 import com.project.web.domain.Member;
+import com.project.web.domain.MemberAuth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -11,15 +12,15 @@ import java.util.Collection;
 import java.util.Map;
 
 public class PrincipalDetails implements UserDetails, OAuth2User {
-    private Member member;
+    private MemberAuth memberAuth;
     private Map<String, Object> attributes;
 
-    public PrincipalDetails(Member member){
-        this.member = member;
+    public PrincipalDetails(MemberAuth memberAuth){
+        this.memberAuth = memberAuth;
     }
 
-    public PrincipalDetails(Member member, Map<String, Object> attributes){
-        this.member = member;
+    public PrincipalDetails(MemberAuth memberAuth, Map<String, Object> attributes){
+        this.memberAuth = memberAuth;
         this.attributes = attributes;
     }
 
@@ -30,7 +31,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return member.getRole().name();
+                return memberAuth.getRole().name();
             }
         });
 
@@ -39,20 +40,16 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword(){
-        return member.getPassword();
+        return memberAuth.getPassword();
     }
 
     @Override
     public String getUsername(){
-        return member.getUsername();
-    }
-
-    public Long getId() {
-        return member.getId();
+        return memberAuth.getUsername();
     }
 
     public String getNickname(){
-        return member.getNickname();
+        return memberAuth.getMember().getNickname();
     }
 
     @Override

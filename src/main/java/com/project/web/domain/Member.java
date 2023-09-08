@@ -11,28 +11,17 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "member")
-public class Member implements Serializable {
+public class Member implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, length = 50)
-    private String username;
-
-    @Column(length = 200)
-    private String password;
-    @Column(unique = true, length = 50)
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
-    private Authority role;
-
     @Builder
-    public Member(String username, String password, String nickname, Authority role){
-        this.username = username;
-        this.password = password;
+    public Member(String nickname){
         this.nickname = nickname;
-        this.role = role;
     }
 
 }
