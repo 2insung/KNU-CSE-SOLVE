@@ -20,7 +20,8 @@ public class Member implements Serializable{
     private String nickname;
 
     @Builder
-    public Member(String nickname){
+    public Member(Long id, String nickname){
+        this.id = id;
         this.nickname = nickname;
     }
 

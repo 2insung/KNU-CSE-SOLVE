@@ -1,0 +1,59 @@
+#container{
+    position: relative;
+    width: 1600px;
+    margin: 0 auto;
+    display: flex;
+}
+
+main{
+    margin-top: 20px;
+}
+
+
+.board{
+    width: 1200px;
+    height: 700px;
+    margin: 0 auto;
+}
+
+.boardWrapper{
+    width: 100% !important;
+}
+
+.inner{
+    width: 100%;
+}
+
+.innerHeader{
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.innerHeader .title{
+    font-size: 2rem;
+}
+
+.option{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    height: 2rem;
+}
+
+.option .description{
+    font-size: 1rem;
+}
+
+.option button{
+    background-color: blue;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px 5px;
+}
+
+.option button a {
+    color: white;
+    text-decoration: none;
+}
+

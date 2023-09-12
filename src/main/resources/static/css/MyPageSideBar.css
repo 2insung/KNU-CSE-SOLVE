@@ -1,0 +1,21 @@
+.myPageSideBar{
+    width: 200px;
+    margin-top: 20px;
+}
+
+.myPageSideBar a {
+    background-color: #eee; /* 메뉴의 배경색 */
+    color: black; /* 메뉴의 텍스트 색상 */
+    display: block; /* 블록 요소로 설정하여 수직 배열 */
+    padding: 12px; /* 내부 여백 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+.myPageSideBar a:hover {
+    background-color: #ccc; /* 호버 시 배경색 */
+}
+
+.myPageSideBar a.active {
+    background-color: #4CAF50; /* 활성화된 메뉴 아이템의 배경색 */
+    color: white; /* 활성화된 메뉴 아이템의 텍스트 색상 */
+}

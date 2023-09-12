@@ -30,7 +30,8 @@ public class MemberAuth implements Serializable {
     private Member member;
 
     @Builder
-    public MemberAuth(String username, String password, Authority role, Member member){
+    public MemberAuth(Long id, String username, String password, Authority role, Member member){
+        this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;

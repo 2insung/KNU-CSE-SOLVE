@@ -43,6 +43,8 @@ dependencies {
     implementation 'it.ozimov:embedded-redis:0.7.2'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'org.springframework.session:spring-session-data-redis:2.7.0'
+    implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+    implementation 'org.jsoup:jsoup:1.14.2'
 }
 
 jar {

@@ -1,11 +1,9 @@
 package com.project.web.service;
 
 import com.project.web.controller.dto.signup.SignUpRequestDto;
-import com.project.web.domain.Member;
-import com.project.web.domain.MemberAuth;
+import com.project.web.domain.*;
 import com.project.web.exception.SignUpException;
-import com.project.web.repository.MemberAuthRepository;
-import com.project.web.repository.MemberRepository;
+import com.project.web.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +16,9 @@ public class SignUpService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberAuthRepository memberAuthRepository;
+    private final MemberLevelRepository memberLevelRepository;
+    private final MemberProfileRepository memberProfileRepository;
+    private final LevelRepository levelRepository;
 
     @Transactional
     public void signup(SignUpRequestDto signUpRequestDto) {
@@ -29,8 +30,18 @@ public class SignUpService {
         }
         Member member = signUpRequestDto.toMember();
         MemberAuth memberAuth = signUpRequestDto.toMemberAuth(passwordEncoder, member);
+        Level level = levelRepository.findByName("유저");
+        MemberLevel memberLevel = MemberLevel.builder()
+                .level(level)
+                .member(member)
+                .build();
+        MemberProfile memberProfile = MemberProfile.builder()
+                .member(member)
+                .build();
         memberRepository.save(member);
         memberAuthRepository.save(memberAuth);
+        memberLevelRepository.save(memberLevel);
+        memberProfileRepository.save(memberProfile);
     }
 
     @Transactional(readOnly = true)

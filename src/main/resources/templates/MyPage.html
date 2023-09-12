@@ -12,6 +12,7 @@
     <link href="/css/Common.css" rel="stylesheet"/>
     <link href="/css/Header.css" rel="stylesheet"/>
     <link href="/css/MyPage.css" rel="stylesheet"/>
+    <link href="/css/MyPageSideBar.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/js/MyPage.js}"></script>
     <script th:src="@{/js/Header.js}"></script>
@@ -19,10 +20,27 @@
 <body>
 <div th:replace="Header :: headerFragment"></div>
 <div id="container">
-    <div class="leftOptionBar">
-    </div>
+    <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
     <main>
         <section>
+            <div class="profile">
+                <div class="profileWrapper">
+                    <div class="inner">
+                        <div class="userStatus">
+                            <h2></h2>
+                        </div>
+                        <div class="profilePicture">
+                            <img th:src="${profileImageUrl != null ? profileImageUrl : '/img/tempProfile.jpg'}">
+                        </div>
+                        <div class="profileNickname" th:text="${profileNickname}"></div>
+                        <div class="profileRank" th:text="${profileRank}"></div>
+                        <div class="profileEmail" th:text="${profileEmail}"></div>
+                        <div class="profileCreateAt" th:text="${profileCreateAt}"></div>
+                        <div class="profileDescription"th:text="${profileDescription}"></div>
+                    </div>
+
+                </div>
+            </div>
         </section>
     </main>
 </div>

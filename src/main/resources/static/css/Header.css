@@ -2,6 +2,7 @@ header {
     vertical-align: baseline;
     background: transparent;
     font-style: normal;
+    z-index: 100;
 }
 
 .head {
@@ -62,7 +63,7 @@ header {
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 60;
 }
 
 .dropDownContent a,
@@ -98,6 +99,78 @@ header {
 }
 
 nav {
+    display: flex;
+    align-items: center;
+    width: 1200px;
     height: 44px;
     margin: 0 auto;
+    position: relative;
+}
+
+.hamburgerWrapper{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 10px;
+    overflow: hidden;
+}
+
+.hamburgerWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hamburgerMenu {
+    position: absolute; /* 위의 요소들을 덮도록 absolute 설정 */
+    top: 45px; /* nav의 높이만큼 아래에 위치 */
+    left: 50%; /* 페이지 중앙에 위치하도록 설정 */
+    transform: translateX(-50%); /* 정확히 중앙에 위치하도록 좌측 이동 */
+    width: 1200px; /* 너비 1200px로 제한 */
+    background-color: #f3f3f3;
+    z-index: 50; /* headerNavWrapper 아래에 위치 */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+
+.allList {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* 너무 많아지면 다음 행으로 내려감 */
+    padding: 20px 40px; /* 메뉴 주위의 패딩 */
+}
+
+dl {
+    flex: 1; /* flex 속성을 이용해서 1200px 내에서 균등하게 배열 */
+    border-right: 1px solid #ccc; /* 오른쪽에 선 추가 */
+    padding: 0 15px; /* dl 내부의 패딩 추가 */
+}
+
+dl:last-child {
+    border-right: none; /* 마지막 dl에는 오른쪽 선 제거 */
+}
+
+dt {
+    font-size: 1rem; /* 제목의 크기 */
+    margin-bottom: 10px; /* 제목 밑에 간격 */
+    color: #555;
+}
+
+dt a {
+    color: inherit;       /* dt의 글자색을 상속받음 */
+    text-decoration: none; /* 밑줄 제거 */
+    display: block;       /* 전체 dt 영역을 클릭 가능하게 함 */
+}
+
+dt a:hover {
+    text-decoration: underline; /* 마우스 오버시 밑줄 표시 */
+}
+
+dd {
+    margin-bottom: 6px; /* 링크 간의 간격 */
+    font-size: 16px; /* 링크의 크기 */
+}
+
+dd:last-child {
+    margin-bottom: 0; /* 마지막 링크는 추가 간격 없음 */
 }

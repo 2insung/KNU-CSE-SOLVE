@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="../static/css/Header.css">
 <header th:fragment="headerFragment">
     <div class="head">
         <h1 class="logo">
-            <a href="/">Web Project</a>
+            <a href="/">KNU CSE Solve</a>
         </h1>
         <div class="headRight">
-            <span th:unless="${isLogin}" class="loginStatus">로그인 하세요.</span>
-            <span th:if="${isLogin}" th:text="${nickname} + '님, 환영합니다.'" class="loginStatus"></span>
-            <a th:unless="${isLogin}" href="/login-page">
+            <span th:unless="${headerIsLogin}" class="loginStatus">로그인 하세요.</span>
+            <span th:if="${headerIsLogin}" th:text="${headerNickname} + '님, 환영합니다.'" class="loginStatus"></span>
+            <a th:unless="${headerIsLogin}" href="/login-page">
                 <button class="loginButton">Login</button>
             </a>
-            <div class="dropDown" th:if="${isLogin}">
+            <div class="dropDown" th:if="${headerIsLogin}">
                 <a onclick="toggleDropdown()">
                     <div class="userProfile">
-                        <img src="/img/tempProfile.jpg">
+                        <img th:src="${headerImageUrl != null ? headerImageUrl : '/img/tempProfile.jpg'}">
                     </div>
                 </a>
                 <div class="dropDownContent" id="dropdownMenu">
-                    <a th:href="@{/my-page/{n}(n=${nickname})}">마이페이지</a>
+                    <a th:href="@{/my-page/{n}(n=${headerNickname})}">마이페이지</a>
                     <form th:action="@{/private/logout}" th:method="post">
                         <button type="submit">로그아웃</button>
                     </form>
@@ -28,7 +29,54 @@
     </div>
     <div class="headerNavWrapper">
         <nav>
+            <div class="hamburgerWrapper">
+                <img src='/img/hamburger.png' id="hamburger">
+            </div>
         </nav>
+        <div class="hamburgerMenu" id="hamburgerMenu" style="display: none;">
+            <div class="allList">
+                <dl>
+                    <dt><a href="/board?type=free&page=1">자유게시판</a></dt>
+                    <dt><a href="/board?type=hot&page=1">인기게시판</a></dt>
+                    <dt><a href="/board?type=information&page=1">정보게시판</a></dt>
+                    <dt><a href="/board?type=promotion&page=1">홍보게시판</a></dt>
+                    <dt><a href="/board?type=employ&page=1">취업게시판</a></dt>
+                    <dt><a href="/board?type=coding&page=1">코딩게시판</a></dt>
+                </dl>
+                <dl>
+                    <dt><a href="/board?type=discrete_mathematics&page=1">이산수학</a></dt>
+                    <dt><a href="/board?type=engineering_mathematics&page=1">공학수학</a></dt>
+                    <dt><a href="/board?type=introduction_to_computer_science&page=1">컴퓨터학개론</a></dt>
+                    <dt><a href="/board?type=programming_fundamentals&page=1">프로그래밍기초</a></dt>
+                    <dt><a href="/board?type=cpp_programming&page=1">c++ 프로그래밍</a></dt>
+                    <dt><a href="/board?type=python_programming&page=1">파이썬 프로그래밍</a></dt>
+                </dl>
+                <dl>
+                    <dt><a href="/board?type=java_programming&page=1">자바 프로그래밍</a></dt>
+                    <dt><a href="/board?type=data_structures&page=1">자료구조</a></dt>
+                    <dt><a href="/board?type=advanced_data_structures&page=1">자료구조응용</a></dt>
+                    <dt><a href="/board?type=data_structure_programming&page=1">자료구조프로그래밍</a></dt>
+                    <dt><a href="/board?type=computer_architecture&page=1">컴퓨터구조</a></dt>
+                    <dt><a href="/board?type=operating_systems&page=1">운영체제</a></dt>
+                </dl>
+                <dl>
+                    <dt><a href="/board?type=system_programming&page=1">시스템프로그래밍</a></dt>
+                    <dt><a href="/board?type=digital_design_and_experiment&page=1">디지털설계및실험</a></dt>
+                    <dt><a href="/board?type=software_design&page=1">소프트웨어설계</a></dt>
+                    <dt><a href="/board?type=linear_algebra&page=1">선형대수</a></dt>
+                    <dt><a href="/board?type=probability_and_statistics&page=1">확률과통계</a></dt>
+                    <dt><a href="/board?type=logic_circuits&page=1">논리회로</a></dt>
+                </dl>
+                <dl>
+                    <dt><a href="/board?type=algorithms_1&page=1">알고리즘1</a></dt>
+                    <dt><a href="/board?type=algorithms_2&page=1">알고리즘2</a></dt>
+                    <dt><a href="/board?type=compiler&page=1">컴파일러</a></dt>
+                    <dt><a href="/board?type=database_systems&page=1">데이터베이스</a></dt>
+                    <dt><a href="/board?type=capstone_design_project_1&page=1">종합설계프로젝트1</a></dt>
+                    <dt><a href="/board?type=capstone_design_project_2&page=1">종합설계프로젝트2</a></dt>
+                </dl>
+            </div>
+        </div>
     </div>
 </header>
 </html>

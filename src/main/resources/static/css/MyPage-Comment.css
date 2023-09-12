@@ -1,0 +1,31 @@
+#container{
+    position: relative;
+    width: 1600px;
+    margin: 0 auto;
+    display: flex;
+}
+
+main{
+    margin-top: 20px;
+}
+
+
+.profile{
+    width: 1200px;
+    height: 700px;
+    margin: 0 auto;
+}
+
+.profileWrapper{
+    width: 100% !important;
+}
+
+.inner{
+    padding: 25px 0px 0 56px;
+    width: calc(100% - 115px) !important;
+}
+
+.inner .title{
+    font-size: 2rem;
+    border-bottom: 1px solid #e2e2e2;
+}

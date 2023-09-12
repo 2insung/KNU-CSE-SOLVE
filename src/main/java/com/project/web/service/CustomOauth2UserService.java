@@ -2,10 +2,8 @@ package com.project.web.service;
 
 import com.project.web.controller.dto.auth.OAuthAttributes;
 import com.project.web.controller.dto.auth.PrincipalDetails;
-import com.project.web.domain.Member;
-import com.project.web.domain.MemberAuth;
-import com.project.web.repository.MemberAuthRepository;
-import com.project.web.repository.MemberRepository;
+import com.project.web.domain.*;
+import com.project.web.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,6 +19,12 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
     private MemberAuthRepository memberAuthRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MemberProfileRepository memberProfileRepository;
+    @Autowired
+    private MemberLevelRepository memberLevelRepository;
+    @Autowired
+    private LevelRepository levelRepository;
 
     @Override
     @Transactional
@@ -53,8 +57,18 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User signUpDefaultOAuth2User(OAuthAttributes attributes) {
         Member member = attributes.toMember();
         MemberAuth memberAuth = attributes.toMemberAuth(member);
+        Level level = levelRepository.findByName("유저");
+        MemberLevel memberLevel = MemberLevel.builder()
+                .level(level)
+                .member(member)
+                .build();
+        MemberProfile memberProfile = MemberProfile.builder()
+                .member(member)
+                .build();
         memberRepository.save(member);
         memberAuthRepository.save(memberAuth);
+        memberLevelRepository.save(memberLevel);
+        memberProfileRepository.save(memberProfile);
         return new PrincipalDetails(memberAuth, attributes.getAttributes());
     }
 

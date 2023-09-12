@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="myPageSideBar" th:fragment="MyPageSideBarFragment">
+    <a th:if="${isMyPage}" th:href="@{/my-page/{n}/edit(n=${nickname})}">내 정보 수정</a>
+    <a th:href="@{/my-page/{n}/post(n=${nickname})}">작성한 글</a>
+    <a th:href="@{/my-page/{n}/comment(n=${nickname})}">작성한 댓글</a>
+    <a th:if="${isMyPage}" th:href="@{/my-page/{n}/pwEdit(n=${nickname})}">비밀번호 수정</a>
+    <a th:if="${isMyPage}" th:href="@{/my-page/{n}/withdraw(n=${nickname})}">회원 탈퇴</a>
+</div>
+</html>

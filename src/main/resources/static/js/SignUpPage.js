@@ -47,6 +47,11 @@ function sendEmail(){
         return
     }
 
+    if(inputNickname.length > 10){
+        showErrorMessage("닉네임은 10자 이하로 입력해주세요.")
+        return
+    }
+
     if(inputUsername === ""){
         showErrorMessage("이메일을 입력해주세요.")
         return

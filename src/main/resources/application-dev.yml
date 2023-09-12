@@ -53,3 +53,15 @@ spring:
   redis:
     host: ${redis-host}
     port: ${redis-port}
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: minioadmin
+      secret-key: minioadmin
+    s3:
+      bucket: web-project-bucket
+    stack:
+      auto: false
+    endpoint: http://127.0.0.1:9000

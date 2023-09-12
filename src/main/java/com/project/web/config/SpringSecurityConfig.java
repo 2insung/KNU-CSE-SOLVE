@@ -52,6 +52,7 @@ public class SpringSecurityConfig {
 
                 .authorizeRequests()
                 .antMatchers("/private/**").authenticated()
+                .antMatchers("/write").authenticated()
                 .anyRequest().permitAll()
                 .and()
 
@@ -76,7 +77,7 @@ public class SpringSecurityConfig {
 
                 .logout()
                 .logoutUrl("/private/logout")
-                .logoutSuccessUrl("/login-page?logout")
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION")
                 .and()

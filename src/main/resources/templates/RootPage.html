@@ -9,12 +9,14 @@
     <meta name="description" content=""/>
     <meta name="author" content=""/>
     <title>메인 페이지</title>
-    <link href="css/Common.css" rel="stylesheet"/>
-    <link href="css/Header.css" rel="stylesheet"/>
-    <link href="css/RootPage.css" rel="stylesheet"/>
+    <link href="/css/Common.css" rel="stylesheet"/>
+    <link href="/css/Header.css" rel="stylesheet"/>
+    <link href="/css/RootPage.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:src="@{/js/RootPage.js}"></script>
     <script th:src="@{/js/Header.js}"></script>
+    <script th:src="@{/ckeditor/ckeditor.js}"></script>
+
 </head>
 <body>
 <div th:replace="Header :: headerFragment"></div>
