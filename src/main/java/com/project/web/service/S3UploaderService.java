@@ -24,7 +24,7 @@ public class S3UploaderService {
     private String bucket;
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException{
-        String s3FileName = dirName + '/' + UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        String s3FileName = dirName + '/' + UUID.randomUUID();
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(multipartFile.getInputStream().available());
