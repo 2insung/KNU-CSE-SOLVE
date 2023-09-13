@@ -9,3 +9,24 @@ $(document).ready(function () {
     })
 })
 
+document.addEventListener("DOMContentLoaded", function () {
+    var writeForm = document.getElementById("writeForm");
+
+    writeForm.addEventListener("submit", function (event) {
+        var title = $("#title").val()
+        var content = $("#content").val()
+
+        if (title === "") {
+            alert("제목을 입력해주세요.")
+            event.preventDefault()
+            return
+        }
+
+        if (content === "") {
+            alert("내용을 입력해주세요.")
+            event.preventDefault();
+            return;
+        }
+
+    })
+});

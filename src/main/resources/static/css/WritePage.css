@@ -16,9 +16,6 @@ main{
     margin: 0 auto;
 }
 
-.writeWrapper{
-    width: 100% !important;
-}
 
 .inner{
     width: 100%;
@@ -73,5 +70,26 @@ input[type="checkbox"] {
 .checkBoxWrapper span label:last-of-type {
     padding-left: 10px;
 }
+
+.ckEditorWrapper input {
+    margin-top: 7px;
+    margin-bottom: 5px;
+    height: 2rem;
+    line-height: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 5px 0 5px;
+    font-size: 1rem;
+    color: #555;
+    background: white;
+    border: 1px solid #e2e2e2;
+}
+
+.ckEditorButtonWrapper button{
+    display: block;
+    height: 1rem;
+}
+
+
 
 

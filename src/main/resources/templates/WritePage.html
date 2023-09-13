@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
+    <title>KNU CSE Solve</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>메인 페이지</title>
     <link href="/css/Common.css" rel="stylesheet"/>
     <link href="/css/Header.css" rel="stylesheet"/>
     <link href="/css/WritePage.css" rel="stylesheet"/>
@@ -24,22 +24,27 @@
         <div class="write">
             <div class="writeWrapper">
                 <div class="inner">
-                    <div class="innerHeader">
-                        <div th:text="${alias}" class="title"></div>
-                        <div class="option">
-                            <div th:text="${alias} + ' 게시판에 글을 작성합니다.'" class="description"></div>
-                            <div th:if="${hasNotificationAccess}" class="checkBoxWrapper">
+                    <form id="writeForm" th:action="@{/private/savePost(type=${type})}" method="post">
+                        <div class="innerHeader">
+                            <div th:text="${alias}" class="title"></div>
+                            <div class="option">
+                                <div th:text="${alias} + ' 게시판에 글을 작성합니다.'" class="description"></div>
+                                <div th:if="${hasNotificationAccess}" class="checkBoxWrapper">
                                 <span>
-                                    <input type="checkbox" id="notice" name="notice"/>
-                                    <label id="checkBoxLabel" for="notice"></label>
-                                    <label for="notice">공지로 올리기</label>
+                                    <input type="checkbox" id="isNotification" name="isNotification"/>
+                                    <label id="checkBoxLabel" for="isNotification"></label>
+                                    <label for="isNotification">공지로 올리기</label>
                                 </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <form class="ckEditorWrapper" th:action="@{/send}" method="post">
-                        <textarea rows="5" id="content" name="content"></textarea>
-                        <button type="submit">제출하기</button>
+                        <div class="ckEditorWrapper">
+                            <input type="text" id="title" name="title" placeholder="제목을 입력해주세요."/>
+                            <textarea rows="5" id="content" name="body"></textarea>
+                            <div class="ckEditorButtonWrapper">
+                                <button type="submit">제출하기</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
