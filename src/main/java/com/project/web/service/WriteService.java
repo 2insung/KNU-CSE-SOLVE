@@ -1,12 +1,7 @@
 package com.project.web.service;
 
-import com.project.web.domain.MemberLevel;
-import com.project.web.domain.PostType;
-import com.project.web.domain.PostTypeDetail;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.MemberLevelRepository;
-import com.project.web.repository.PostTypeDetailRepository;
-import com.project.web.repository.PostTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

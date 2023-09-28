@@ -1,12 +1,12 @@
 package com.project.web.controller;
 
-import com.project.web.controller.dto.my.EditMemberProfileRequestDto;
+import com.project.web.controller.dto.my.MyEditFormRequestDto;
 import com.project.web.service.MyService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,13 +19,13 @@ import java.net.URLEncoder;
 public class MyController {
     private final MyService myService;
 
-    @PostMapping("/public/editMemberProfile")
-    public ModelAndView editMemberProfile(EditMemberProfileRequestDto requestDto) throws IOException {
-        myService.editMemberProfile(requestDto);
-        ModelAndView modelAndView = new ModelAndView();
+    @PostMapping("/private/editMemberProfile/{prevNickname}")
+    public String editMemberProfile(@PathVariable(name = "prevNickname") String prevNickname,
+                                    MyEditFormRequestDto requestDto,
+                                    Model model) throws IOException {
+        myService.editMemberProfile(prevNickname, requestDto);
         String encodedNickname = URLEncoder.encode(requestDto.getNickname(), "UTF-8");
-        modelAndView.setViewName("redirect:/my-page/" + encodedNickname);
-        return modelAndView;
+        return "redirect:/my/" + encodedNickname;
     }
 
     @PostMapping("/private/checkValidNickname")

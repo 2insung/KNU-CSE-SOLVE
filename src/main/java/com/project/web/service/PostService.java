@@ -1,6 +1,7 @@
 package com.project.web.service;
 
 import com.project.web.controller.dto.auth.PrincipalDetails;
+import com.project.web.controller.dto.post.PostPageResponseDto;
 import com.project.web.controller.dto.post.SavePostRequestDto;
 import com.project.web.domain.*;
 import com.project.web.exception.Error400Exception;
@@ -17,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final PostPreviewRepository postPreviewRepository;
     private final PostContentRepository postContentRepository;
     private final CommentRepository commentRepository;
-    private final PostTypeRepository postTypeRepository;
     private final MemberRepository memberRepository;
+    private final MemberProfileRepository memberProfileRepository;
+
 
     @Transactional
     public void savePost(String type, SavePostRequestDto savePostRequestDto, PrincipalDetails principalDetails){
@@ -37,7 +38,7 @@ public class PostService {
         String body = savePostRequestDto.getBody();
         Document doc = Jsoup.parse(body);
         String bodyText = doc.text();
-        String summary = bodyText.length() > 20 ? bodyText.substring(0, 20) + "..." : bodyText;
+        String summary = bodyText.length() > 120 ? bodyText.substring(0, 120) + "..." : bodyText;
         Element imgElement = doc.select("img").first();
         String thumbnail = imgElement != null ? imgElement.attr("src") : null;
 

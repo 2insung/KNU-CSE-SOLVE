@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,31 +15,45 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "member_profile")
 public class MemberProfile {
+    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    private String imageUrl;
+    @Column(name = "nickname", nullable = false, unique = true)
+    @Size(max = 20)
+    private String nickname;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(name = "profile_image")
+    private String profileImage;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @Column(name = "post_count")
+    private Integer postCount;
 
-    private String description;
+    @Column(name = "comment_count")
+    private Integer commentCount;
+
 
     @Builder
-    public MemberProfile(Long id, Member member, String imageUrl, LocalDateTime createdAt , LocalDateTime updatedAt, String description){
+    public MemberProfile(Long id,  Member member, String nickname, String profileImage, Integer postCount,
+                         Integer commentCount) {
         this.id = id;
         this.member = member;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.postCount = postCount;
+        this.commentCount = commentCount;
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void updateProfileImage(String profileImage){
+        this.profileImage = profileImage;
     }
 }

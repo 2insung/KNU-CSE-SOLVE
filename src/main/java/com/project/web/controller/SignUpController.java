@@ -1,7 +1,7 @@
 package com.project.web.controller;
 
 import com.project.web.controller.dto.signup.SignUpRequestDto;
-import com.project.web.service.SmtpEmailService;
+import com.project.web.service.SignUpEmailService;
 import com.project.web.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +13,31 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class SignUpController {
     private final SignUpService signUpService;
-    private final SmtpEmailService smtpEmailService;
+    private final SignUpEmailService signUpEmailService;
 
-    @PostMapping("/public/signup")
-    public ModelAndView signup(@ModelAttribute SignUpRequestDto signUpRequestDto){
-        signUpService.signup(signUpRequestDto);
+    @PostMapping("/public/signup/save")
+    public ModelAndView signup(@ModelAttribute SignUpRequestDto signUpRequestDto) {
         ModelAndView modelAndView = new ModelAndView();
+        signUpService.signup(signUpRequestDto);
         modelAndView.setViewName("redirect:/login-page");
         return modelAndView;
     }
 
     @PostMapping("/public/signup/send-email")
-    public ResponseEntity<String> sendEmail(@RequestParam(name="nickname") String nickname,
-                                         @RequestParam(name="username") String username) throws Exception{
+    public ResponseEntity<String> sendEmail(@RequestParam(name = "nickname") String nickname,
+                                            @RequestParam(name = "username") String username) throws Exception {
         Boolean isExistingNickname = signUpService.checkExistingNickname(nickname);
         Boolean isExistingUsername = signUpService.checkExistingUsername(username);
 
-        if(!isExistingNickname){
+        if (isExistingNickname) {
             return ResponseEntity.ok("InvalidNickname");
         }
 
-        if(!isExistingUsername){
+        if (isExistingUsername) {
             return ResponseEntity.ok("InvalidUsername");
         }
 
-        String code = smtpEmailService.sendMessage(username);
+        String code = signUpEmailService.sendEmail(username);
         return ResponseEntity.ok(code);
     }
 
@@ -45,7 +45,7 @@ public class SignUpController {
     public ResponseEntity<Boolean> checkCode(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "code") String code) {
-        return ResponseEntity.ok(smtpEmailService.checkCode(email, code));
+        return ResponseEntity.ok(signUpEmailService.checkCode(email, code));
     }
 
 }

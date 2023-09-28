@@ -24,9 +24,11 @@
         <div class="write">
             <div class="writeWrapper">
                 <div class="inner">
+                    <div class="type">
+                        <a th:href="@{'/board?type=' + ${type}}" th:text="${alias}"></a>
+                    </div>
                     <form id="writeForm" th:action="@{/private/savePost(type=${type})}" method="post">
                         <div class="innerHeader">
-                            <div th:text="${alias}" class="title"></div>
                             <div class="option">
                                 <div th:text="${alias} + ' 게시판에 글을 작성합니다.'" class="description"></div>
                                 <div th:if="${hasNotificationAccess}" class="checkBoxWrapper">

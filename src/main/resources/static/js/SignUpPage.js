@@ -1,7 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content")
 
 window.onload = function() {
-    // 쿼리 스트링에서 'code'와 'error' 값을 가져오기
     var code = new URLSearchParams(window.location.search).get('code');
     var error = new URLSearchParams(window.location.search).get('error');
 
@@ -29,7 +28,7 @@ function initErrorMessage(){
     $("#errorMessage").text("")
 }
 
-function convertInputUserInfoToConfirmCode(username){
+function convertInputUserFormToInputCodeForm(username){
     initErrorMessage()
     $("#inputUserInfo").css("display", "none")
     $("#confirmCode").css("display", "block")
@@ -87,7 +86,7 @@ function sendEmail(){
                 showErrorMessage("중복된 이메일입니다.")
             }
             else{
-                convertInputUserInfoToConfirmCode(inputUsername)
+                convertInputUserFormToInputCodeForm(inputUsername)
             }
         },
         error: function (error){

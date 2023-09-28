@@ -1,21 +1,23 @@
 package com.project.web.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+public enum Level {
+    LEVEL_USER("유저", 1), LEVEL_MANAGER("매니저", 2), LEVEL_ADMIN("어드민", 3);
 
-import javax.persistence.*;
+    private final String name;
+    private final Integer value;
 
-@Getter
-@NoArgsConstructor
-@Entity
-@Table(name = "level")
-public class Level {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Level(String name, Integer value){
+        this.name = name;
+        this.value = value;
+    }
 
-    private String name;
+    public String getName(){
+        return name;
+    }
 
-    private Integer grade;
+    public Integer getValue(){
+        return value;
+    }
+
+
 }

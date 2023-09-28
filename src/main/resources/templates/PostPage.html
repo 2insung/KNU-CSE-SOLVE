@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>KNU CSE Solve</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link href="/css/Common.css" rel="stylesheet"/>
+    <link href="/css/Header.css" rel="stylesheet"/>
+    <link href="/css/PostPage.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/PostPage.js}"></script>
+    <script th:src="@{/js/Header.js}"></script>
+</head>
+<body>
+<div th:replace="Header :: headerFragment"></div>
+<main>
+    <section>
+        <div class="post">
+            <div class="postWrapper">
+                <div class="inner">
+                    <div class="type">
+                        <a th:href="@{'/board?type=' + ${type}}" th:text="${alias}"></a>
+                    </div>
+                    <div class="contentWrapper">
+                        <div class="innerHeader">
+                            <div class="title" th:text="${postContent.title}"></div>
+                            <div class="authorInfo">
+                                <div class="author">
+                                    <div class="authorImage">
+                                        <img th:src="${postContent.profileImage != null ? postContent.profileImage : '/img/tempProfile.jpg'}">
+                                    </div>
+                                    <div class="authorNickname">
+                                        <a th:href="@{/my-page/{n}(n=${postContent.author})}"
+                                           th:text="${postContent.author}"></a>
+                                    </div>
+                                </div>
+                                <div class="time">
+                                    <span th:text="${postContent.createdAt}"></span>
+                                    <span th:text="'(마지막 수정일 : ' + ${postContent.updatedAt} + ')'"></span>
+                                </div>
+                            </div>
+                            <div class="postInfo">
+                                <div>
+                                    <span th:text="'조회수 ' + ${postContent.hits}"></span>
+                                    <span th:text="'추천수 ' + ${postContent.recommend}"></span>
+                                    <span th:text="'댓글수 ' + ${postContent.commentCount}"></span>
+                                </div>
+                                <div class="buttonWrapper">
+                                    <button>수정</button>
+                                    <button>삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contentBobyWrapper">
+                            <div class="contentBody" th:utext="${postContent.body}"></div>
+                            <div class="recommendWrapper">
+                                <div class="recommend">
+                                    <div class="recommendImage">
+                                        <img src="/img/thumb.png">
+                                    </div>
+                                    <span th:text="${postContent.recommend}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="commentListWrapper">
+                            <div class="commentInputWrapper">
+                                <ul th:each="comment : ${commentList}">
+                                    <li>
+                                        <div class="commentWrapper">
+                                            <div class="userWrapper">
+                                                <div class="user">
+                                                    <div class="userImageWrapper">
+                                                        <img th:src="${comment.profileImage != null ? comment.profileImage : '/img/tempProfile.jpg'}">
+                                                    </div>
+                                                    <div class="userNickname">
+                                                        <a th:href="@{/my-page/{n}(n=${comment.author})}"
+                                                           th:text="${comment.author}"></a>
+                                                    </div>
+                                                </div>
+                                                <div class="commentButtonWrapper">
+                                                    <button>삭제</button>
+                                                </div>
+                                            </div>
+                                            <div class="commentBodyWrapper">
+                                                <div th:text="${comment.body}"></div>
+                                            </div>
+                                        </div>
+                                        <form class="commentFormParent"
+                                              th:action="@{/private/saveComment(type=${postContent.type}, postId=${postContent.id}, commentId=${comment.id})}"
+                                              method="post" style="display: none;">
+                                            <textarea class="commentInput" name="body"></textarea>
+                                            <div class="submitButtonWrapper">
+                                                <button>입력</button>
+                                            </div>
+                                        </form>
+                                    </li>
+                                </ul>
+                                <form id="commentForm"
+                                      th:action="@{/private/saveComment(type=${postContent.type}, postId=${postContent.id})}"
+                                      method="post">
+                                    <textarea class="commentInput" name="body"></textarea>
+                                    <div class="submitButtonWrapper">
+                                        <button>입력</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

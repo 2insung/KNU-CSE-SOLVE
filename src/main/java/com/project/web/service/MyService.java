@@ -1,14 +1,18 @@
 package com.project.web.service;
 
-import com.project.web.controller.dto.my.EditMemberProfileRequestDto;
+import com.project.web.controller.dto.my.MyEditFormRequestDto;
+import com.project.web.controller.dto.my.MyEditPageResponseDto;
+import com.project.web.controller.dto.my.MyPageResponseDto;
 import com.project.web.domain.Member;
+import com.project.web.domain.MemberDetail;
 import com.project.web.domain.MemberProfile;
+import com.project.web.exception.Error404Exception;
+import com.project.web.repository.MemberDetailRepository;
 import com.project.web.repository.MemberProfileRepository;
 import com.project.web.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -16,26 +20,27 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class MyService {
     private final S3UploaderService s3UploaderService;
-    private final MemberProfileRepository memberProfileRepository;
     private final MemberRepository memberRepository;
-    public void editMemberProfile(EditMemberProfileRequestDto requestDto) throws IOException {
-        MemberProfile prevMemberProfile = memberProfileRepository.findByMember_Id(requestDto.getId());
-        String imageUrl = prevMemberProfile.getImageUrl();
-        if(requestDto.getFile() != null && !requestDto.getFile().isEmpty()){
-            imageUrl = s3UploaderService.upload(requestDto.getFile(), "images");
+
+    @Transactional
+    public void editMemberProfile(String prevNickname, MyEditFormRequestDto requestDto) throws IOException {
+        Object[] result = memberRepository.findByNicknameWithProfileAndDetail(prevNickname)
+                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+
+        MemberProfile memberProfile = (MemberProfile) result[1];
+        MemberDetail memberDetail = (MemberDetail) result[2];
+
+        memberProfile.updateNickname(requestDto.getNickname());
+
+        if (requestDto.getFile() != null && !requestDto.getFile().isEmpty()) {
+            String imageUrl = s3UploaderService.upload(requestDto.getFile(), "images");
+            memberProfile.updateProfileImage(imageUrl);
         }
-        Member member = requestDto.toMember();
-        MemberProfile memberProfile = requestDto.toMemberProfile(prevMemberProfile, imageUrl, member);
-        memberRepository.save(member);
-        memberProfileRepository.save(memberProfile);
+
+        memberDetail.updateGrade(requestDto.getGrade());
+        memberDetail.updateDescription(requestDto.getDescription());
+        memberDetail.updateAdmissionYear(requestDto.getAdmissionYear());
+        memberDetail.updateDepartment(requestDto.getDepartment());
     }
 
-    public Boolean checkValidNickname(String nickname){
-        if(memberRepository.existsByNickname(nickname)){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
 }

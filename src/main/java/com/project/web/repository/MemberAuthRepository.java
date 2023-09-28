@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface MemberAuthRepository extends JpaRepository<MemberAuth, Long> {
-    Optional<MemberAuth> findByUsername(String username);
-    MemberAuth findByMember_Nickname(String nickname);
-    boolean existsByUsername(String username);
+
 }

@@ -22,6 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
             return
         }
 
+        if (title.length > 30) {
+            alert("닉네임은 30자 이하만 가능합니다.");
+            event.preventDefault()
+            return;
+        }
+
         if (content === "") {
             alert("내용을 입력해주세요.")
             event.preventDefault();

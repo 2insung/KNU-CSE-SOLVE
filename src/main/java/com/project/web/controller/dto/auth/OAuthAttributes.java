@@ -1,8 +1,6 @@
 package com.project.web.controller.dto.auth;
 
-import com.project.web.domain.Authority;
-import com.project.web.domain.Member;
-import com.project.web.domain.MemberAuth;
+import com.project.web.domain.*;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,23 +36,4 @@ public class OAuthAttributes {
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
-
-    public Member toMember() {
-        String uuid = UUID.randomUUID().toString().substring(0, 6);
-        return Member.builder()
-                .nickname("user_" + uuid)
-                .build();
-    }
-
-    public MemberAuth toMemberAuth(Member member) {
-        String uuid = UUID.randomUUID().toString().substring(0, 6);
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return MemberAuth.builder()
-                .username(email)
-                .password(bCryptPasswordEncoder.encode("password_" + uuid))
-                .role(Authority.ROLE_USER)
-                .member(member)
-                .build();
-    }
-
 }
