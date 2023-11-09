@@ -6,10 +6,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   session:
-    store-type: redis
+    store-type: jdbc
 
   jpa:
     database: mysql
+    show-sql: true
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:

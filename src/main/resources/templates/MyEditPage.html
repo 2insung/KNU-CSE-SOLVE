@@ -1,82 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{GeneralLayout}">
 <head>
-    <title>KNU CSE Solve</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link href="/css/Common.css" rel="stylesheet"/>
-    <link href="/css/Header.css" rel="stylesheet"/>
-    <link href="/css/MyPage-Edit.css" rel="stylesheet"/>
-    <link href="/css/MyPageSideBar.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/MyPage-Edit.js}"></script>
-    <script th:src="@{/js/Header.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/MyEditPage.css}"/>
 </head>
-<body>
-<div th:replace="Header :: headerFragment"></div>
-<div id="container">
-    <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-    <main>
-        <section>
-            <div class="profile">
-                <div class="profileWrapper">
-                    <div class="inner">
-                        <div class="title">
-                            내 정보 수정
-                        </div>
-                        <form id="editProfileForm" th:action="@{/public/editMemberProfile}" method="post" enctype="multipart/form-data">
-                            <input id="id" name="id" type="hidden" th:value="${id}">
-                            <div class="editWrapper">
-                                <div class="editTitle">
+<th:block layout:fragment="contentFragment">
+    <div id="container">
+        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
+        <main>
+            <section>
+                <div class="profile">
+                    <div class="profileWrapper">
+                        <div class="inner">
+                            <div class="title">
+                                내 정보 수정
+                            </div>
+                            <form id="editProfileForm" th:action="@{/public/editMemberProfile}" method="post"
+                                  enctype="multipart/form-data">
+                                <input id="id" name="id" type="hidden" th:value="${id}">
+                                <div class="editWrapper">
+                                    <div class="editTitle">
                                 <span>
                                     프로필 사진
                                 </span>
+                                    </div>
+                                    <div class="editPicture">
+                                        <img id="previewImage"
+                                             th:src="${imageUrl != null ? imageUrl : '/img/tempProfile.jpg'}">
+                                        <input type="file" id="imageInput" name="file" accept="image/*"
+                                               style="display: none"/>
+                                    </div>
+                                    <button onclick="document.getElementById('imageInput').click();" type="button">
+                                        Edit
+                                    </button>
                                 </div>
-                                <div class="editPicture">
-                                    <img id="previewImage" th:src="${imageUrl != null ? imageUrl : '/img/tempProfile.jpg'}">
-                                    <input type="file" id="imageInput" name="file" accept="image/*" style="display: none"/>
-                                </div>
-                                <button onclick="document.getElementById('imageInput').click();" type="button">Edit</button>
-                            </div>
-                            <div class="editWrapper">
-                                <div class="editTitle">
+                                <div class="editWrapper">
+                                    <div class="editTitle">
                                 <span>
                                     닉네임
                                 </span>
+                                    </div>
+                                    <div class="editInput">
+                                        <input th:value="${nickname}" id="nickname" name="nickname" type="text"/>
+                                    </div>
+                                    <div id="confirmVaildNickname">
+                                    </div>
                                 </div>
-                                <div class="editInput">
-                                    <input th:value="${nickname}" id="nickname" name="nickname" type="text"/>
-                                </div>
-                                <div id="confirmVaildNickname">
-                                </div>
-                            </div>
-                            <div class="editWrapper">
-                                <div class="editTitle">
+                                <div class="editWrapper">
+                                    <div class="editTitle">
                                 <span>
                                     소개
                                 </span>
+                                    </div>
+                                    <div class="editInput">
+                                        <input th:value="${description}" id="description" name="description"
+                                               type="text"/>
+                                    </div>
                                 </div>
-                                <div class="editInput">
-                                    <input th:value="${description}" id="description" name="description" type="text"/>
+                                <div class="errorWrapper">
+                                    <p id="errorMessage"></p>
                                 </div>
-                            </div>
-                            <div class="errorWrapper">
-                                <p id="errorMessage"></p>
-                            </div>
-                            <div class="editWrapper">
-                                <button type="submit">Sumbit</button>
-                            </div>
-                        </form>
+                                <div class="editWrapper">
+                                    <button type="submit">Sumbit</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-</div>
-</body>
+            </section>
+        </main>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/MyEditPage.js}"></script>
+</th:block>
 </html>
+
+

@@ -1,31 +1,21 @@
-#container{
-    position: relative;
-    width: 1600px;
-    margin: 0 auto;
-    display: flex;
-}
-
-main{
-    margin-top: 20px;
-}
-
-
 .write{
     width: 1200px;
     height: 700px;
     margin: 0 auto;
 }
 
-
-.inner{
-    width: 100%;
+.writeWrapper{
+    width: 100% !important;
 }
 
-.innerHeader{
-    border-bottom: 1px solid #e2e2e2;
+.boardHeader{
+    padding-bottom: 3px;
+    border-bottom: 3px solid #837ed7;
 }
 
-.type{
+.boardAlias a{
+    color: #6f6abe;
+    font-weight: bolder;
     font-size: 2rem;
 }
 
@@ -41,39 +31,71 @@ main{
     font-size: 1rem;
 }
 
-.checkBoxWrapper span {
+.inputWrapper{
+    display: flex;
+}
+
+.inputWrapper .checkBoxWrapper{
     display: flex;
     align-items: center;
+    margin-right: 10px;
+}
+
+.inputWrapper .checkBoxWrapper span {
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    font-size: 15px;
+}
+
+.inputWrapper .checkBoxWrapper span label:last-of-type {
     padding-left: 5px;
 }
 
 input[type="checkbox"] + label[id="checkBoxLabel"] {
     display: inline-block;
-    width: 1rem;
-    height: 1rem;
+    width: 17px;
+    height: 17px;
     border: 1px solid #bcbcbc;
+    border-radius: 50%;
     cursor: pointer;
+    position: relative;
+    background-color: transparent;
 }
 
-input[type="checkbox"]:checked + label[id="checkBoxLabel"] {
-    background-color: #666666;
+input[type="checkbox"]:checked + label[id="checkBoxLabel"]::before {
+    content: '';
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #6f6bad;
+    border-radius: 50%;
+    z-index: 1;
 }
 
 input[type="checkbox"] {
     display: none;
 }
 
-.ckEditorWrapper{
-    margin-top: 20px;
+.inputWrapper .submitButtonWrapper button{
+    display: block;
+    font-size: 1rem;
+    padding: 5px 10px;
+    background-color: #837ed7;
+    color: white;
+    border-radius: 4px;
 }
 
-.checkBoxWrapper span label:last-of-type {
-    padding-left: 10px;
+
+.ckEditorWrapper{
+    margin-top: 5px;
 }
 
 .ckEditorWrapper input {
     margin-top: 7px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     height: 2rem;
     line-height: 2rem;
     width: 100%;
@@ -82,14 +104,8 @@ input[type="checkbox"] {
     font-size: 1rem;
     color: #555;
     background: white;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #837ed7;
 }
-
-.ckEditorButtonWrapper button{
-    display: block;
-    height: 1rem;
-}
-
 
 
 

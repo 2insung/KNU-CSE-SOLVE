@@ -1,20 +1,5 @@
-#container{
-    position: relative;
-    width: 1600px;
-    margin: 0 auto;
-    display: flex;
-}
-
-main{
-    margin-top: 20px;
-}
-
-.type{
-    font-size: 2rem;
-}
-
 .board{
-    width: 1200px;
+    width: 1100px;
     height: 700px;
     margin: 0 auto;
 }
@@ -23,173 +8,65 @@ main{
     width: 100% !important;
 }
 
-.inner{
-    width: 100%;
+.boardHeader{
+    padding-bottom: 3px;
+    border-bottom: 0.1px solid #837ed7;
 }
 
-.innerHeader{
-    border-bottom: 1px solid black;
+.boardAlias {
+   margin-bottom: 10px;
 }
 
+.boardAlias a{
+    color: #6f6abe;
+    font-weight: bolder;
+    font-size: 2rem;
+}
+
+.description{
+    font-size: 1rem;
+    padding: 3px 0;
+}
 
 .option{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
-    height: 2rem;
+    border-bottom: 3px solid #837ed7;
 }
 
-.option .description{
-    font-size: 1rem;
-}
-
-.option button{
-    background-color: blue;
-    border: none;
+.writePostButton{
+    font-size: 14px;
+    background-color: #837ed7;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
     color: white;
     cursor: pointer;
-    padding: 5px 5px;
+    padding: 5px 10px;
 }
 
-.option button a {
+.selectView{
+    display: flex;
+}
+
+.selectViewButton{
+    font-size: 14px;
+    background-color: white;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    color: #837ed7;
+    cursor: pointer;
+    margin: 5px 5px;
+    padding: 5px 10px;
+}
+
+.activeSelectViewButton{
+    font-size: 14px;
+    background-color: #837ed7;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
     color: white;
-    text-decoration: none;
-}
-
-
-.postPreviewListWrapper li{
-    list-style: none;
-}
-
-.postPreviewWrapper{
-    border-bottom: 1px solid #e2e2e2;
-    height: 120px;
-    display: flex;
-    align-items: center;
-}
-
-.authorWrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-}
-
-.author{
-    padding: 5px 5px 10px 5px;
-}
-
-.thumbnailWrapper{
-    width: 90px;
-    height: 90px;
-    margin-left: 10px;
-    overflow: hidden;
-    border: 2px solid #e2e2e2;
-}
-
-.thumbnailWrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.contentWrapper{
-    display: flex;
-    flex-direction: column;
-    width: 600px;
-    margin: 0px 50px 0px 50px;
-}
-
-.default{
-    font-size: 1.1rem;
-    height: 26px;
-    font-weight: bold;
-}
-
-.contentWrapper .description{
-    font-size: 13px;
-    margin-top: 11px;
-    height: 53px;
-}
-
-.createdAtWrapper{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
-}
-
-.createdAt{
-    padding: 5px 5px 10px 5px;
-}
-
-.infoWrapper{
-    width: auto;
-    height: 90px;
-    display: flex;
-    flex-direction: column;
-    margin: 0px 40px;
-}
-
-.infoContentWrapper{
-    width: auto;
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-
-.infoContentWrapper span{
-    display: block;
-    width: 60px;
-    margin: 0 5px;
-}
-
-.infoImageWrapper{
-    width: 20px;
-    height: 20px;
-    overflow: hidden;
-}
-
-.infoImageWrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.noticeWrapper{
-    border-bottom: 1px solid black;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    background-color: peachpuff;
-}
-
-.noticeImageWrapper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 14px;
-    width: 90px;
-    height: 25px;
-    overflow: hidden;
-}
-
-.noticeImageWrapper img{
-    width: 25px;
-    height: 100%;
-    object-fit: cover;
-}
-
-.notice{
-    font-size: 0.8rem;
-    font-weight: bold;
-}
-
-.title{
-    margin-bottom: 1px;
-}
-
-.title:hover{
-    text-decoration: underline;
+    cursor: pointer;
+    margin: 5px 5px;
+    padding: 5px 10px;
 }

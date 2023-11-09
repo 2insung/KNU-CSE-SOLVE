@@ -14,9 +14,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setHeader("Redirect-URL", "/login-page?authentication=false");
+            response.setHeader("Redirect-URL", "/login?authentication=false");
         } else {
-            response.sendRedirect("/login-page?authentication=false");
+            response.sendRedirect("/login?authentication=false");
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.project.web;
 
-import com.project.web.controller.dto.signup.SignUpRequestDto;
-import com.project.web.service.SignUpService;
+import com.project.web.controller.auth.dto.SignUpRequestDto;
+import com.project.web.service.auth.SignUpService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.project.web;
 
-import com.project.web.service.SignUpEmailService;
+import com.project.web.service.auth.SignUpEmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

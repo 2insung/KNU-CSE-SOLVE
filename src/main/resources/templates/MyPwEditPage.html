@@ -1,39 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{GeneralLayout}">
 <head>
-    <title>KNU CSE Solve</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link href="/css/Common.css" rel="stylesheet"/>
-    <link href="/css/Header.css" rel="stylesheet"/>
-    <link href="/css/MyPage-PwEdit.css" rel="stylesheet"/>
-    <link href="/css/MyPageSideBar.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/MyPage-PwEdit.js}"></script>
-    <script th:src="@{/js/Header.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/MyPwEditPage.css}"/>
 </head>
-<body>
-<div th:replace="Header :: headerFragment"></div>
-<div id="container">
-    <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-    <main>
-        <section>
-            <div class="profile">
-                <div class="profileWrapper">
-                    <div class="inner">
-                        <div class="title">
-                            비밀번호 변경
+<th:block layout:fragment="contentFragment">
+    <div id="container">
+        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
+        <main>
+            <section>
+                <div class="profile">
+                    <div class="profileWrapper">
+                        <div class="inner">
+                            <div class="title">
+                                비밀번호 변경
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-</div>
-</body>
+            </section>
+        </main>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/MyPwEditPage.js}"></script>
+</th:block>
 </html>

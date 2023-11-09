@@ -1,10 +1,10 @@
 package com.project.web;
 
-import com.project.web.controller.dto.auth.OAuthAttributes;
-import com.project.web.controller.dto.auth.PrincipalDetails;
-import com.project.web.domain.Member;
-import com.project.web.repository.MemberRepository;
-import com.project.web.service.CustomOauth2UserService;
+import com.project.web.controller.auth.dto.OAuthAttributes;
+import com.project.web.controller.auth.dto.PrincipalDetails;
+import com.project.web.domain.member.Member;
+import com.project.web.repository.member.MemberRepository;
+import com.project.web.service.auth.CustomOauth2UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;

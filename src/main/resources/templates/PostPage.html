@@ -1,121 +1,182 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{GeneralLayout}">
 <head>
-    <title>KNU CSE Solve</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link href="/css/Common.css" rel="stylesheet"/>
-    <link href="/css/Header.css" rel="stylesheet"/>
-    <link href="/css/PostPage.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/PostPage.js}"></script>
-    <script th:src="@{/js/Header.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/PostPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/PostPreviewList.css}"/>
 </head>
-<body>
-<div th:replace="Header :: headerFragment"></div>
-<main>
-    <section>
-        <div class="post">
-            <div class="postWrapper">
-                <div class="inner">
-                    <div class="type">
-                        <a th:href="@{'/board?type=' + ${type}}" th:text="${alias}"></a>
-                    </div>
-                    <div class="contentWrapper">
-                        <div class="innerHeader">
-                            <div class="title" th:text="${postContent.title}"></div>
-                            <div class="authorInfo">
-                                <div class="author">
-                                    <div class="authorImage">
-                                        <img th:src="${postContent.profileImage != null ? postContent.profileImage : '/img/tempProfile.jpg'}">
-                                    </div>
-                                    <div class="authorNickname">
-                                        <a th:href="@{/my-page/{n}(n=${postContent.author})}"
-                                           th:text="${postContent.author}"></a>
-                                    </div>
-                                </div>
-                                <div class="time">
-                                    <span th:text="${postContent.createdAt}"></span>
-                                    <span th:text="'(마지막 수정일 : ' + ${postContent.updatedAt} + ')'"></span>
-                                </div>
-                            </div>
-                            <div class="postInfo">
-                                <div>
-                                    <span th:text="'조회수 ' + ${postContent.hits}"></span>
-                                    <span th:text="'추천수 ' + ${postContent.recommend}"></span>
-                                    <span th:text="'댓글수 ' + ${postContent.commentCount}"></span>
-                                </div>
-                                <div class="buttonWrapper">
-                                    <button>수정</button>
-                                    <button>삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contentBobyWrapper">
-                            <div class="contentBody" th:utext="${postContent.body}"></div>
-                            <div class="recommendWrapper">
-                                <div class="recommend">
-                                    <div class="recommendImage">
-                                        <img src="/img/thumb.png">
-                                    </div>
-                                    <span th:text="${postContent.recommend}"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="commentListWrapper">
-                            <div class="commentInputWrapper">
-                                <ul th:each="comment : ${commentList}">
-                                    <li>
-                                        <div class="commentWrapper">
-                                            <div class="userWrapper">
-                                                <div class="user">
-                                                    <div class="userImageWrapper">
-                                                        <img th:src="${comment.profileImage != null ? comment.profileImage : '/img/tempProfile.jpg'}">
-                                                    </div>
-                                                    <div class="userNickname">
-                                                        <a th:href="@{/my-page/{n}(n=${comment.author})}"
-                                                           th:text="${comment.author}"></a>
-                                                    </div>
-                                                </div>
-                                                <div class="commentButtonWrapper">
-                                                    <button>삭제</button>
-                                                </div>
-                                            </div>
-                                            <div class="commentBodyWrapper">
-                                                <div th:text="${comment.body}"></div>
-                                            </div>
-                                        </div>
-                                        <form class="commentFormParent"
-                                              th:action="@{/private/saveComment(type=${postContent.type}, postId=${postContent.id}, commentId=${comment.id})}"
-                                              method="post" style="display: none;">
-                                            <textarea class="commentInput" name="body"></textarea>
-                                            <div class="submitButtonWrapper">
-                                                <button>입력</button>
-                                            </div>
-                                        </form>
-                                    </li>
-                                </ul>
-                                <form id="commentForm"
-                                      th:action="@{/private/saveComment(type=${postContent.type}, postId=${postContent.id})}"
-                                      method="post">
-                                    <textarea class="commentInput" name="body"></textarea>
-                                    <div class="submitButtonWrapper">
-                                        <button>입력</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+<th:block layout:fragment="contentFragment">
+    <div class="post">
+        <div class="board-header">
+            <div class="board-alias">
+                <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
+            </div>
+        </div>
+        <div class="post-header">
+            <div class="post-title" th:text="${post.title}"></div>
+            <div class="post-author-wrapper">
+                <div class="post-author-image">
+                    <img th:src="${post.authorProfileImage != null ? post.authorProfileImage : '/img/tempProfile.jpg'}">
+                </div>
+                <div class="post-author-nickname">
+                    <a th:href="@{/my/{nickname}(nickname=${post.authorNickname})}"
+                       th:text="${post.authorNickname}"></a>
+                </div>
+            </div>
 
+            <div class="post-info-wrapper">
+                <div class="time">
+                    <span th:text="${post.createdAt}"></span>
+                    <span th:text="'(수정 : ' + ${post.updatedAt} + ')'"></span>
+                </div>
+                <div class="count">
+                    <span th:text="'조회수 ' + ${post.hitCount}"></span>
+                    <span th:text="'추천수 ' + ${post.recommendCount}"></span>
+                    <span th:text="'댓글수 ' + ${post.commentCount}"></span>
                 </div>
             </div>
         </div>
-    </section>
-</main>
-</body>
+        <div class="post-option-wrapper">
+            <div class="post-rewrite-button" th:if="${post.isMine}">
+                <a th:href="@{/rewrite/{postAuthor}/{boardType}/{postId}(postAuthor=${post.authorNickname},boardType=${board.type},postId=${postId})}">
+                    수정
+                </a>
+            </div>
+            <button class="post-delete-button"
+                    th:if="${post.isMine}"
+                    th:data-boardType="${board.type}"
+                    th:data-postAuthor="${post.authorNickname}"
+                    th:data-postId="${post.postId}"
+                    onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postAuthor'), this.getAttribute('data-postId'))">
+                삭제
+            </button>
+        </div>
+        <div class="post-body-wrapper">
+            <div class="post-body" th:utext="${post.body}"></div>
+            <div class="post-recommend">
+                <div class="post-recommend-image">
+                    <img src="/img/thumb.png">
+                </div>
+                <div class="post-recommend-count">
+                    <span id="postRecommendCount" th:text="${post.recommendCount}"></span>
+                </div>
+            </div>
+        </div>
+        <div id="commentFragment">
+            <div class="comment-list-wrapper">
+                <div class="comment-count">
+                    <span th:text="'댓글수 ' + ${commentCount}"></span>
+                </div>
+                <ul th:each="comment : ${commentList}">
+                    <li class="deleted-comment" th:if="${comment.isDeleted}">
+                        삭제된 댓글입니다.
+                    </li>
+                    <li th:unless="${comment.isDeleted}">
+                        <div th:class="${comment.isRoot ? 'root-comment-wrapper' : 'child-comment-wrapper'}">
+                            <div class="comment-header">
+                                <div class="comment-author-wrapper">
+                                    <div class="comment-author-image">
+                                        <img th:src="${comment.authorProfileImage != null ? comment.authorProfileImage : '/img/tempProfile.jpg'}">
+                                    </div>
+                                    <div class="comment-author-nickname">
+                                        <a th:href="@{/my/{nickname}(nickname=${comment.authorNickname})}"
+                                           th:text="${comment.authorNickname}"></a>
+                                    </div>
+                                    <div class="post-author" th:if="${comment.isPostAuthor}">
+                                        작성자
+                                    </div>
+                                </div>
+                                <div class="comment-button-wrapper">
+                                    <button type="button"
+                                            class="delete-comment-button"
+                                            th:if="${comment.isMine}"
+                                            th:data-commentAuthor="${comment.authorNickname}"
+                                            th:data-commentId="${comment.commentId}"
+                                            th:data-postId="${comment.postId}"
+                                            th:data-currentPageNumber="${commentPageNumber}"
+                                            onclick="
+                                                deleteComment(
+                                                    this.getAttribute('data-commentAuthor'),
+                                                    this.getAttribute('data-commentId'),
+                                                    this.getAttribute('data-postId'),
+                                                    this.getAttribute('data-currentPageNumber')
+                                                )"
+                                    >삭제
+                                    </button>
+                                    <button type="button"
+                                            class="show-form-button"
+                                            onclick="showForm(this)">
+                                        대댓글
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="comment-body-wrapper">
+                                <div class="parent-author"
+                                     th:if="${comment.isRoot == false && comment.isRootChild == false}"
+                                     th:text="${comment.parentAuthorNickname}"
+                                ></div>
+                                <div class="comment-body" th:text="${comment.body}"></div>
+                            </div>
+                            <div class="comment-time-wrapper">
+                                <div class="comment-created-at"
+                                     th:text="${comment.createdAt}"
+                                ></div>
+                            </div>
+                        </div>
+                        <form id="childCommentForm" class="child-comment-form" style="display: none;">
+                            <textarea class="comment-input" th:id="'childContent-' + ${comment.commentId}"
+                                      name="body"></textarea>
+                            <div class="submit-button-wrapper">
+                                <button type="button"
+                                        th:data-commentId="${comment.commentId}"
+                                        th:data-postId="${comment.postId}"
+                                        th:data-currentPageNumber="${commentPageNumber}"
+                                        onclick="saveChildComment(this.getAttribute('data-commentId'), this.getAttribute('data-postId'), this.getAttribute('data-currentPageNumber'))">
+                                    입력
+                                </button>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+                <div class="comment-page-number-list-wrapper">
+                    <button th:if="${commentPrevPageNumber != null}"
+                            th:data-postId="${postId}"
+                            th:data-prevPageNumber="${commentPrevPageNumber}"
+                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-prevPageNumber'))">
+                        <div class="comment-arrow-left">◀</div>
+                    </button>
+                    <ul th:each="number : ${commentPageNumberList}">
+                        <li th:class="${number == commentPageNumber} ? 'comment-active-page-number' : 'comment-page-number'"
+                            th:text="${number}"
+                            th:data-postId="${postId}"
+                            th:data-pageNumber="${number}"
+                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
+                        </li>
+                    </ul>
+                    <button th:if="${commentNextPageNumber != null}"
+                            th:data-postId="${postId}"
+                            th:data-nextPageNumber="${commentNextPageNumber}"
+                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-nextPageNumber'))">
+                        <div class="comment-arrow-right">▶</div>
+                    </button>
+                </div>
+                <form id="rootCommentForm" class="root-comment-form">
+                    <textarea id="rootContent" class="comment-input" name="body"></textarea>
+                    <div class="submit-button-wrapper">
+                        <button type="button"
+                                class="submit-button"
+                                th:data-postId="${postId}"
+                                onclick="saveRootComment(this.getAttribute('data-postId'))">입력
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <th:block th:replace="PostPreviewList :: postPreviewListFragment"></th:block>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/PostPage.js}"></script>
+</th:block>
 </html>

@@ -4,35 +4,61 @@ $(document).ready(function () {
     CKEDITOR.replace('content', {
         filebrowserUploadUrl: $ckUploadPath,
         width: '1200px',
-        height: '400px',
+        height: '500px',
         resize_enabled: false
     })
 })
 
-document.addEventListener("DOMContentLoaded", function () {
-    var writeForm = document.getElementById("writeForm");
+function savePost(boardType) {
+    var boardType = boardType
+    var title = $("#title").val()
+    var content = CKEDITOR.instances.content.getData();
+    var isNotification = $("#isNotification").is(":checked")
 
-    writeForm.addEventListener("submit", function (event) {
-        var title = $("#title").val()
-        var content = $("#content").val()
+    if (title === "") {
+        alert("제목을 입력해주세요.")
+        return
+    }
 
-        if (title === "") {
-            alert("제목을 입력해주세요.")
-            event.preventDefault()
-            return
+    if (title.length > 30) {
+        alert("제목은 30자 이하만 가능합니다.");
+        return;
+    }
+
+    if (content === "") {
+        alert("내용을 입력해주세요.")
+        return;
+    }
+
+    $.ajax(
+        {
+            url: "/api/save-post",
+            type: "POST",
+            data: JSON.stringify({
+                boardType: boardType,
+                title: title,
+                body: content,
+                isNotice: isNotification
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRF-TOKEN", token);
+            },
+            success: function (response) {
+                window.location.href = "/board/" + response.boardType
+            },
+            error: function (error) {
+                if (error.status === 401 || error.status === 403) {
+                    var redirectUrl = xhr.getResponseHeader("Redirect-URL");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }
+                else {
+                    alert(error.responseText)
+                }
+            }
         }
-
-        if (title.length > 30) {
-            alert("닉네임은 30자 이하만 가능합니다.");
-            event.preventDefault()
-            return;
-        }
-
-        if (content === "") {
-            alert("내용을 입력해주세요.")
-            event.preventDefault();
-            return;
-        }
-
-    })
-});
+    )
+}

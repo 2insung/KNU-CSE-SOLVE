@@ -9,6 +9,7 @@ group = 'com.project.web'
 version = '0.0.1'
 sourceCompatibility = '11'
 
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -26,7 +27,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'mysql:mysql-connector-java'
-    implementation 'org.hibernate:hibernate-spatial:5.6.11.Final'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -38,11 +38,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:4.8.0'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.data:spring-data-redis'
-    implementation 'io.lettuce:lettuce-core'
-    implementation 'it.ozimov:embedded-redis:0.7.2'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-    implementation 'org.springframework.session:spring-session-data-redis:2.7.0'
+    implementation 'org.springframework.session:spring-session-jdbc'
     implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
     implementation 'org.jsoup:jsoup:1.14.2'
 }

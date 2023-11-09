@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="postPreviewListFragment">
+    <div class="post-preview-list-wrapper">
+        <ul th:each="postPreview : ${postPreviewList}">
+            <li th:if="${postPreview.isNotice}">
+                <div class="notice-post-preview-wrapper">
+                    <div class="notice-post-image">
+                        <img src="/img/notice.png">
+                    </div>
+                    <div class="notice-post-preview-content-wrapper">
+                        <div class="notice-post-preview-title">
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId})}"
+                               th:text="${postPreview.title}"></a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li th:unless="${postPreview.isNotice}">
+                <div class="post-preview-wrapper">
+                    <div class="post-thumbnail-wrapper">
+                        <img id="previewImage"
+                             th:src="${postPreview.thumbnail != null ? postPreview.thumbnail : '/img/tempProfile.jpg'}">
+                    </div>
+                    <div class="post-preview-content-wrapper">
+                        <div class="post-preview-title">
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, page=${boardPageNumber})}"
+                               th:text="${postPreview.title}"></a>
+                        </div>
+                        <div class="post-preview-summary" th:text="${postPreview.summary}"></div>
+                    </div>
+                    <div class="post-preview-author-wrapper">
+                        <div class="post-preview-author-nickname" th:text="${postPreview.authorNickname}"></div>
+                    </div>
+                    <div class="post-time-wrapper">
+                        <div class="post-created-at" th:text="${postPreview.createdAt}"></div>
+                    </div>
+                    <div class="post-count-wrapper">
+                        <div class="post-count">
+                            <div class="post-count-image">
+                                <img src='/img/hit.png'>
+                            </div>
+                            <span th:text="${postPreview.hitCount}"></span>
+                        </div>
+                        <div class="post-count">
+                            <div class="post-count-image">
+                                <img src="/img/comment2.png">
+                            </div>
+                            <span th:text="${postPreview.commentCount}"></span>
+                        </div>
+                        <div class="post-count">
+                            <div class="post-count-image">
+                                <img src="/img/thumb.png">
+                            </div>
+                            <span th:text="${postPreview.recommendCount}"></span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="board-page-number-list-wrapper">
+        <a th:if="${boardPrevPageNumber != null}"
+           th:href="@{/board/{boardType}(boardType=${board.type}, page=${boardPrevPageNumber})}">
+            <div class="board-arrow-left">◀</div>
+        </a>
+        <ul th:each="number : ${boardPageNumberList}">
+            <li>
+                <a th:href="@{/board/{boardType}(boardType=${board.type}, page=${number})}">
+                    <div th:text="${number}"
+                         th:class="${number == boardPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+                </a>
+            </li>
+        </ul>
+        <a th:if="${boardNextPageNumber != null}"
+           th:href="@{/board/{boardType}(boardType=${board.type}, page=${boardNextPageNumber})}">
+            <div class="board-arrow-right">▶</div>
+        </a>
+    </div>
+</div>
+</html>

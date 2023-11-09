@@ -1,99 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{GeneralLayout}">
 <head>
-    <title>KNU CSE Solve</title>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link href="/css/Common.css" rel="stylesheet"/>
-    <link href="/css/Header.css" rel="stylesheet"/>
-    <link href="/css/BoardPage.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/BoardPage.js}"></script>
-    <script th:src="@{/js/Header.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/BoardPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/PostPreviewList.css}"/>
 </head>
-<body>
-<div th:replace="Header :: headerFragment"></div>
-<main>
-    <section>
-        <div class="board">
-            <div class="boardWrapper">
-                <div class="inner">
-                    <div class="type">
-                        <a th:href="@{'/board?type=' + ${type}}" th:text="${alias}"></a>
-                    </div>
-                    <div class="innerHeader">
-                        <div class="option">
-                            <div th:text="${description}" class="description"></div>
-                            <button><a th:href="@{'/write?type=' + ${type}}">글쓰기</a></button>
-                        </div>
-                    </div>
-                    <div class="postPreviewListWrapper">
-                        <ul th:each="postPreview : ${postPreviewList}">
-                            <li th:if="${postPreview.isNotification}">
-                                <div class="noticeWrapper">
-                                    <div class="noticeImageWrapper">
-                                        <img src="/img/notice.png">
-                                    </div>
-                                    <div class="contentWrapper">
-                                        <div class="title notice">
-                                            <a th:href="@{'/post?type=' + ${type} + '&id=' + ${postPreview.id}}"
-                                               th:text="${postPreview.title}"></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li th:unless="${postPreview.isNotification}">
-                                <div class="postPreviewWrapper">
-                                    <div class="thumbnailWrapper">
-                                        <img id="previewImage"
-                                             th:src="${postPreview.thumbnail != null ? postPreview.thumbnail : '/img/tempProfile.jpg'}">
-                                    </div>
-                                    <div class="contentWrapper">
-                                        <div class="title default">
-                                            <a th:href="@{'/post?type=' + ${type} + '&id=' + ${postPreview.id}}"
-                                               th:text="${postPreview.title}"></a>
-                                        </div>
-                                        <div class="description" th:text="${postPreview.summary}"></div>
-                                    </div>
-                                    <div class="authorWrapper">
-                                        <div class="author" th:text="${postPreview.author}"></div>
-                                    </div>
-                                    <div class="createdAtWrapper">
-                                        <div class="createdAt" th:text="${postPreview.createdAt}"></div>
-                                    </div>
-                                    <div class="infoWrapper">
-                                        <div class="infoContentWrapper">
-                                            <div class="infoImageWrapper">
-                                                <img src='/img/hit.png'>
-                                            </div>
-                                            <span th:text="${postPreview.hits}"></span>
-                                        </div>
-                                        <div class="infoContentWrapper">
-                                            <div class="infoImageWrapper">
-                                                <img src="/img/comment2.png">
-                                            </div>
-                                            <span th:text="${postPreview.commentCount}"></span>
-                                        </div>
-                                        <div class="infoContentWrapper">
-                                            <div class="infoImageWrapper">
-                                                <img src="/img/thumb.png">
-                                            </div>
-                                            <span th:text="${postPreview.recommend}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+<th:block layout:fragment="contentFragment">
+    <div class="board">
+        <div class="boardWrapper">
+            <div class="boardHeader">
+                <div class="boardAlias">
+                    <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
                 </div>
+                <div th:text="${board.description}" class="description"></div>
             </div>
+            <div class="option">
+                <div class="selectView">
+                    <a th:href="@{/board/{boardType}(boardType=${board.type})}">
+                        <div th:class="${boardIsViewHotPostPreviewList == false} ? 'activeSelectViewButton' : 'selectViewButton'">
+                            전체글
+                        </div>
+                    </a>
+                    <a th:href="@{/board/{boardType}(boardType=${board.type}, hot=true)}">
+                        <div th:class="${boardIsViewHotPostPreviewList == true} ? 'activeSelectViewButton' : 'selectViewButton'">
+                            인기글
+                        </div>
+                    </a>
+                </div>
+                <a th:href="@{/write/{boardType}(boardType=${board.type})}">
+                    <div class="writePostButton">게시글 작성하기</div>
+                </a>
+            </div>
+            <th:block th:replace="PostPreviewList :: postPreviewListFragment"></th:block>
         </div>
-    </section>
-</main>
-</body>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/BoardPage.js}"></script>
+</th:block>
 </html>

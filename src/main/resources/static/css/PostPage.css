@@ -1,57 +1,42 @@
-#container{
-    position: relative;
-    width: 1600px;
-    margin: 0 auto;
-    display: flex;
-}
-
-main{
-    margin-top: 20px;
-}
-
-.type{
-    font-size: 2rem;
-}
-
-.post{
-    width: 1200px;
+.post {
+    width: 1100px;
     height: 700px;
     margin: 0 auto;
 }
 
-.postWrapper{
-    width: 100% !important;
+.board-header {
+    border-bottom: 3px solid #837ed7;
+    padding-bottom: 3px;
 }
 
-.inner{
-    width: 100%;
+.board-alias {
+    margin-bottom: 10px;
 }
 
-.contentWrapper{
-    padding: 5px;
+.board-alias a {
+    color: #6f6abe;
+    font-weight: bolder;
+    font-size: 2rem;
 }
 
-.innerHeader{
-    margin-top: 10px;
+.post-header {
     border-bottom: 1px solid #e2e2e2;
-}
-
-.title{
-    font-size: 1.4rem;
-}
-
-.authorInfo{
-    display: flex;
-    align-items: center;
+    padding-bottom: 5px;
     margin-top: 10px;
 }
 
-.author{
-    display: flex;
-    align-items: center;
+.post-title {
+    font-size: 1.5rem;
+    padding-left: 10px;
 }
 
-.authorImage{
+.post-author-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.post-author-image {
     width: 25px; /* 원하는 크기로 변경 가능 */
     height: 25px; /* 원하는 크기로 변경 가능 */
     border-radius: 50%;
@@ -59,173 +44,340 @@ main{
     border: 2px solid #e2e2e2; /* 2px 너비의 검은색 테두리 추가 */
 }
 
-.authorImage img{
+.post-author-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.author span{
-    display: block;
-}
-
-.authorNickname{
+.post-author-nickname {
     margin-left: 5px;
 }
 
-.time{
+.post-info-wrapper {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-left: 10px;
+    margin-top: 3px;
 }
 
-.time span{
-    display: block;
+.post-info-wrapper span {
     font-size: 14px;
     margin-right: 5px;
 }
 
-.postInfo{
-    margin-top: 3px;
+.post-info-wrapper .time {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    margin-left: 10px;
 }
 
-.postInfo span{
-    margin-right: 5px;
+.post-info-wrapper .count span:not(:first-child)::before {
+    display: inline-block;
+    content: "|";
     font-size: 15px;
+    color: black;
+    vertical-align: top;
+    padding: 0 4px 0 1px;
 }
 
-.buttonWrapper{
+.post-option-wrapper {
     display: flex;
-    gap: 10px;
+    justify-content: flex-end;
 }
 
-.buttonWrapper button{
-    height: 1rem;
+.post-option-wrapper .post-rewrite-button {
+    font-size: 14px;
+    background-color: white;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    color: #837ed7;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 5px 5px;
 }
 
-.contentBobyWrapper{
+.post-option-wrapper .post-delete-button {
+    font-size: 14px;
+    background-color: #fd6666;
+    border: 1px solid red;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 5px 5px;
+}
+
+.post-body-wrapper {
     padding: 10px;
+    margin-bottom: 20px;
 }
 
-.contentBody{
+.post-body {
 
 }
 
-.recommendWrapper{
+.post-recommend {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    width: 100px;
     height: 50px;
+    border: 2px solid #837ed7;
+    border-radius: 10%;
+    margin: 0 auto;
     margin-top: 50px;
 }
 
-.recommend{
-    width: 100px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    border: 1px solid black;
-}
-
-.recommendImage{
-    width: 40px;
-    height: 40px;
+.post-recommend .post-recommend-image {
+    width: 35px;
+    height: 35px;
     overflow: hidden;
 }
 
-.recommendImage img{
+.post-recommend .post-recommend-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.recommend span{
-    display: block;
-    font-size: 1.2rem;
-    margin-left: 10px;
+.post-recommend .post-recommend-count {
+    display: flex;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.comment-list-wrapper {
+    padding-top: 10px;
+}
+
+.comment-count {
+    padding-left: 5px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #837ed7;
+}
+
+.deleted-comment {
+    background: #efefef;
+    color: #c2b6b6;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 5px 5px;
+}
+
+.root-comment-wrapper {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.child-comment-wrapper {
+    padding-left: 30px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+#commentFragment {
+    padding-bottom: 40px;
+    border-bottom: 3px solid #837ed7;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.comment-author-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.comment-author-image {
+    width: 25px; /* 원하는 크기로 변경 가능 */
+    height: 25px; /* 원하는 크기로 변경 가능 */
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e2e2e2; /* 2px 너비의 검은색 테두리 추가 */
+}
+
+.comment-author-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comment-author-nickname {
+    margin-left: 5px;
+}
+
+.post-author {
+    font-size: 10px;
+    color: salmon;
+    border-radius: 5px;
+    border: 1px solid salmon;
+    padding: 0 1px;
+    margin-left: 5px;
+}
+
+.comment-button-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.comment-button-wrapper .delete-comment-button {
+    margin-right: 7px;
+    padding: 3px;
+    color: red;
+    border: 1px solid red;
+    border-radius: 3px;
+}
+
+.comment-button-wrapper .show-form-button {
+    margin-right: 7px;
+    padding: 3px;
+    color: grey;
+    border: 1px solid grey;
+    border-radius: 3px;
+}
+
+.comment-body-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.comment-body-wrapper .parent-author {
+    font-size: 13px;
+    font-weight: bolder;
+    padding: 1px 0;
+}
+
+.comment-body-wrapper .comment-body {
+    width: auto;
+    word-wrap: break-word;
+}
+
+.comment-time-wrapper{
+    padding-left: 5px;
+    font-size: 12px;
+    color: grey;
 }
 
 
-.commentInputWrapper form{
+.child-comment-form {
     display: flex;
+    align-items: center;
     height: 100px;
     padding: 10px;
-    margin-top: 20px;
-    background-color: #e2e2e2;
+    background-color: #d2d1ff;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
 }
 
-.commentInput{
+.child-comment-form .comment-input {
     width: 900px;
     height: 100%;
     box-sizing: border-box;
     font-size: 14px;
     color: #555;
-    background: #f3f3f3;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background: white;
     padding: 5px;
     resize: none;
 }
 
-.submitButtonWrapper{
+.child-comment-form .submit-button-wrapper {
     width: 100px;
     height: 70%;
-    margin-left: 20px;
+    margin-left: 40px;
 }
 
-.submitButtonWrapper button{
-    width: 100%;      /* 버튼의 너비를 wrapper에 꽉 차게 설정 */
-    height: 100%;     /* 버튼의 높이를 wrapper에 꽉 차게 설정 */
-    background-color: white; /* 버튼의 배경색 */
-    color: black;     /* 버튼의 글자색 */
-    border: none;     /* 버튼의 테두리 제거 */
-    border-radius: 5px; /* 버튼 모서리 둥글게 */
-    cursor: pointer;  /* 마우스를 버튼 위에 올리면 포인터로 변경 */
-    font-size: 16px;  /* 글자 크기 */
-}
-
-
-.commentWrapper{
+.child-comment-form .submit-button-wrapper button {
     width: 100%;
-    padding: 5px;
-    border-bottom: 1px solid #e2e2e2;
+    height: 100%;
+    font-size: 16px;
+    background-color: white;
+    border: 1px solid #837ed7;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.userWrapper{
+.comment-page-number-list-wrapper {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
     margin-top: 10px;
 }
 
-.user{
+.comment-page-number-list-wrapper li {
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.comment-arrow-left {
+    color: #837ed7;
+}
+
+.comment-arrow-right {
+    color: #837ed7;
+}
+
+.comment-active-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: #837ed7;
+    color: white;
+}
+
+.comment-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: white;
+}
+
+
+.root-comment-form {
     display: flex;
     align-items: center;
+    height: 100px;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #d2d1ff;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
 }
 
-.userImageWrapper{
-    width: 25px; /* 원하는 크기로 변경 가능 */
-    height: 25px; /* 원하는 크기로 변경 가능 */
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #e2e2e2; /* 2px 너비의 검은색 테두리 추가 */
+.root-comment-form .comment-input {
+    width: 900px;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #555;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background: white;
+    padding: 5px;
+    resize: none;
 }
 
-.userImageWrapper img{
+.root-comment-form .submit-button-wrapper {
+    width: 100px;
+    height: 70%;
+    margin-left: 40px;
+}
+
+.root-comment-form .submit-button-wrapper button {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-}
-
-.userNickname{
-    margin-left: 5px;
-}
-
-.commentBodyWrapper{
-    padding: 5px;
-}
-
-.commentInputWrapper li{
-    list-style: none;
+    font-size: 16px;
+    background-color: white;
+    border: 1px solid #837ed7;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
 }

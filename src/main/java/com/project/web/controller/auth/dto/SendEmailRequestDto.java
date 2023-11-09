@@ -1,0 +1,13 @@
+package com.project.web.controller.auth.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class SendEmailRequestDto {
+    private String username;
+    private String nickname;
+}

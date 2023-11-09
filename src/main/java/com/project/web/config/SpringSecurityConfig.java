@@ -1,8 +1,8 @@
 package com.project.web.config;
 
 import com.project.web.handler.CustomLoginFailureHandler;
-import com.project.web.service.CustomOauth2UserService;
-import com.project.web.service.CustomUserDetailsService;
+import com.project.web.service.auth.CustomOauth2UserService;
+import com.project.web.service.auth.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +20,8 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SpringSecurityConfig {
     private final CustomLoginFailureHandler customLoginFailureHandler;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final CustomOauth2UserService customOauth2UserService;
-
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,8 +36,8 @@ public class SpringSecurityConfig {
 
 
                 .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
 
 
@@ -51,8 +48,6 @@ public class SpringSecurityConfig {
 
 
                 .authorizeRequests()
-                .antMatchers("/private/**").authenticated()
-                .antMatchers("/write").authenticated()
                 .anyRequest().permitAll()
                 .and()
 
@@ -60,8 +55,8 @@ public class SpringSecurityConfig {
                 .formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .loginPage("/public/login")
-                .loginProcessingUrl("/public/login")
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .failureHandler(customLoginFailureHandler)
                 .and()
@@ -71,12 +66,11 @@ public class SpringSecurityConfig {
                 .rememberMeParameter("remember")
                 .tokenValiditySeconds(60 * 60 * 24 * 7)
                 .alwaysRemember(false)
-                .userDetailsService(customUserDetailsService)
                 .and()
 
 
                 .logout()
-                .logoutUrl("/private/logout")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION")
@@ -84,8 +78,7 @@ public class SpringSecurityConfig {
 
                 .oauth2Login()
                 .defaultSuccessUrl("/")
-                .userInfoEndpoint()
-                .userService(customOauth2UserService);
+                .userInfoEndpoint();
 
 
         return http.build();

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>KNU CSE Solve</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link th:href="@{/css/Common.css}" rel="stylesheet"/>
+    <link th:href="@{/css/Header.css}" rel="stylesheet"/>
+    <link th:href="@{/css/GeneralLayout.css}" rel="stylesheet"/>
+</head>
+<body>
+<th:block th:replace="Header :: headerFragment"></th:block>
+<main>
+    <th:block layout:fragment="contentFragment"></th:block>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/Header.js}"></script>
+<th:block layout:fragment="scriptFragment"></th:block>
+</body>
+</html>
