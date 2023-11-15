@@ -137,7 +137,7 @@ nav {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap; /* 너무 많아지면 다음 행으로 내려감 */
-    padding: 20px 40px; /* 메뉴 주위의 패딩 */
+    padding: 20px 40px 5px 40px; /* 메뉴 주위의 패딩 */
 }
 
 dl {
@@ -173,4 +173,17 @@ dd {
 
 dd:last-child {
     margin-bottom: 0; /* 마지막 링크는 추가 간격 없음 */
+}
+
+#boardMenu .more{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 40px;
+}
+
+.more a{
+    font-size: 13px;
+    text-decoration: underline;
+    font-weight: bold;
+    color: black;
 }

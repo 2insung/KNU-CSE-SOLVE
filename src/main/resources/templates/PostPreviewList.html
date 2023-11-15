@@ -2,9 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="postPreviewListFragment">
     <div class="post-preview-list-wrapper">
-        <ul th:each="postPreview : ${postPreviewList}">
-            <li th:if="${postPreview.isNotice}">
-                <div class="notice-post-preview-wrapper">
+        <ul>
+            <li th:each="postPreview : ${postPreviewList}">
+                <div class="notice-post-preview-wrapper" th:if="${postPreview.isNotice}">
                     <div class="notice-post-image">
                         <img src="/img/notice.png">
                     </div>
@@ -15,16 +15,19 @@
                         </div>
                     </div>
                 </div>
-            </li>
-            <li th:unless="${postPreview.isNotice}">
-                <div class="post-preview-wrapper">
+                <div class="post-preview-wrapper" th:unless="${postPreview.isNotice}"
+                     th:classappend="${postPreview.isHot == true ? 'hot-post' : ''}">
                     <div class="post-thumbnail-wrapper">
                         <img id="previewImage"
                              th:src="${postPreview.thumbnail != null ? postPreview.thumbnail : '/img/tempProfile.jpg'}">
                     </div>
                     <div class="post-preview-content-wrapper">
                         <div class="post-preview-title">
-                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, page=${boardPageNumber})}"
+                            <a th:if="${boardIsViewHotPostPreviewList}"
+                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, hot=true, page=${postPageNumber})}"
+                               th:text="${postPreview.title}"></a>
+                            <a th:unless="${boardIsViewHotPostPreviewList}"
+                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, page=${postPageNumber})}"
                                th:text="${postPreview.title}"></a>
                         </div>
                         <div class="post-preview-summary" th:text="${postPreview.summary}"></div>
@@ -60,22 +63,26 @@
         </ul>
     </div>
     <div class="board-page-number-list-wrapper">
-        <a th:if="${boardPrevPageNumber != null}"
-           th:href="@{/board/{boardType}(boardType=${board.type}, page=${boardPrevPageNumber})}">
-            <div class="board-arrow-left">◀</div>
-        </a>
-        <ul th:each="number : ${boardPageNumberList}">
-            <li>
-                <a th:href="@{/board/{boardType}(boardType=${board.type}, page=${number})}">
-                    <div th:text="${number}"
-                         th:class="${number == boardPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+        <ul>
+            <li th:each="postPage, stat : ${postPageNumberList}" th:if="${postPage.pageNumber != null}">
+                <a th:if="${!boardIsViewHotPostPreviewList}"
+                   th:href="@{/board/{boardType}(boardType=${postPage.boardType}, page=${postPage.pageNumber})}">
+                    <div th:if="${stat.first}" class="board-arrow-left">◀</div>
+                    <div th:if="${!stat.first && !stat.last}"
+                         th:text="${postPage.pageNumber}"
+                         th:class="${postPage.pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+                    <div th:if="${stat.last}" class="board-arrow-right">▶</div>
+                </a>
+                <a th:if="${boardIsViewHotPostPreviewList}"
+                   th:href="@{/board/{boardType}(boardType=${postPage.boardType}, hot=true, page=${postPage.pageNumber})}">
+                    <div th:if="${stat.first}" class="board-arrow-left">◀</div>
+                    <div th:if="${!stat.first && !stat.last}"
+                         th:text="${postPage.pageNumber}"
+                         th:class="${postPage.pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+                    <div th:if="${stat.last}" class="board-arrow-right">▶</div>
                 </a>
             </li>
         </ul>
-        <a th:if="${boardNextPageNumber != null}"
-           th:href="@{/board/{boardType}(boardType=${board.type}, page=${boardNextPageNumber})}">
-            <div class="board-arrow-right">▶</div>
-        </a>
     </div>
 </div>
 </html>

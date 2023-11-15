@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Integer> {
     Boolean existsByType(String type);
 
+    Boolean existsByAlias(String alias);
+
     Optional<Board> findByType(String type);
 }

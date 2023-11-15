@@ -45,6 +45,10 @@
     height: 120px;
 }
 
+.hot-post {
+    background-color: #d7f4ff;
+}
+
 .post-thumbnail-wrapper {
     width: 90px;
     height: 90px;
@@ -139,7 +143,7 @@
 }
 
 
-.board-page-number-list-wrapper {
+.board-page-number-list-wrapper ul {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,10 +173,8 @@
 
 .board-arrow-left {
     color: #837ed7;
-    margin-right: 5px;
 }
 
 .board-arrow-right {
     color: #837ed7;
-    margin-left: 5px;
 }

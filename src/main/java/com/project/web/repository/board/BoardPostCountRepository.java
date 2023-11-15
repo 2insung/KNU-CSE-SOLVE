@@ -15,8 +15,8 @@ public interface BoardPostCountRepository extends JpaRepository<BoardPostCount, 
      * 게시글 등록, 삭제 시 사용됨.
     */
     @Modifying
-    @Query("update BoardPostCount bpc set bpc.postCount = bpc.postCount + :value where bpc.board.id = :boardId")
-    int updateByBoardId(Integer boardId, Integer value);
+    @Query("update BoardPostCount bpc set bpc.postCount = bpc.postCount + :value, bpc.hotPostCount = bpc.hotPostCount + :hotValue where bpc.board.id = :boardId")
+    int updateByBoardId(Integer boardId, Integer value, Integer hotValue);
 
     @Query("select bpc from BoardPostCount bpc where bpc.board.id = :boardId")
     Optional<BoardPostCount> findByBoardId(Integer boardId);

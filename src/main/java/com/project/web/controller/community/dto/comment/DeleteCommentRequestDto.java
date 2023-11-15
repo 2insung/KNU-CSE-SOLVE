@@ -10,5 +10,6 @@ import lombok.Setter;
 public class DeleteCommentRequestDto {
     private Integer postId;
     private Integer commentId;
+    private Integer commentAuthorId;
     private Integer currentPageNumber;
 }

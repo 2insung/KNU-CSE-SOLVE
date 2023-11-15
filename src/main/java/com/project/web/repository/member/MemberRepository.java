@@ -19,13 +19,18 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     Optional<Object> findByUsernameForLogin(String username);
 
 
-    @Query("SELECT m.isDeleted, ma.username, ma.level, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt, mpc.postCount, mcc.commentCount " +
+    @Query("SELECT m.isDeleted, ma.username, ma.level, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberDetail md ON md.member = m " +
-            "INNER JOIN MemberPostCount mpc ON mpc.member = m " +
-            "INNER JOIN MemberCommentCount mcc ON mcc.member = m " +
             "WHERE md.nickname = :nickname")
-    Optional<Object> findByNicknameForMy(String nickname);
+    Optional<Object> findMyByNickname(String nickname);
+
+    @Query("select md.nickname, md.profileImage, ma.role " +
+            "from Member m " +
+            "inner join MemberDetail md on md.member = m " +
+            "inner join MemberAuth ma on ma.member = m " +
+            "where m.id = :memberId")
+    Optional<Object> findUserByMemberId(Integer memberId);
 
 }

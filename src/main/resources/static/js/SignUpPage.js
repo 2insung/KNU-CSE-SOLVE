@@ -4,18 +4,7 @@ function showErrorMessage(message) {
     $("#errorMessage").text(message)
 }
 
-function initErrorMessage() {
-    $("#errorMessage").text("")
-}
-
-function convertInputUserFormToInputCodeForm(username) {
-    initErrorMessage()
-    $("#inputUserInfo").css("display", "none")
-    $("#confirmCode").css("display", "block")
-    $("#codeUsername").text(username)
-}
-
-function sendEmail() {
+function signup() {
     var inputUsername = $("#username").val()
     var inputNickname = $("#nickname").val()
     var inputPassword = $("#password").val()
@@ -47,81 +36,6 @@ function sendEmail() {
     }
 
     $.ajax({
-        url: "/api/send-email",
-        type: "POST",
-        data: JSON.stringify({
-            username: inputUsername,
-            nickname: inputNickname,
-        }),
-        contentType: 'application/json',
-        dataType: 'json',
-        beforeSend: function (xhr) {
-            $("#sendEmailButton").text("이메일 전송 중..")
-            xhr.setRequestHeader("X-CSRF-TOKEN", token);
-        },
-        success: function (response) {
-            if (response.isExistingUsername) {
-                showErrorMessage("중복된 닉네임입니다.")
-            }
-            else if (response.isExistingNickname) {
-                showErrorMessage("중복된 이메일입니다.")
-            }
-            else {
-                convertInputUserFormToInputCodeForm(inputUsername)
-            }
-        },
-        error: function (error) {
-            showErrorMessage("알 수 없는 에러입니다.")
-        },
-        complete: function () {
-            $("#sendEmailButton").text("이메일 인증하기")
-        }
-    })
-}
-
-function checkCode() {
-    var inputUsername = $("#username").val()
-    var inputCode = $("#code").val()
-
-    $.ajax(
-        {
-            url: "/api/check-code",
-            type: "POST",
-            data: JSON.stringify({
-                username: inputUsername,
-                code: inputCode
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("X-CSRF-TOKEN", token);
-            },
-            success: function (response) {
-                if (response.result) {
-                    $("#checkCodeResult").css("display", "block")
-                    $("#checkCodeResult").text("인증 성공입니다.")
-                    $("#submitButton").css("display", "block")
-                    $("#inputCodeWrapper").css("display", "none")
-                    $("#code").val(null)
-                }
-                else {
-                    $("#checkCodeResult").css("display", "block")
-                    $("#checkCodeResult").text("인증 실패입니다. 다시 시도해주세요.")
-                }
-            },
-            error: function (error) {
-                showErrorMessage("알 수 없는 에러입니다.")
-            }
-        }
-    )
-}
-
-function signup() {
-    var inputUsername = $("#username").val()
-    var inputPassword = $("#password").val()
-    var inputNickname = $("#nickname").val()
-
-    $.ajax({
         url: "/api/signup",
         type: "POST",
         data: JSON.stringify({
@@ -132,16 +46,27 @@ function signup() {
         contentType: 'application/json',
         dataType: 'json',
         beforeSend: function (xhr) {
-            $("#sendEmailButton").text("이메일 전송 중..")
             xhr.setRequestHeader("X-CSRF-TOKEN", token);
         },
         success: function (response) {
             if (response.result) {
+                alert("회원가입이 완료되었습니다.")
                 window.location.href = "/login"
             }
         },
         error: function (error) {
-            showErrorMessage("알 수 없는 에러입니다.")
+            if (error.status === 401 || error.status === 403) {
+                var redirectUrl = error.getResponseHeader("Redirect-URL");
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            }
+            else if (error.status === 404) {
+                showErrorMessage(error.responseText)
+            }
+            else {
+                showErrorMessage("알 수 없는 오류입니다.")
+            }
         }
     })
 }

@@ -19,16 +19,16 @@ public class CommentDto {
     private final Boolean isRoot;
     private final Boolean isRootChild;
     private final Boolean isDeleted;
-    private final Boolean isMine;
     private final String body;
     private final String createdAt;
     private final Integer recommendCount;
+    private final Boolean isMine;
 
     @Builder
     public CommentDto(Integer commentId, Integer postId, Integer authorId, String authorNickname,
                       String authorProfileImage, Integer parentAuthorId, String parentAuthorNickname, Boolean isPostAuthor,
-                      Boolean isRoot, Boolean isRootChild, Boolean isDeleted, Boolean isMine,
-                      String body, LocalDateTime createdAt, Integer recommendCount) {
+                      Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body,
+                      LocalDateTime createdAt, Integer recommendCount, Boolean isMine) {
         this.commentId = commentId;
         this.postId = postId;
         this.authorId = authorId;
@@ -40,9 +40,9 @@ public class CommentDto {
         this.isRoot = isRoot;
         this.isRootChild = isRootChild;
         this.isDeleted = isDeleted;
-        this.isMine = isMine;
         this.body = body;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
         this.recommendCount = recommendCount;
+        this.isMine = isMine;
     }
 }

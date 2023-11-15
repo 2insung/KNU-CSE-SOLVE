@@ -24,7 +24,8 @@ public class CommentChildCount {
     private Integer childCount;
 
     @Builder
-    public CommentChildCount(Comment comment, Integer childCount) {
+    public CommentChildCount(Integer id, Comment comment, Integer childCount) {
+        this.id = id;
         this.comment = comment;
         this.childCount = childCount;
     }

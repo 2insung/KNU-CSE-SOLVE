@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,8 @@ public interface CommentChildCountRepository extends JpaRepository<CommentChildC
     @Query("select ccc from CommentChildCount ccc join fetch ccc.comment where ccc.comment.id = :commentId")
     Optional<CommentChildCount> findByCommentIdWithComment(Integer commentId);
 
+    @Modifying
+    @Query("delete from CommentChildCount ccc where ccc.comment.id in :commentIds")
+    int deleteByCommentIds(List<Integer> commentIds);
 
 }

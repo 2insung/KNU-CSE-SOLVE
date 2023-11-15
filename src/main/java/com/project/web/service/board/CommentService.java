@@ -1,18 +1,18 @@
 package com.project.web.service.board;
 
 import com.project.web.controller.community.dto.comment.CommentDto;
+import com.project.web.controller.community.dto.comment.IncCommentRecommendResponseDto;
 import com.project.web.domain.comment.Comment;
 import com.project.web.domain.comment.CommentChildCount;
 import com.project.web.domain.comment.CommentRecommendCount;
-import com.project.web.domain.comment.DeletedComment;
+import com.project.web.domain.comment.CommentRecommendMember;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.comment.CommentChildCountRepository;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
+import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
-import com.project.web.repository.comment.DeletedCommentRepository;
-import com.project.web.repository.member.MemberCommentCountRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostCommentCountRepository;
 import com.project.web.repository.post.PostRepository;
@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,13 +30,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
     private final MemberRepository memberRepository;
-    private final MemberCommentCountRepository memberCommentCountRepository;
     private final PostRepository postRepository;
     private final PostCommentCountRepository postCommentCountRepository;
     private final CommentRepository commentRepository;
     private final CommentChildCountRepository commentChildCountRepository;
     private final CommentRecommendCountRepository commentRecommendCountRepository;
-    private final DeletedCommentRepository deletedCommentRepository;
+    private final CommentRecommendMemberRepository commentRecommendMemberRepository;
+
 
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentList(Integer userId, Integer postId, Integer pageSize, Integer pageNumber) {
@@ -131,15 +130,12 @@ public class CommentService {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
 
-        if (memberCommentCountRepository.updateByMemberId(userId, 1) == 0) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
-        }
-
         if (parentCommentId != null) {
             if (commentChildCountRepository.updateByCommentId(parentComment.getRootCommentId(), 1) == 0) {
                 throw new Error404Exception("존재하지 않는 댓글입니다.");
             }
         }
+
     }
 
     /*
@@ -154,7 +150,7 @@ public class CommentService {
      * 반환값은 댓글 등록 후의 게시글 댓글 개수임.
     */
     @Transactional
-    public void deleteComment(Integer userId, Integer postId, Integer commentId) {
+    public void deleteComment(Integer postId, Integer commentId) {
         if (commentRepository.updateIsDeleted(commentId, true) == 0) {
             throw new Error404Exception("존재하지 않는 댓글입니다.");
         }
@@ -164,10 +160,6 @@ public class CommentService {
         Object[] arr = (Object[]) result;
         Comment comment = (Comment) arr[0];
         CommentChildCount commentChildCount = (CommentChildCount) arr[1];
-        CommentRecommendCount commentRecommendCount = (CommentRecommendCount) arr[2];
-
-        DeletedComment deletedComment = new DeletedComment(comment, commentRecommendCount);
-        deletedCommentRepository.save(deletedComment);
 
         Integer dropCommentCount = 0;
         Integer dropTotalCommentCount = 0;
@@ -199,7 +191,9 @@ public class CommentService {
                 dropTotalCommentCount = -2;
             }
 
-            commentRepository.deleteCommentRelationsByCommentIds(deleteCommentIds);
+            commentRecommendMemberRepository.deleteByCommentIds(deleteCommentIds);
+            commentRecommendCountRepository.deleteByCommentIds(deleteCommentIds);
+            commentChildCountRepository.deleteByCommentIds(deleteCommentIds);
             commentRepository.deleteByCommentIds(deleteCommentIds);
         }
         else {
@@ -211,8 +205,37 @@ public class CommentService {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
 
-        if (memberCommentCountRepository.updateByMemberId(userId, -1) == 0) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+    }
+
+    @Transactional
+    public IncCommentRecommendResponseDto incCommentRecommend(Integer userId, Integer commentId) {
+        Member member = memberRepository.getReferenceById(userId);
+        Comment comment = commentRepository.getReferenceById(commentId);
+
+        if (!commentRecommendMemberRepository.existsByCommentAndMemberId(commentId, userId)) {
+            if (commentRecommendCountRepository.updateByCommentId(commentId, 1) == 0) {
+                throw new Error404Exception("존재하지 않는 댓글입니다.");
+            }
+
+            CommentRecommendCount commentRecommendCount = commentRecommendCountRepository.findById(commentId)
+                    .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
+
+            CommentRecommendMember commentRecommendMember = CommentRecommendMember.builder()
+                    .comment(comment)
+                    .member(member)
+                    .build();
+            commentRecommendMemberRepository.save(commentRecommendMember);
+
+            return IncCommentRecommendResponseDto.builder()
+                    .isSuccess(true)
+                    .recommendCount(commentRecommendCount.getRecommendCount())
+                    .build();
+        }
+        else {
+            return IncCommentRecommendResponseDto.builder()
+                    .isSuccess(false)
+                    .recommendCount(null)
+                    .build();
         }
     }
 }

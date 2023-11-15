@@ -24,4 +24,8 @@ public interface PostCommentCountRepository extends JpaRepository<PostCommentCou
 
     @Query("select pcc from PostCommentCount pcc where pcc.post.id = :postId")
     Optional<PostCommentCount> findByPostId(Integer postId);
+
+    @Modifying
+    @Query("delete from PostCommentCount pcc where pcc.post.id = :postId")
+    int deleteByPostId(Integer postId);
 }

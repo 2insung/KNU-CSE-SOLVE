@@ -13,6 +13,7 @@ public class PostDto {
     private final Boolean isNotice;
     private final Boolean isHot;
     private final String createdAt;
+    private final String category;
     private final String boardType;
     private final String authorNickname;
     private final String authorProfileImage;
@@ -27,14 +28,16 @@ public class PostDto {
 
     @Builder
     public PostDto(Integer postId, Integer authorId, Boolean isNotice, Boolean isHot,
-                   LocalDateTime createdAt, String boardType, String authorNickname, String authorProfileImage,
-                   String title, String body, LocalDateTime updatedAt, Integer hitCount,
-                   Integer recommendCount, Integer commentCount, Integer totalCommentCount, Boolean isMine) {
+                   LocalDateTime createdAt, String category, String boardType, String authorNickname,
+                   String authorProfileImage, String title, String body, LocalDateTime updatedAt,
+                   Integer hitCount, Integer recommendCount, Integer commentCount, Integer totalCommentCount,
+                   Boolean isMine) {
         this.postId = postId;
         this.authorId = authorId;
         this.isNotice = isNotice;
         this.isHot = isHot;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
+        this.category = category;
         this.boardType = boardType;
         this.authorNickname = authorNickname;
         this.authorProfileImage = authorProfileImage;

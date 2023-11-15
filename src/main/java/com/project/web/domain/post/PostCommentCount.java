@@ -27,7 +27,8 @@ public class PostCommentCount {
     private Integer totalCommentCount;
 
     @Builder
-    public PostCommentCount(Post post, Integer commentCount, Integer totalCommentCount) {
+    public PostCommentCount(Integer id, Post post, Integer commentCount, Integer totalCommentCount) {
+        this.id = id;
         this.post = post;
         this.totalCommentCount = totalCommentCount;
         this.commentCount = commentCount;

@@ -1,6 +1,5 @@
 .post {
     width: 1100px;
-    height: 700px;
     margin: 0 auto;
 }
 
@@ -23,6 +22,11 @@
     border-bottom: 1px solid #e2e2e2;
     padding-bottom: 5px;
     margin-top: 10px;
+}
+
+.post-category{
+    font-size: 1rem;
+    padding-left: 10px;
 }
 
 .post-title {
@@ -128,6 +132,7 @@
     border-radius: 10%;
     margin: 0 auto;
     margin-top: 50px;
+    cursor: pointer;
 }
 
 .post-recommend .post-recommend-image {
@@ -223,11 +228,21 @@
     align-items: center;
 }
 
-.comment-button-wrapper .delete-comment-button {
+.comment-button-wrapper .recommend-comment-button{
     margin-right: 7px;
     padding: 3px;
     color: red;
     border: 1px solid red;
+    border-radius: 3px;
+}
+
+
+.comment-button-wrapper .delete-comment-button {
+    margin-right: 7px;
+    padding: 3px;
+    color: white;
+    background-color: #fd6666;
+    border: 1px solid #fd6666;
     border-radius: 3px;
 }
 
@@ -303,7 +318,7 @@
     cursor: pointer;
 }
 
-.comment-page-number-list-wrapper {
+.comment-page-number-list-wrapper ul {
     display: flex;
     justify-content: center;
     align-items: center;

@@ -26,7 +26,8 @@ public class MemberPassword {
     private String password;
 
     @Builder
-    public MemberPassword(Member member, String password) {
+    public MemberPassword(Integer id, Member member, String password) {
+        this.id = id;
         this.member = member;
         this.password = password;
     }

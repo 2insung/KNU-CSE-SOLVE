@@ -101,12 +101,11 @@ fieldset input {
 }
 
 .checkCodeResultWrapper {
-    margin-top: 10px;
+    margin: 10px 0;
     height: 1rem;
 }
 
 #inputCodeWrapper input {
-    margin-bottom: 10px;
     height: 41px;
     line-height: 41px;
     width: 100%;

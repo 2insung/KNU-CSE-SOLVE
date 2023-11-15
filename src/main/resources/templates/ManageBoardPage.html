@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{GeneralLayout}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/ManageBoardPage.css}"/>
+</head>
+<th:block layout:fragment="contentFragment">
+    <div class="manage-board">
+        <div class="manage-board-header">
+            <div class="manage-board-title">
+                <a th:href="@{/manage-board}">
+                    게시판 관리
+                </a>
+            </div>
+        </div>
+        <div class="option-wrapper">
+            <div class="option">
+                <div class="option-title">
+                    게시판 만들기
+                </div>
+                <div class="option-input">
+                    <div class="input-wrapper">
+                        <span>게시판 이름</span>
+                        <input id="alias" name="alias" type="text" placeholder="게시판 이름"/>
+                    </div>
+                    <div class="input-wrapper">
+                        <span>게시판 타입</span>
+                        <input id="type" name="type" type="text" placeholder="게시판 타입명"/>
+                    </div>
+                    <div class="input-wrapper">
+                        <span>게시판 분류</span>
+                        <select name="category" id="category">
+                            <option value="일반">일반</option>
+                            <option value="과목">과목</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <span>게시판 설명</span>
+                        <textarea rows="5" id="description" name="description"></textarea>
+                    </div>
+                    <button type="button" onclick="makeBoard()">만들기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/ManageBoardPage.js}"></script>
+</th:block>
+</html>

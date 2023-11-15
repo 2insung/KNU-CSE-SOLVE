@@ -24,7 +24,8 @@ public class PostHitCount {
     private Integer hitCount;
 
     @Builder
-    public PostHitCount(Post post, Integer hitCount) {
+    public PostHitCount(Integer id, Post post, Integer hitCount) {
+        this.id = id;
         this.post = post;
         this.hitCount = hitCount;
     }

@@ -15,14 +15,15 @@ function showForm(button) {
     }
 }
 
-function deletePost(boardType, postAuthor, postId) {
+function deletePost(boardType, postId, postAuthorId) {
     $.ajax(
         {
-            url: "/api/delete-post/" + postAuthor,
+            url: "/api/delete-post",
             type: "DELETE",
             data: JSON.stringify({
                 boardType: boardType,
-                postId: postId
+                postId: postId,
+                postAuthorId: postAuthorId
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -47,14 +48,15 @@ function deletePost(boardType, postAuthor, postId) {
     )
 }
 
-function deleteComment(commentAuthor, commentId, postId, currentPageNumber) {
+function deleteComment(postId, commentId, commentAuthorId, currentPageNumber) {
     $.ajax(
         {
-            url: "/api/delete-comment/" + commentAuthor,
+            url: "/api/delete-comment",
             type: "DELETE",
             data: JSON.stringify({
                 postId: postId,
                 commentId: commentId,
+                commentAuthorId: commentAuthorId,
                 currentPageNumber: currentPageNumber
             }),
             contentType: 'application/json',
@@ -81,7 +83,7 @@ function deleteComment(commentAuthor, commentId, postId, currentPageNumber) {
 }
 
 function saveChildComment(commentId, postId, currentPageNumber) {
-    var body = document.getElementById('childContent-' + commentId).value;
+    var body = document.getElementById('childComment-' + commentId).value;
     if (body === "") {
         alert("내용을 입력해주세요.")
         return;
@@ -166,6 +168,79 @@ function readComment(postId, pageNumber) {
             type: "GET",
             success: function (response) {
                 $("#commentFragment").replaceWith(response)
+            },
+            error: function (error) {
+                if (error.status === 401 || error.status === 403) {
+                    var redirectUrl = error.getResponseHeader("Redirect-URL");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }
+                else {
+                    alert(error.responseText)
+                }
+            }
+        }
+    )
+}
+
+function incPostRecommend(postId){
+    $.ajax(
+        {
+            url: "/api/inc-post-recommend",
+            type: "POST",
+            data: JSON.stringify({
+                postId: postId
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRF-TOKEN", token);
+            },
+            success: function (response) {
+                if(response.isSuccess){
+                    $("#postRecommendCount").replaceWith(response.recommendCount)
+                }
+                else{
+                    alert("이미 추천한 게시글입니다.")
+                }
+            },
+            error: function (error) {
+                if (error.status === 401 || error.status === 403) {
+                    var redirectUrl = error.getResponseHeader("Redirect-URL");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }
+                else {
+                    alert(error.responseText)
+                }
+            }
+        }
+    )
+}
+
+function incCommentRecommend(commentId){
+    $.ajax(
+        {
+            url: "/api/inc-comment-recommend",
+            type: "POST",
+            data: JSON.stringify({
+                commentId: commentId
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRF-TOKEN", token);
+            },
+            success: function (response) {
+                if(response.isSuccess){
+                    var commentCountElementId = "#commentRecommendCount-" + commentId
+                    $(commentCountElementId).replaceWith(response.recommendCount)
+                }
+                else{
+                    alert("이미 추천한 게시글입니다.")
+                }
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

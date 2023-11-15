@@ -43,8 +43,9 @@ public class PostContent {
     private LocalDateTime updatedAt;
 
     @Builder
-    public PostContent(Post post, String title, String body, String summary,
+    public PostContent(Integer id, Post post, String title, String body, String summary,
                        String thumbnail) {
+        this.id = id;
         this.post = post;
         this.title = title;
         this.body = body;

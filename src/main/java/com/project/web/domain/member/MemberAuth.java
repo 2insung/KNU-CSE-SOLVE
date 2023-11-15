@@ -34,7 +34,8 @@ public class MemberAuth {
     private Authority role;
 
     @Builder
-    public MemberAuth(Member member, String username, Level level, Authority role) {
+    public MemberAuth(Integer id, Member member, String username, Level level, Authority role) {
+        this.id = id;
         this.member = member;
         this.username = username;
         this.level = level;

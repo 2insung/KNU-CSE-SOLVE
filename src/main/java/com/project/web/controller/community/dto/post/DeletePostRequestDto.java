@@ -10,4 +10,5 @@ import lombok.Setter;
 public class DeletePostRequestDto {
     private String boardType;
     private Integer postId;
+    private Integer postAuthorId;
 }

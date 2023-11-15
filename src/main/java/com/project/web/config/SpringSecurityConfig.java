@@ -1,23 +1,25 @@
 package com.project.web.config;
 
 import com.project.web.handler.CustomLoginFailureHandler;
-import com.project.web.service.auth.CustomOauth2UserService;
-import com.project.web.service.auth.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SpringSecurityConfig {
     private final CustomLoginFailureHandler customLoginFailureHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
@@ -74,11 +76,7 @@ public class SpringSecurityConfig {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION")
-                .and()
-
-                .oauth2Login()
-                .defaultSuccessUrl("/")
-                .userInfoEndpoint();
+                .and();
 
 
         return http.build();

@@ -26,7 +26,8 @@ public class PostRecommendMember {
     private Member member;
 
     @Builder
-    public PostRecommendMember(Post post, Member member) {
+    public PostRecommendMember(Integer id, Post post, Member member) {
+        this.id = id;
         this.post = post;
         this.member = member;
     }

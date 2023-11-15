@@ -14,7 +14,10 @@
             </div>
         </div>
         <div class="post-header">
-            <div class="post-title" th:text="${post.title}"></div>
+            <div class="post-title-wrapper">
+                <span class="post-category" th:text="'[' + ${post.category} + ']'"></span>
+                <span class="post-title" th:text="${post.title}"></span>
+            </div>
             <div class="post-author-wrapper">
                 <div class="post-author-image">
                     <img th:src="${post.authorProfileImage != null ? post.authorProfileImage : '/img/tempProfile.jpg'}">
@@ -38,23 +41,25 @@
             </div>
         </div>
         <div class="post-option-wrapper">
-            <div class="post-rewrite-button" th:if="${post.isMine}">
+            <div class="post-rewrite-button" th:if="${post.isMine || (user.isLogin && user.isAdmin)}">
                 <a th:href="@{/rewrite/{postAuthor}/{boardType}/{postId}(postAuthor=${post.authorNickname},boardType=${board.type},postId=${postId})}">
                     수정
                 </a>
             </div>
             <button class="post-delete-button"
-                    th:if="${post.isMine}"
+                    th:if="${post.isMine || (user.isLogin && user.isAdmin)}"
                     th:data-boardType="${board.type}"
-                    th:data-postAuthor="${post.authorNickname}"
                     th:data-postId="${post.postId}"
-                    onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postAuthor'), this.getAttribute('data-postId'))">
+                    th:data-postAuthorId="${post.authorId}"
+                    onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
                 삭제
             </button>
         </div>
         <div class="post-body-wrapper">
             <div class="post-body" th:utext="${post.body}"></div>
-            <div class="post-recommend">
+            <div class="post-recommend"
+                 th:data-postId="${post.postId}"
+                 onclick="incPostRecommend(this.getAttribute('data-postId'))">
                 <div class="post-recommend-image">
                     <img src="/img/thumb.png">
                 </div>
@@ -68,12 +73,13 @@
                 <div class="comment-count">
                     <span th:text="'댓글수 ' + ${commentCount}"></span>
                 </div>
-                <ul th:each="comment : ${commentList}">
-                    <li class="deleted-comment" th:if="${comment.isDeleted}">
-                        삭제된 댓글입니다.
-                    </li>
-                    <li th:unless="${comment.isDeleted}">
-                        <div th:class="${comment.isRoot ? 'root-comment-wrapper' : 'child-comment-wrapper'}">
+                <ul>
+                    <li th:each="comment : ${commentList}">
+                        <div class="deleted-comment" th:if="${comment.isDeleted}">
+                            삭제된 댓글입니다.
+                        </div>
+                        <div th:unless="${comment.isDeleted}"
+                             th:class="${comment.isRoot ? 'root-comment-wrapper' : 'child-comment-wrapper'}">
                             <div class="comment-header">
                                 <div class="comment-author-wrapper">
                                     <div class="comment-author-image">
@@ -89,17 +95,26 @@
                                 </div>
                                 <div class="comment-button-wrapper">
                                     <button type="button"
-                                            class="delete-comment-button"
-                                            th:if="${comment.isMine}"
-                                            th:data-commentAuthor="${comment.authorNickname}"
+                                            class="recommend-comment-button"
                                             th:data-commentId="${comment.commentId}"
+                                            onclick="incCommentRecommend(this.getAttribute('data-commentId'))"
+                                    >
+                                        <span>추천</span>
+                                        <span th:id="'commentRecommendCount-' + ${comment.commentId}"
+                                              th:text="${comment.recommendCount}"></span>
+                                    </button>
+                                    <button type="button"
+                                            class="delete-comment-button"
+                                            th:if="${comment.isMine || (user.isLogin && user.isAdmin)}"
                                             th:data-postId="${comment.postId}"
+                                            th:data-commentId="${comment.commentId}"
+                                            th:data-commentAuthorId="${comment.authorId}"
                                             th:data-currentPageNumber="${commentPageNumber}"
                                             onclick="
                                                 deleteComment(
-                                                    this.getAttribute('data-commentAuthor'),
-                                                    this.getAttribute('data-commentId'),
                                                     this.getAttribute('data-postId'),
+                                                    this.getAttribute('data-commentId'),
+                                                    this.getAttribute('data-commentAuthorId'),
                                                     this.getAttribute('data-currentPageNumber')
                                                 )"
                                     >삭제
@@ -125,7 +140,7 @@
                             </div>
                         </div>
                         <form id="childCommentForm" class="child-comment-form" style="display: none;">
-                            <textarea class="comment-input" th:id="'childContent-' + ${comment.commentId}"
+                            <textarea class="comment-input" th:id="'childComment-' + ${comment.commentId}"
                                       name="body"></textarea>
                             <div class="submit-button-wrapper">
                                 <button type="button"
@@ -140,26 +155,31 @@
                     </li>
                 </ul>
                 <div class="comment-page-number-list-wrapper">
-                    <button th:if="${commentPrevPageNumber != null}"
-                            th:data-postId="${postId}"
-                            th:data-prevPageNumber="${commentPrevPageNumber}"
-                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-prevPageNumber'))">
-                        <div class="comment-arrow-left">◀</div>
-                    </button>
-                    <ul th:each="number : ${commentPageNumberList}">
-                        <li th:class="${number == commentPageNumber} ? 'comment-active-page-number' : 'comment-page-number'"
-                            th:text="${number}"
-                            th:data-postId="${postId}"
-                            th:data-pageNumber="${number}"
-                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
+                    <ul>
+                        <li th:each="commentPage, stat : ${commentPageNumberList}" th:if="${commentPage.pageNumber != null}">
+                            <div class="comment-arrow-left"
+                                 th:if="${stat.first}"
+                                 th:data-postId="${commentPage.postId}"
+                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
+                                ◀
+                            </div>
+                            <div th:if="${!stat.first && !stat.last}"
+                                 th:class="${commentPage.pageNumber == commentPageNumber} ? 'comment-active-page-number' : 'comment-page-number'"
+                                 th:text="${commentPage.pageNumber}"
+                                 th:data-postId="${commentPage.postId}"
+                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
+                            </div>
+                            <div class="comment-arrow-right"
+                                 th:if="${stat.last}"
+                                 th:data-postId="${commentPage.postId}"
+                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
+                                ▶
+                            </div>
                         </li>
                     </ul>
-                    <button th:if="${commentNextPageNumber != null}"
-                            th:data-postId="${postId}"
-                            th:data-nextPageNumber="${commentNextPageNumber}"
-                            onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-nextPageNumber'))">
-                        <div class="comment-arrow-right">▶</div>
-                    </button>
                 </div>
                 <form id="rootCommentForm" class="root-comment-form">
                     <textarea id="rootContent" class="comment-input" name="body"></textarea>

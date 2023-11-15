@@ -18,13 +18,24 @@
                         <div class="inputWrapper">
                             <div class="checkBoxWrapper" th:if="${hasNoticeAccess}">
                                 <span>
-                                    <input type="checkbox" id="isNotification" name="isNotification"/>
+                                    <input th:checked="${isRewrite == true ? rewrite.isNotice : false}"
+                                           type="checkbox" id="isNotification" name="isNotification"/>
                                     <label id="checkBoxLabel" for="isNotification"></label>
                                     <label for="isNotification">공지로 올리기</label>
                                 </span>
                             </div>
                             <div class="submitButtonWrapper">
-                                <button th:data-boardType="${board.type}" type="button"
+                                <button th:if="${isRewrite}"
+                                        th:data-boardType="${board.type}"
+                                        th:data-postId="${rewrite.postId}"
+                                        th:data-postAuthorId="${rewrite.postAuthorId}"
+                                        type="button"
+                                        onclick="updatePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
+                                    수정하기
+                                </button>
+                                <button th:unless="${isRewrite}"
+                                        th:data-boardType="${board.type}"
+                                        type="button"
                                         onclick="savePost(this.getAttribute('data-boardType'))">제출하기
                                 </button>
                             </div>
@@ -32,8 +43,10 @@
                     </div>
                 </div>
                 <div class="ckEditorWrapper">
-                    <input type="text" id="title" name="title" placeholder="제목을 입력해주세요."/>
-                    <textarea rows="5" id="content" name="body"></textarea>
+                    <input th:value="${isRewrite == true ? rewrite.title : ''}" type="text" id="title" name="title"
+                           placeholder="제목을 입력해주세요."/>
+                    <textarea th:utext="${isRewrite == true ? rewrite.body : ''}" rows="5" id="content"
+                              name="body"></textarea>
                 </div>
             </form>
 

@@ -23,10 +23,15 @@ public class BoardPostCount {
     @Column(name = "post_count")
     private Integer postCount;
 
+    @Column(name = "hot_post_count")
+    private Integer hotPostCount;
+
     @Builder
-    public BoardPostCount(Board board, Integer postCount) {
+    public BoardPostCount(Integer id, Board board, Integer postCount, Integer hotPostCount) {
+        this.id = id;
         this.board = board;
         this.postCount = postCount;
+        this.hotPostCount = hotPostCount;
     }
 
 }

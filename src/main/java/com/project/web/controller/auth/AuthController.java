@@ -1,15 +1,9 @@
 package com.project.web.controller.auth;
 
-import com.project.web.controller.auth.dto.SignUpRequestDto;
-import com.project.web.service.auth.SignUpEmailService;
-import com.project.web.service.auth.SignUpService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller

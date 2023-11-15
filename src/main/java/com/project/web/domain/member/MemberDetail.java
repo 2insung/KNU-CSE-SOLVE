@@ -57,9 +57,10 @@ public class MemberDetail {
     private LocalDateTime updatedAt;
 
     @Builder
-    public MemberDetail(Member member, String nickname, String profileImage, String description,
+    public MemberDetail(Integer id, Member member, String nickname, String profileImage, String description,
                         String grade, String admissionYear, String department, LocalDateTime createdAt,
                         LocalDateTime updatedAt) {
+        this.id = id;
         this.member = member;
         this.nickname = nickname;
         this.profileImage = profileImage;

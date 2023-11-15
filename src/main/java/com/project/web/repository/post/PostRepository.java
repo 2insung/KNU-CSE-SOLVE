@@ -70,11 +70,25 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Object[]> findHotPostPreviewByBoardId(Integer boardId, Integer limit, Integer offset);
 
 
+    @Query(nativeQuery = true,
+            value = "select p.id, b.id, b.type, b.alias, pc.title, p.created_at  " +
+                    "from (select tp.id from post tp where tp.member_id = :memberId order by tp.created_at desc limit :limit offset :offset) as temp " +
+                    "inner join post p on p.id = temp.id " +
+                    "inner join board b on p.board_id = b.id " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "order by p.created_at desc")
+    List<Object[]> findMyPostByMemberId(Integer memberId, Integer limit, Integer offset);
+
+    @Query(nativeQuery = true,
+            value = "select count(*) from (select * from post where member_id = :memberId limit :limit) as temp")
+    int countMyPost(Integer memberId, Integer limit);
+
+
     /*
      게시글(Post) 출력 함수.
      1. '/post?type=xxx&number=xxx...' 요청 시 Post 관련 정보 출력.
     */
-    @Query("select p.id, p.member.id, p.isNotice, p.isHot, p.createdAt, b.type, md.nickname, md.profileImage, pc.title, pc.body, pc.updatedAt,  phc.hitCount, prc.recommendCount, pcc.commentCount, pcc.totalCommentCount " +
+    @Query("select p.id, p.member.id, p.isNotice, p.isHot, p.createdAt, p.category, b.type, md.nickname, md.profileImage, pc.title, pc.body, pc.updatedAt,  phc.hitCount, prc.recommendCount, pcc.commentCount, pcc.totalCommentCount " +
             "from Post p " +
             "inner join Board b on p.board = b " +
             "inner join MemberDetail md on p.member = md.member " +
@@ -100,6 +114,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "where p.id = :postId")
     Optional<Object> fetchPostRelationsByPostId(Integer postId);
 
+
     /*
      게시글의 isDeleted 속성 업데이트 함수.
      * 삭제될 게시글에 사용됨.
@@ -121,10 +136,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "inner join post_content pc on pc.post_id = p.id " +
                     "inner join post_hit_count phc on phc.post_id = p.id " +
                     "inner join post_recommend_count prc on prc.post_id = p.id " +
-                    "inner join post_recommend_member prm on prm.post_id = p.id " +
                     "inner join post_comment_count pcc on pcc.post_id = p.id " +
                     "where p.id = :postId")
-    int deleteCommentRelationsByPostId(Integer postId);
+    int deletePostRelationsByPostId(Integer postId);
 
     /*
      게시글 삭제 함수.
@@ -133,4 +147,5 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Modifying
     @Query("delete from Post p where p.id = :postId")
     int deleteByPostId(Integer postId);
+
 }

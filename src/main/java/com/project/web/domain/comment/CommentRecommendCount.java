@@ -24,7 +24,8 @@ public class CommentRecommendCount {
     private Integer recommendCount;
 
     @Builder
-    public CommentRecommendCount(Comment comment, Integer recommendCount) {
+    public CommentRecommendCount(Integer id, Comment comment, Integer recommendCount) {
+        this.id = id;
         this.comment = comment;
         this.recommendCount = recommendCount;
     }

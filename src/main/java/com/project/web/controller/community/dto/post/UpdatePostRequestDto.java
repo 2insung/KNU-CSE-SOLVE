@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class UpdatePostRequestDto {
     private String boardType;
     private Integer postId;
+    private Integer postAuthorId;
     private String title;
     private String body;
     private Boolean isNotice;

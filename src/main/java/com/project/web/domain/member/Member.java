@@ -23,7 +23,8 @@ public class Member {
     private Boolean isDeleted;
 
     @Builder
-    public Member(Boolean isDeleted){
+    public Member(Integer id, Boolean isDeleted){
+        this.id = id;
         this.isDeleted = isDeleted;
     }
 }

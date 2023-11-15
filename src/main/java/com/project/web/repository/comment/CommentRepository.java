@@ -28,6 +28,21 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
                     "order by c.root_comment_id, c.created_at")
     List<Object[]> findPageByPostId(Integer postId, Integer limit, Integer offset);
 
+
+    @Query(nativeQuery = true,
+            value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.id, b.type, b.alias, p.title " +
+                    "from (select tc.id from comment tc where tc.member_id = :member_id order by tc.created_at desc limit :limit offset :offset) as temp " +
+                    "inner join comment c on c.id = temp.id " +
+                    "inner join post p on c.post_id = p.id " +
+                    "inner join post_content pc on p.id = pc.post_id" +
+                    "inner join board b on b.id = p.board_id " +
+                    "order by c.created_at desc")
+    List<Object[]> findMyCommentByMemberId(Integer memberId, Integer limit, Integer offset);
+
+    @Query(nativeQuery = true,
+            value = "select count(*) from (select * from comment where member_id = :memberId limit :limit) as temp")
+    int countMyComment(Integer memberId, Integer limit);
+
     /*
      Comment 와 매핑된 모든 엔티티 출력 함수(By CommentId).
      * Comment table을 기준으로 연관된 테이블을 조인함.

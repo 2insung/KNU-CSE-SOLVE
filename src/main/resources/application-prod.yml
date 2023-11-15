@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   session:
-    store-type: redis
+    store-type: jdbc
 
   jpa:
     database: mysql
@@ -24,44 +24,11 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${OAUTH_CLIENT_ID_PROD}
-            client-secret: ${OAUTH_CLIENT_SECRET_PROD}
-            scope:
-              - profile
-              - email
+image:
+  resource:
+    location: ${IMAGE_RESOURCE_LOCATION}
+  path: ${IMAGE_PATH}
 
-  mail:
-    host: smtp.gmail.com
-    port: 465
-    username: ${MAIL_USERNAME_PROD}
-    password: ${MAIL_PASSWORD_PROD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            enable: true
-            trust: smtp.gmail.com
 
-  redis:
-    host: ${REDIS_HOST_PROD}
-    port: ${REDIS_PORT_PROD}
 
-cloud:
-  aws:
-    credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
-    s3:
-      bucket: ${AWS_S3_BUCKET}
-    region:
-      static: ${AWS_REGION}
-    stack:
-      auto: false
+

@@ -1,22 +1,18 @@
 package com.project.web.service.board;
 
-import com.project.web.controller.community.dto.post.NoticePostPreviewDto;
-import com.project.web.controller.community.dto.post.PostCommentCountDto;
-import com.project.web.controller.community.dto.post.PostPreviewDto;
-import com.project.web.controller.community.dto.post.PostDto;
+import com.project.web.controller.community.dto.post.*;
 import com.project.web.domain.board.Board;
 import com.project.web.domain.comment.Comment;
-import com.project.web.domain.comment.CommentRecommendCount;
-import com.project.web.domain.comment.DeletedComment;
 import com.project.web.domain.member.Level;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.*;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.board.BoardPostCountRepository;
 import com.project.web.repository.board.BoardRepository;
+import com.project.web.repository.comment.CommentChildCountRepository;
+import com.project.web.repository.comment.CommentRecommendCountRepository;
+import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
-import com.project.web.repository.comment.DeletedCommentJDBCRepository;
-import com.project.web.repository.member.MemberPostCountRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.*;
 import lombok.RequiredArgsConstructor;
@@ -41,11 +37,12 @@ public class PostService {
     private final PostHitCountRepository postHitCountRepository;
     private final PostRecommendCountRepository postRecommendCountRepository;
     private final PostCommentCountRepository postCommentCountRepository;
-    private final DeletedPostRepository deletedPostRepository;
+    private final PostRecommendMemberRepository postRecommendMemberRepository;
     private final MemberRepository memberRepository;
-    private final MemberPostCountRepository memberPostCountRepository;
     private final CommentRepository commentRepository;
-    private final DeletedCommentJDBCRepository deletedCommentJDBCRepository;
+    private final CommentRecommendCountRepository commentRecommendCountRepository;
+    private final CommentChildCountRepository commentChildCountRepository;
+    private final CommentRecommendMemberRepository commentRecommendMemberRepository;
     private final int noticePriority = 100000000;
 
     @Transactional(readOnly = true)
@@ -89,7 +86,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostPreviewDto> getHotPostPreviewListAll(Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = postRepository.findHotPostPreviewAll(pageSize, pageSize * pageNumber);
+        List<Object[]> results = postRepository.findHotPostPreviewAll(pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -128,7 +125,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostPreviewDto> getHotPostPreviewListByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = postRepository.findHotPostPreviewByBoardId(boardId, pageSize, pageSize * pageNumber);
+        List<Object[]> results = postRepository.findHotPostPreviewByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -175,16 +172,17 @@ public class PostService {
         Boolean isNotice = (Boolean) arr[2];
         Boolean isHot = (Boolean) arr[3];
         LocalDateTime createdAt = (LocalDateTime) arr[4];
-        String boardType = (String) arr[5];
-        String authorNickname = (String) arr[6];
-        String authorProfileImage = (String) arr[7];
-        String title = (String) arr[8];
-        String body = (String) arr[9];
-        LocalDateTime updatedAt = (LocalDateTime) arr[10];
-        Integer hitCount = (Integer) arr[11];
-        Integer recommendCount = (Integer) arr[12];
-        Integer commentCount = (Integer) arr[13];
-        Integer totalCommentCount = (Integer) arr[14];
+        String category = (String) arr[5];
+        String boardType = (String) arr[6];
+        String authorNickname = (String) arr[7];
+        String authorProfileImage = (String) arr[8];
+        String title = (String) arr[9];
+        String body = (String) arr[10];
+        LocalDateTime updatedAt = (LocalDateTime) arr[11];
+        Integer hitCount = (Integer) arr[12];
+        Integer recommendCount = (Integer) arr[13];
+        Integer commentCount = (Integer) arr[14];
+        Integer totalCommentCount = (Integer) arr[15];
         Boolean isMine = userId != null && userId.equals(authorId);
 
         return PostDto.builder()
@@ -193,6 +191,7 @@ public class PostService {
                 .isNotice(isNotice)
                 .isHot(isHot)
                 .createdAt(createdAt)
+                .category(category)
                 .boardType(boardType)
                 .authorNickname(authorNickname)
                 .authorProfileImage(authorProfileImage)
@@ -220,6 +219,7 @@ public class PostService {
                 .isNotice(isNotice)
                 .isHot(false)
                 .isDeleted(false)
+                .category(isNotice ? "공지" : "일반")
                 .build();
         postRepository.save(post);
 
@@ -256,12 +256,8 @@ public class PostService {
                 .build();
         postCommentCountRepository.save(postCommentCount);
 
-        if (boardPostCountRepository.updateByBoardId(boardId, 1) == 0) {
+        if (boardPostCountRepository.updateByBoardId(boardId, 1, 0) == 0) {
             throw new Error404Exception("존재하지 않는 게시판입니다.");
-        }
-
-        if (memberPostCountRepository.updateByMemberId(userId, 1) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
     }
 
@@ -283,65 +279,43 @@ public class PostService {
         postContent.updateThumbnail(thumbnail);
         if (isNotice != null) {
             post.updatePriority(isNotice ? 1 : 0);
-            post.updateIsNotice(isNotice ? true : false);
+            post.updateCategory(isNotice ? "공지" : "일반");
+            post.updateIsNotice(isNotice);
         }
     }
 
     @Transactional
-    public void deletePost(Integer userId, Integer boardId, Integer postId) {
+    public void deletePost(Integer boardId, Integer postId) {
         if (postRepository.updateIsDeleted(postId, true) == 0) {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
 
-        Object result = postRepository.fetchPostRelationsByPostId(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
-        Object[] arr = (Object[]) result;
-        Post post = (Post) arr[0];
-        PostContent postContent = (PostContent) arr[1];
-        PostHitCount postHitCount = (PostHitCount) arr[2];
-        PostRecommendCount postRecommendCount = (PostRecommendCount) arr[3];
 
         List<Object[]> commentResults = commentRepository.fetchCommentRelationsByPostId(postId);
-        List<DeletedComment> deletedComments = commentResults.stream()
-                .map((commentResult) -> {
-                    Comment comment = (Comment) commentResult[0];
-                    CommentRecommendCount commentRecommendCount = (CommentRecommendCount) commentResult[2];
-                    return new DeletedComment(comment, commentRecommendCount);
-                })
-                .collect(Collectors.toList());
-        deletedCommentJDBCRepository.saveAll(deletedComments);
-
         List<Integer> commentIds = commentResults.stream()
                 .map((commentResult) -> {
                     Comment comment = (Comment) commentResult[0];
                     return comment.getId();
                 })
                 .collect(Collectors.toList());
-        commentRepository.deleteCommentRelationsByCommentIds(commentIds);
+        commentRecommendMemberRepository.deleteByCommentIds(commentIds);
+        commentRecommendCountRepository.deleteByCommentIds(commentIds);
+        commentChildCountRepository.deleteByCommentIds(commentIds);
         commentRepository.deleteByCommentIds(commentIds);
 
-        DeletedPost deletedPost = DeletedPost.builder()
-                .post(post)
-                .postContent(postContent)
-                .postHitCount(postHitCount)
-                .postRecommendCount(postRecommendCount)
-                .build();
-        deletedPostRepository.save(deletedPost);
-
-        postRepository.deleteCommentRelationsByPostId(postId);
+        postRecommendMemberRepository.deleteByPostId(postId);
+        postCommentCountRepository.deleteByPostId(postId);
+        postRecommendCountRepository.deleteByPostId(postId);
+        postHitCountRepository.deleteByPostId(postId);
+        postContentRepository.deleteByPostId(postId);
         postRepository.deleteByPostId(postId);
 
-        if (boardPostCountRepository.updateByBoardId(boardId, -1) == 0) {
+        Integer dropHotPostCount = post.getIsHot() ? -1 : 0;
+        if (boardPostCountRepository.updateByBoardId(boardId, -1, dropHotPostCount) == 0) {
             throw new Error404Exception("존재하지 않는 게시판입니다.");
         }
-
-        if (memberPostCountRepository.updateByMemberId(userId, -1) == 0) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
-        }
-    }
-
-    @Transactional
-    public void incPostHitCount() {
 
     }
 
@@ -366,5 +340,71 @@ public class PostService {
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
 
         return postCommentCount.getTotalCommentCount();
+    }
+
+    @Transactional(readOnly = true)
+    public RewriteDto getRewrite(Integer postId) {
+        PostContent postContent = postContentRepository.findWithPostByPostId(postId)
+                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시판입니다."));
+        Post post = postContent.getPost();
+
+        return RewriteDto.builder()
+                .postId(post.getId())
+                .postAuthorId(post.getMember().getId())
+                .title(postContent.getTitle())
+                .body(postContent.getBody())
+                .isNotice(post.getIsNotice())
+                .build();
+    }
+
+    @Transactional
+    public IncPostRecommendResponseDto incPostRecommend(Integer userId, Integer postId) {
+        if (!postRecommendMemberRepository.existsByPostAndMemberId(postId, userId)) {
+            if (postRecommendCountRepository.updateByPostId(postId, 1) == 0) {
+                throw new Error404Exception("존재하지 않는 게시글입니다.");
+            }
+
+            PostRecommendCount postRecommendCount = postRecommendCountRepository.findWithPostByPostId(postId)
+                    .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+            Post post = postRecommendCount.getPost();
+            Member member = memberRepository.getReferenceById(userId);
+
+            PostRecommendMember postRecommendMember = PostRecommendMember.builder()
+                    .post(post)
+                    .member(member)
+                    .build();
+            postRecommendMemberRepository.save(postRecommendMember);
+
+            if (postRecommendCount.getRecommendCount() >= 1) {
+                LocalDateTime now = LocalDateTime.now();
+                post.updateIsHot(true);
+                post.updateHotRegisteredTime(now);
+                if (post.getCategory().equals("일반")) {
+                    post.updateCategory("인기");
+                }
+
+                if (boardPostCountRepository.updateByBoardId(post.getBoard().getId(), 0, 1) == 0) {
+                    throw new Error404Exception("존재하지 않는 게시판입니다.");
+                }
+            }
+
+            return IncPostRecommendResponseDto.builder()
+                    .isSuccess(true)
+                    .recommendCount(postRecommendCount.getRecommendCount())
+                    .build();
+        }
+        else {
+            return IncPostRecommendResponseDto.builder()
+                    .isSuccess(false)
+                    .recommendCount(null)
+                    .build();
+        }
+    }
+
+    @Transactional
+    public void incPostHit(Integer postId) {
+        if (postHitCountRepository.updateByPostId(postId, 1) == 0) {
+            throw new Error404Exception("존재하지 않는 게시글입니다.");
+        }
     }
 }

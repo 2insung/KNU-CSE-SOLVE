@@ -39,8 +39,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .userId(memberId)
                 .username(username)
                 .password(password)
-                .nickname(nickname)
-                .profileImage(profileImage)
                 .role(role)
                 .level(level)
                 .build();

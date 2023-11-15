@@ -2,6 +2,8 @@ package com.project.web.controller.community;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.community.dto.board.BoardDto;
+import com.project.web.controller.community.dto.board.SaveBoardRequestDto;
+import com.project.web.controller.community.dto.board.SaveBoardResponseDto;
 import com.project.web.controller.community.dto.comment.*;
 import com.project.web.controller.community.dto.post.*;
 import com.project.web.service.board.BoardService;
@@ -41,10 +43,9 @@ public class CommunityRestController {
         );
     }
 
-    @PreAuthorize("isAuthenticated() and #postAuthor == authentication.principal.nickname")
-    @PatchMapping("/api/update-post/{postAuthor}")
+    @PreAuthorize("isAuthenticated() and ((#updatePostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/api/update-post")
     public ResponseEntity<UpdatePostResponseDto> updatePost(@RequestBody UpdatePostRequestDto updatePostRequestDto,
-                                                            @PathVariable(name = "postAuthor") String postAuthor,
                                                             @AuthenticationPrincipal PrincipalDetails principal) {
         String boardType = updatePostRequestDto.getBoardType();
         Integer postId = updatePostRequestDto.getPostId();
@@ -63,18 +64,16 @@ public class CommunityRestController {
         );
     }
 
-    @PreAuthorize("isAuthenticated() and #postAuthor == authentication.principal.nickname")
-    @DeleteMapping("/api/delete-post/{postAuthor}")
+    @PreAuthorize("isAuthenticated() and ((#deletePostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/api/delete-post")
     public ResponseEntity<DeletePostResponseDto> deletePost(@RequestBody DeletePostRequestDto deletePostRequestDto,
-                                                            @PathVariable(name = "postAuthor") String postAuthor,
                                                             @AuthenticationPrincipal PrincipalDetails principal) {
         String boardType = deletePostRequestDto.getBoardType();
         Integer postId = deletePostRequestDto.getPostId();
 
         BoardDto boardDto = boardService.getBoard(boardType);
         Integer boardId = boardDto.getBoardId();
-        Integer userId = principal.getUserId();
-        postService.deletePost(userId, boardId, postId);
+        postService.deletePost(boardId, postId);
 
         return ResponseEntity.ok(
                 DeletePostResponseDto.builder()
@@ -106,16 +105,14 @@ public class CommunityRestController {
         );
     }
 
-    @PreAuthorize("isAuthenticated() and #commentAuthor == authentication.principal.nickname")
-    @DeleteMapping("/api/delete-comment/{commentAuthor}")
+    @PreAuthorize("isAuthenticated() and ((#deleteCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/api/delete-comment")
     public ResponseEntity<DeleteCommentResponseDto> deleteComment(@RequestBody DeleteCommentRequestDto deleteCommentRequestDto,
-                                                                  @PathVariable(name = "commentAuthor") String commentAuthor,
                                                                   @AuthenticationPrincipal PrincipalDetails principal) {
-        Integer userId = principal.getUserId();
         Integer postId = deleteCommentRequestDto.getPostId();
         Integer commentId = deleteCommentRequestDto.getCommentId();
         Integer currentPageNumber = deleteCommentRequestDto.getCurrentPageNumber();
-        commentService.deleteComment(userId, postId, commentId);
+        commentService.deleteComment(postId, commentId);
 
         Integer totalCommentCount = postService.getTotalCommentCount(postId);
         Integer totalPageNumber = ((totalCommentCount - 1) / Constants.COMMENT_PAGE_SIZE) + 1;
@@ -124,6 +121,44 @@ public class CommunityRestController {
         return ResponseEntity.ok(
                 DeleteCommentResponseDto.builder()
                         .commentPageNumber(commentPageNumber)
+                        .build()
+        );
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/inc-post-recommend")
+    public ResponseEntity<IncPostRecommendResponseDto> incPostRecommend(@RequestBody IncPostRecommendRequestDto incPostRecommendRequestDto,
+                                                                        @AuthenticationPrincipal PrincipalDetails pricipal) {
+        Integer userId = pricipal.getUserId();
+        Integer postId = incPostRecommendRequestDto.getPostId();
+        IncPostRecommendResponseDto incPostRecommendResponseDto = postService.incPostRecommend(userId, postId);
+        return ResponseEntity.ok(incPostRecommendResponseDto);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/inc-comment-recommend")
+    public ResponseEntity<IncCommentRecommendResponseDto> incPostRecommend(@RequestBody IncCommentRecommendRequestDto incCommentRecommendRequestDto,
+                                                                           @AuthenticationPrincipal PrincipalDetails principal) {
+        Integer userId = principal.getUserId();
+        Integer commentId = incCommentRecommendRequestDto.getCommentId();
+        IncCommentRecommendResponseDto incCommentRecommendResponseDto = commentService.incCommentRecommend(userId, commentId);
+        return ResponseEntity.ok(incCommentRecommendResponseDto);
+    }
+
+    @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
+    @PostMapping("/api/save-board")
+    public ResponseEntity<SaveBoardResponseDto> saveBoard(@RequestBody SaveBoardRequestDto saveBoardRequestDto,
+                                                          @AuthenticationPrincipal PrincipalDetails principal) {
+        String type = saveBoardRequestDto.getType();
+        String description = saveBoardRequestDto.getDescription();
+        String alias = saveBoardRequestDto.getAlias();
+        String category = saveBoardRequestDto.getCategory();
+
+        boardService.saveBoard(type, alias, description, category);
+
+        return ResponseEntity.ok(
+                SaveBoardResponseDto.builder()
+                        .boardType(type)
                         .build()
         );
     }

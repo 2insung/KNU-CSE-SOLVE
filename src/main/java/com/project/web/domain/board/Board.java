@@ -19,25 +19,26 @@ public class Board {
     private Integer id;
 
     @Column(name = "type", unique = true, nullable = false)
-    @Size(max = 20)
+    @Size(max = 50)
     private String type;
 
     @Column(name = "alias")
-    @Size(max = 20)
+    @Size(max = 50)
     private String alias;
 
     @Column(name = "description")
     @Size(max = 100)
     private String description;
 
-    @Column(name = "user_access", nullable = false)
-    private Boolean userAccess;
+    @Column(name = "category")
+    private String category;
 
     @Builder
-    public Board(String type, String alias, String description, Boolean userAccess) {
+    public Board(Integer id, String type, String alias, String description, String category) {
+        this.id = id;
         this.type = type;
         this.alias = alias;
         this.description = description;
-        this.userAccess = userAccess;
+        this.category = category;
     }
 }

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    document.getElementById("previewImage").src = e.target.result;
+
                 }
                 reader.readAsDataURL(file);
             }

@@ -57,9 +57,10 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @Builder
-    public Comment(Member member, Post post, Member parentMember, Integer rootCommentId,
-                   Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild, Boolean isDeleted,
-                   String body) {
+    public Comment(Integer id, Member member, Post post, Member parentMember, Integer rootCommentId,
+                   Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body,
+                   LocalDateTime createdAt) {
+        this.id = id;
         this.member = member;
         this.post = post;
         this.parentMember = parentMember;
@@ -69,6 +70,7 @@ public class Comment {
         this.isRootChild = isRootChild;
         this.isDeleted = isDeleted;
         this.body = body;
+        this.createdAt = createdAt;
     }
 
     @PostPersist
