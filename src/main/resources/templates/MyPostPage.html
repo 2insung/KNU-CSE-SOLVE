@@ -10,6 +10,32 @@
         <div class="my-post-header">
             <span>내가 작성한 글</span>
         </div>
+        <div class="my-post-list-wrapper">
+            <ul>
+                <li th:each="myPost : ${myPostList}">
+                    <div class="my-post-wrapper">
+                        <div class="alias" th:text="${myPost.boardAlias}"></div>
+                        <div class="title">
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myPost.boardType}, postId=${myPost.postId})}" th:text="${myPost.title}"></a>
+                        </div>
+                        <div class="createdAt" th:text="${myPost.createdAt}"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="my-post-page-number-list-wrapper">
+            <ul>
+                <li th:each="myPostPage, stat : ${myPostPageNumberList}" th:if="${myPostPage.pageNumber != null}">
+                    <a th:href="@{/my/post/{userId}(userId=${myPostPage.userId}, page=${myPostPage.pageNumber})}">
+                        <div th:if="${stat.first}" class="my-post-arrow-left">◀</div>
+                        <div th:if="${!stat.first && !stat.last}"
+                             th:text="${myPostPage.pageNumber}"
+                             th:class="${myPostPage.pageNumber == myPostPageNumber} ? 'my-post-active-page-number' : 'my-post-page-number'"></div>
+                        <div th:if="${stat.last}" class="my-post-arrow-right">▶</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

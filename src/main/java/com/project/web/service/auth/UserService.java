@@ -25,6 +25,7 @@ public class UserService {
 
             return UserDto.builder()
                     .isLogin(true)
+                    .userId(principal.getUserId())
                     .nickname(nickname)
                     .profileImage(profileImage)
                     .isAdmin(role.name().equals("ROLE_ADMIN"))
@@ -33,6 +34,7 @@ public class UserService {
         else {
             return UserDto.builder()
                     .isLogin(false)
+                    .userId(null)
                     .nickname(null)
                     .profileImage(null)
                     .isAdmin(false)

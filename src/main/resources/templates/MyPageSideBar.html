@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="my-side-bar" th:fragment="MyPageSideBarFragment">
-    <a th:href="@{/my/{nickname}(nickname=${nickname})}">사용자 정보</a>
-    <a th:if="${isMy}" th:href="@{/my/edit/{nickname}(nickname=${nickname})}">내 정보 수정</a>
-    <a th:href="@{/my/post/{nickname}(nickname=${nickname})}">작성한 글</a>
-    <a th:href="@{/my/comment/{nickname}(nickname=${nickname})}">작성한 댓글</a>
-    <a th:if="${isMy}" th:href="@{/my/pwEdit/{nickname}(nickname=${nickname})}">비밀번호 수정</a>
-    <a th:if="${isMy}" th:href="@{/my/withdraw/{nickname}(nickname=${nickname})}">회원 탈퇴</a>
+    <a th:href="@{/my/{userId}(userId=${userId})}">사용자 정보</a>
+    <a th:if="${isMy}" th:href="@{/my/edit/{userId}(userId=${userId})}">내 정보 수정</a>
+    <a th:href="@{/my/post/{userId}(userId=${userId})}">작성한 글</a>
+    <a th:href="@{/my/comment/{userId}(userId=${userId})}">작성한 댓글</a>
+    <a th:if="${isMy}" th:href="@{/my/pwEdit/{userId}(userId=${userId})}">비밀번호 수정</a>
+    <a th:if="${isMy}" th:href="@{/my/withdraw/{userId}(userId=${userId})}">회원 탈퇴</a>
 </div>
 </html>

@@ -17,7 +17,7 @@
                     </div>
                 </a>
                 <div id="dropDownMenu">
-                    <a th:href="@{/my/{nickname}(nickname=${user.nickname})}">마이페이지</a>
+                    <a th:href="@{/my/{userId}(userId=${user.userId})}">마이페이지</a>
                     <form th:action="@{/logout}" th:method="post">
                         <button type="submit">로그아웃</button>
                     </form>

@@ -23,7 +23,7 @@
                     <img th:src="${post.authorProfileImage != null ? post.authorProfileImage : '/img/tempProfile.jpg'}">
                 </div>
                 <div class="post-author-nickname">
-                    <a th:href="@{/my/{nickname}(nickname=${post.authorNickname})}"
+                    <a th:href="@{/my/{authorId}(authorId=${post.authorId})}"
                        th:text="${post.authorNickname}"></a>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                                         <img th:src="${comment.authorProfileImage != null ? comment.authorProfileImage : '/img/tempProfile.jpg'}">
                                     </div>
                                     <div class="comment-author-nickname">
-                                        <a th:href="@{/my/{nickname}(nickname=${comment.authorNickname})}"
+                                        <a th:href="@{/my/{authorId}(authorId=${comment.authorId})}"
                                            th:text="${comment.authorNickname}"></a>
                                     </div>
                                     <div class="post-author" th:if="${comment.isPostAuthor}">
@@ -156,7 +156,8 @@
                 </ul>
                 <div class="comment-page-number-list-wrapper">
                     <ul>
-                        <li th:each="commentPage, stat : ${commentPageNumberList}" th:if="${commentPage.pageNumber != null}">
+                        <li th:each="commentPage, stat : ${commentPageNumberList}"
+                            th:if="${commentPage.pageNumber != null}">
                             <div class="comment-arrow-left"
                                  th:if="${stat.first}"
                                  th:data-postId="${commentPage.postId}"

@@ -3,12 +3,12 @@ package com.project.web.controller.my.dto;
 import lombok.Builder;
 
 public class MyCommentPageDto {
-    private String nickname;
+    private Integer userId;
     private Integer pageNumber;
 
     @Builder
-    public MyCommentPageDto(String nickname, Integer pageNumber){
-        this.nickname = nickname;
+    public MyCommentPageDto(Integer userId, Integer pageNumber){
+        this.userId = userId;
         this.pageNumber = pageNumber;
     }
 }

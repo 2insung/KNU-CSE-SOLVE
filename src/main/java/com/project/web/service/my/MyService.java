@@ -57,10 +57,9 @@ public class MyService {
         memberDetail.updateDepartment(department);
     }
 
-    @PostAuthorize("returnObject.nickname == #userNickname")
     @Transactional(readOnly = true)
-    public MyEditDto getMyEdit(String nickname, String userNickname) {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
+    public MyEditDto getMyEdit(Integer userId) {
+        MemberDetail memberDetail = memberDetailRepository.findByMember_Id(userId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
         Integer memberId = memberDetail.getMember().getId();
@@ -83,8 +82,8 @@ public class MyService {
     }
 
     @Transactional(readOnly = true)
-    public MyDto getMy(String nickname) {
-        Object result = memberRepository.findMyByNickname(nickname)
+    public MyDto getMy(Integer userId) {
+        Object result = memberRepository.findMyById(userId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
         Object[] arr = (Object[]) result;
         Boolean isDeleted = (Boolean) arr[0];
@@ -113,15 +112,13 @@ public class MyService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyPostDto> getMyPostList(String nickname, Integer pageNumber) {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
-        Integer memberId = memberDetail.getMember().getId();
-
+    public List<MyPostDto> getMyPostList(Integer userId, Integer pageNumber) {
+        if (!memberRepository.existsById(userId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
 
         Integer pageSize = 20;
-        List<Object[]> results = postRepository.findMyPostByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
-        System.out.println(results.size());
+        List<Object[]> results = postRepository.findMyPostByMemberId(userId, pageSize, pageSize * (pageNumber - 1));
         List<MyPostDto> myPostDtoList = results.stream()
                 .map((result) -> {
                     Integer postId = (Integer) result[0];
@@ -129,7 +126,7 @@ public class MyService {
                     String boardType = (String) result[2];
                     String boardAlias = (String) result[3];
                     String title = (String) result[4];
-                    LocalDateTime createdAt = (LocalDateTime) result[5];
+                    LocalDateTime createdAt = ((Timestamp) result[5]).toLocalDateTime();
 
                     return MyPostDto.builder()
                             .postId(postId)
@@ -146,23 +143,24 @@ public class MyService {
     }
 
     @Transactional(readOnly = true)
-    public Integer getMyPostCount(String nickname) {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
-        Integer memberId = memberDetail.getMember().getId();
+    public Integer getMyPostCount(Integer userId) {
+        if (!memberRepository.existsById(userId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
 
-        return postRepository.countMyPost(memberId, 20000);
+        return postRepository.countMyPost(userId, 20000);
     }
 
 
     @Transactional(readOnly = true)
-    public List<MyCommentDto> getMyCommentList(String nickname, Integer pageNumber) {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
-        Integer memberId = memberDetail.getMember().getId();
+    public List<MyCommentDto> getMyCommentList(Integer userId, Integer pageNumber) {
+        if (!memberRepository.existsById(userId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
+
 
         Integer pageSize = 20;
-        List<Object[]> results = commentRepository.findMyCommentByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
+        List<Object[]> results = commentRepository.findMyCommentByMemberId(userId, pageSize, pageSize * (pageNumber - 1));
         List<MyCommentDto> myCommentDtoList = results.stream()
                 .map((result) -> {
                     Integer postId = (Integer) result[0];
@@ -191,12 +189,12 @@ public class MyService {
     }
 
     @Transactional(readOnly = true)
-    public Integer getMyCommentCount(String nickname) {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
-        Integer memberId = memberDetail.getMember().getId();
+    public Integer getMyCommentCount(Integer userId) {
+        if (!memberRepository.existsById(userId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
 
-        return commentRepository.countMyComment(memberId, 20000);
+        return commentRepository.countMyComment(userId, 20000);
     }
 
 }

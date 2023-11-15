@@ -26,58 +26,58 @@ public class MyController {
     private final MyService myService;
     private final UserService userService;
 
-    @GetMapping("/my/{nickname}")
-    public String viewMyPage(@PathVariable(name = "nickname") String nickname,
+    @GetMapping("/my/{userId}")
+    public String viewMyPage(@PathVariable(name = "userId") Integer userId,
                              @AuthenticationPrincipal PrincipalDetails principal,
                              Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        MyDto myDto = myService.getMy(nickname);
+        MyDto myDto = myService.getMy(userId);
         model.addAttribute("my", myDto);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         return "MyPage";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/my/edit/{nickname}")
-    public String viewMyPageEdit(@PathVariable String nickname,
+    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
+    @GetMapping("/my/edit/{userId}")
+    public String viewMyPageEdit(@PathVariable(name = "userId") Integer userId,
                                  @AuthenticationPrincipal PrincipalDetails principal,
                                  Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        MyEditDto myEditDto = myService.getMyEdit(nickname, userDto.getNickname());
+        MyEditDto myEditDto = myService.getMyEdit(userId);
         model.addAttribute("myEdit", myEditDto);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         return "MyEditPage";
     }
 
-    @GetMapping("/my/post/{nickname}")
-    public String viewMyPagePost(@PathVariable String nickname,
+    @GetMapping("/my/post/{userId}")
+    public String viewMyPagePost(@PathVariable(name = "userId") Integer userId,
                                  @AuthenticationPrincipal PrincipalDetails principal,
                                  @RequestParam(name = "page", defaultValue = "1") Integer page,
                                  Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        List<MyPostDto> myPostDtoList = myService.getMyPostList(nickname, page);
+        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, page);
         model.addAttribute("myPostList", myPostDtoList);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
-        Integer myPostCount = myService.getMyPostCount(nickname);
+        Integer myPostCount = myService.getMyPostCount(userId);
         Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, 20, page);
         if (!page.equals(processedPageNumber)) {
-            return "redirect:/my/post/" + nickname + "?page=" + processedPageNumber;
+            return "redirect:/my/post/" + userId + "?page=" + processedPageNumber;
         }
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
         List<Integer> myPostPageNumberList = PageUtil.makePageNumberList(myPostCount, 20, page);
         List<MyPostPageNumberDto> myPostPageNumberDtoList = myPostPageNumberList.stream().map(
                 (number) -> MyPostPageNumberDto.builder()
-                        .nickname(nickname)
+                        .userId(userId)
                         .pageNumber(number)
                         .build()
         ).collect(Collectors.toList());
@@ -87,29 +87,29 @@ public class MyController {
         return "MyPostPage";
     }
 
-    @GetMapping("/my/comment/{nickname}")
-    public String viewMyPageComment(@PathVariable String nickname,
+    @GetMapping("/my/comment/{userId}")
+    public String viewMyPageComment(@PathVariable(name = "userId") Integer userId,
                                     @AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestParam(name = "page", defaultValue = "1") Integer page,
                                     Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(nickname, page);
+        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, page);
         model.addAttribute("myCommentList", myCommentDtoList);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
-        Integer myCommentCount = myService.getMyCommentCount(nickname);
+        Integer myCommentCount = myService.getMyCommentCount(userId);
         Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, 20, page);
         if (!page.equals(processedPageNumber)) {
-            return "redirect:/my/comment/" + nickname + "?page=" + processedPageNumber;
+            return "redirect:/my/comment/" + userId + "?page=" + processedPageNumber;
         }
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
         List<Integer> myCommentPageNumberList = PageUtil.makePageNumberList(myCommentCount, 20, page);
         List<MyCommentPageDto> myCommentPageNumberDtoList = myCommentPageNumberList.stream().map(
                 (number) -> MyCommentPageDto.builder()
-                        .nickname(nickname)
+                        .userId(userId)
                         .pageNumber(number)
                         .build()
         ).collect(Collectors.toList());
@@ -119,26 +119,26 @@ public class MyController {
         return "MyCommentPage";
     }
 
-    @PreAuthorize("isAuthenticated() and #nickname == authentication.principal.nickname")
-    @GetMapping("/my/pwEdit/{nickname}")
-    public String viewMyPagePwEdit(@PathVariable String nickname,
+    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
+    @GetMapping("/my/pwEdit/{userId}")
+    public String viewMyPagePwEdit(@PathVariable(name = "userId") Integer userId,
                                    @AuthenticationPrincipal PrincipalDetails principal,
                                    Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         return "MyPwEditPage";
     }
 
-    @PreAuthorize("isAuthenticated() and #nickname == authentication.principal.nickname")
-    @GetMapping("/my/withdraw/{nickname}")
-    public String viewMyPageWithdraw(@PathVariable String nickname,
+    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
+    @GetMapping("/my/withdraw/{userId}")
+    public String viewMyPageWithdraw(@PathVariable(name = "userId") Integer userId,
                                      @AuthenticationPrincipal PrincipalDetails principal,
                                      Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
-        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
+        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         return "MyWithdrawPage";
     }

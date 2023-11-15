@@ -23,8 +23,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberDetail md ON md.member = m " +
-            "WHERE md.nickname = :nickname")
-    Optional<Object> findMyByNickname(String nickname);
+            "WHERE m.id = :memberId")
+    Optional<Object> findMyById(Integer memberId);
 
     @Query("select md.nickname, md.profileImage, ma.role " +
             "from Member m " +

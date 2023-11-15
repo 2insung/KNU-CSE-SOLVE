@@ -14,3 +14,65 @@
     font-weight: bolder;
     font-size: 2rem;
 }
+
+.my-post-list-wrapper{
+}
+
+.my-post-wrapper{
+    padding: 10px 20px;
+    border-bottom: 1px solid #837ed7;
+}
+
+.my-post-wrapper .alias{
+    font-size: 13px;
+}
+
+.my-post-wrapper .title{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.my-post-wrapper .title a:hover{
+    text-decoration: underline;
+}
+
+.my-post-wrapper .createdAt{
+    font-size: 12px;
+}
+
+.my-post-page-number-list-wrapper ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.my-post-page-number-list-wrapper li {
+    margin: 0 5px;
+}
+
+.my-post-active-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: #837ed7;
+    color: white;
+}
+
+.my-post-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.my-post-arrow-left {
+    color: #837ed7;
+}
+
+.my-post-arrow-right {
+    color: #837ed7;
+}
+
