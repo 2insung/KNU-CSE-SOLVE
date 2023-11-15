@@ -16,6 +16,10 @@ public class ImageUploadService {
     private String updatePath;
 
     public String uploadImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
         long fileSizeInMB = file.getSize() / 1024 / 1024;
 
         if (fileSizeInMB >= 1) {

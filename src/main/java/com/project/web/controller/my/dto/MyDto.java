@@ -1,6 +1,7 @@
 package com.project.web.controller.my.dto;
 
 
+import com.project.web.domain.member.Level;
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,18 +26,18 @@ public class MyDto {
     private String createdAt;
 
     @Builder
-    private MyDto(Boolean isDeleted, String username, String level, String nickname,
+    private MyDto(Boolean isDeleted, String username, Level level, String nickname,
                   String profileImage, String description, String grade, String admissionYear,
                   String department, LocalDateTime createdAt) {
         this.isDeleted = isDeleted;
         this.username = username;
-        this.level = level;
+        this.level = level.getName();
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.description = description;
         this.grade = grade;
         this.admissionYear = admissionYear;
         this.department = department;
-        this.createdAt = TimeFormattingUtil.localDateTimeFormatting(createdAt);
+        this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
     }
 }

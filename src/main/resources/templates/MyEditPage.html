@@ -1,75 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{MyLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/MyEditPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
-    <div id="container">
-        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-        <main>
-            <section>
-                <div class="profile">
-                    <div class="profileWrapper">
-                        <div class="inner">
-                            <div class="title">
-                                내 정보 수정
-                            </div>
-                            <form id="editProfileForm" th:action="@{/public/editMemberProfile}" method="post"
-                                  enctype="multipart/form-data">
-                                <input id="id" name="id" type="hidden" th:value="${id}">
-                                <div class="editWrapper">
-                                    <div class="editTitle">
-                                <span>
-                                    프로필 사진
-                                </span>
-                                    </div>
-                                    <div class="editPicture">
-                                        <img id="previewImage"
-                                             th:src="${imageUrl != null ? imageUrl : '/img/tempProfile.jpg'}">
-                                        <input type="file" id="imageInput" name="file" accept="image/*"
-                                               style="display: none"/>
-                                    </div>
-                                    <button onclick="document.getElementById('imageInput').click();" type="button">
-                                        Edit
-                                    </button>
-                                </div>
-                                <div class="editWrapper">
-                                    <div class="editTitle">
-                                <span>
-                                    닉네임
-                                </span>
-                                    </div>
-                                    <div class="editInput">
-                                        <input th:value="${nickname}" id="nickname" name="nickname" type="text"/>
-                                    </div>
-                                    <div id="confirmVaildNickname">
-                                    </div>
-                                </div>
-                                <div class="editWrapper">
-                                    <div class="editTitle">
-                                <span>
-                                    소개
-                                </span>
-                                    </div>
-                                    <div class="editInput">
-                                        <input th:value="${description}" id="description" name="description"
-                                               type="text"/>
-                                    </div>
-                                </div>
-                                <div class="errorWrapper">
-                                    <p id="errorMessage"></p>
-                                </div>
-                                <div class="editWrapper">
-                                    <button type="submit">Sumbit</button>
-                                </div>
-                            </form>
-                        </div>
+    <div class="my-edit">
+        <div class="my-edit-header">
+            <span>내 정보 수정</span>
+        </div>
+        <form>
+            <div class="edit-wrapper">
+                <div class="title">프로필 사진</div>
+                <div class="edit-profile-image">
+                    <div class="picture">
+                        <img id="previewImage"
+                             th:src="${myEdit.profileImage != null ? myEdit.profileImage : '/img/tempProfile.jpg'}">
                     </div>
+                    <input type="file" id="imageInput" name="file" accept="image/*"
+                           style="display: none"/>
                 </div>
-            </section>
-        </main>
+                <button onclick="document.getElementById('imageInput').click();" type="button">
+                    프로필 이미지 변경
+                </button>
+            </div>
+            <div class="edit-wrapper">
+                <div class="title">닉네임</div>
+                <div class="edit-input">
+                    <input th:value="${myEdit.nickname}" id="nickname" name="nickname" type="text"/>
+                </div>
+            </div>
+            <div class="edit-wrapper">
+                <div class="title">자기 소개</div>
+                <div class="edit-input">
+                    <textarea rows="3" th:text="${myEdit.description}" id="description" name="description"></textarea>
+                </div>
+            </div>
+            <div class="edit-wrapper">
+                <div class="title">학과(부)</div>
+                <div class="edit-input">
+                    <input th:value="${myEdit.department}" id="department" name="department" type="text"/>
+                </div>
+            </div>
+            <div class="edit-wrapper">
+                <div class="title">학년</div>
+                <div class="edit-input">
+                    <select name="grade" id="grade" th:field="${myEdit.grade}">
+                        <option value="1">1학년</option>
+                        <option value="2">2학년</option>
+                        <option value="3">3학년</option>
+                        <option value="4">4학년</option>
+                    </select>
+                </div>
+            </div>
+            <div class="edit-wrapper">
+                <div class="title">입학년도</div>
+                <div class="edit-input">
+                    <select name="admissionYear" id="admissionYear" th:field="${myEdit.admissionYear}">
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+            </div>
+            <div class="edit-wrapper">
+                <button th:data-userId="${myEdit.userId}"
+                        class="submit-button"
+                        onclick="submitHandler(this.getAttribute('data-userId'))"
+                        type="button">수정하기</button>
+            </div>
+        </form>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

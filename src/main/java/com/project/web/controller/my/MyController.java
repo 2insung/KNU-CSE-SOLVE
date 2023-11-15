@@ -126,6 +126,7 @@ public class MyController {
                                    Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
+        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
 
         return "MyPwEditPage";
     }
@@ -137,6 +138,7 @@ public class MyController {
                                      Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
+        model.addAttribute("isMy", nickname.equals(userDto.getNickname()));
 
         return "MyWithdrawPage";
     }

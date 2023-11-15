@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{MyLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/MyPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
-    <div id="container">
-        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-        <main>
-            <section>
-                <div class="profile">
-                    <div class="profileWrapper">
-                        <div class="inner">
-                            <div class="userStatus">
-                                <h2></h2>
-                            </div>
-                            <div class="profilePicture">
-                                <img th:src="${profileImageUrl != null ? profileImageUrl : '/img/tempProfile.jpg'}">
-                            </div>
-                            <div class="profileNickname" th:text="${profileNickname}"></div>
-                            <div class="profileRank" th:text="${profileRank}"></div>
-                            <div class="profileEmail" th:text="${profileEmail}"></div>
-                            <div class="profileCreateAt" th:text="${profileCreateAt}"></div>
-                            <div class="profileDescription" th:text="${profileDescription}"></div>
-                        </div>
-
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div class="my">
+        <div class="user-status">
+            <h2 th:text="${my.isDeleted ? '탈퇴한 회원입니다.' : ''}"></h2>
+        </div>
+        <div class="my-base">
+            <div class="my-picture">
+                <img th:src="${my.profileImage != null ? my.profileImage : '/img/tempProfile.jpg'}">
+            </div>
+            <div class="my-nickname" th:text="${my.nickname}"></div>
+            <div class="my-level" th:text="${my.level}"></div>
+        </div>
+        <div class="my-detail">
+            <div class="detail-wrapper">
+                <span>학년</span>
+                <div class="detail" th:text="${my.grade}"></div>
+            </div>
+            <div class="detail-wrapper">
+                <span>입학년도</span>
+                <div class="detail" th:text="${my.admissionYear}"></div>
+            </div>
+            <div class="detail-wrapper">
+                <span>학과</span>
+                <div class="detail" th:text="${my.department}"></div>
+            </div>
+            <div class="detail-wrapper">
+                <span>가입일</span>
+                <div class="detail" th:text="${my.createdAt}"></div>
+            </div>
+        </div>
+        <div class="my-description">
+            <span>자기 소개</span>
+            <div class="description" th:text="${my.description}"></div>
+        </div>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

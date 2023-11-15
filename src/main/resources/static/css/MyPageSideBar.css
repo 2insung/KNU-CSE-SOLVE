@@ -1,21 +1,23 @@
-.myPageSideBar{
+.my-side-bar{
     width: 200px;
-    margin-top: 20px;
+    margin-right: 10px;
+    border : 2px solid #837ed7;
 }
 
-.myPageSideBar a {
-    background-color: #eee; /* 메뉴의 배경색 */
-    color: black; /* 메뉴의 텍스트 색상 */
+.my-side-bar a {
+    background-color: white; /* 메뉴의 배경색 */
+    color: #837ed7; /* 메뉴의 텍스트 색상 */
+    border-bottom : 1px solid #837ed7;
     display: block; /* 블록 요소로 설정하여 수직 배열 */
     padding: 12px; /* 내부 여백 */
     text-decoration: none; /* 밑줄 제거 */
 }
 
-.myPageSideBar a:hover {
-    background-color: #ccc; /* 호버 시 배경색 */
+.my-side-bar a:hover {
+    background-color: #b3b2f1; /* 호버 시 배경색 */
+    color: white;
 }
 
-.myPageSideBar a.active {
-    background-color: #4CAF50; /* 활성화된 메뉴 아이템의 배경색 */
-    color: white; /* 활성화된 메뉴 아이템의 텍스트 색상 */
+.my-side-bar a:last-of-type{
+    border-bottom: 0px;
 }

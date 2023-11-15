@@ -1,31 +1,16 @@
-#container{
-    position: relative;
-    width: 1600px;
+.my-post{
+    width: 1100px;
     margin: 0 auto;
-    display: flex;
+    margin-left: 0;
 }
 
-main{
-    margin-top: 20px;
+.my-post-header{
+    border-bottom: 3px solid #837ed7;
+    padding-bottom: 3px;
 }
 
-
-.profile{
-    width: 1200px;
-    height: 700px;
-    margin: 0 auto;
-}
-
-.profileWrapper{
-    width: 100% !important;
-}
-
-.inner{
-    padding: 25px 0px 0 56px;
-    width: calc(100% - 115px) !important;
-}
-
-.inner .title{
+.my-post-header span{
+    color: #6f6abe;
+    font-weight: bolder;
     font-size: 2rem;
-    border-bottom: 1px solid #e2e2e2;
 }

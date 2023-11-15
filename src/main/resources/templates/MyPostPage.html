@@ -1,26 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{MyLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/MyPostPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
-    <div id="container">
-        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-        <main>
-            <section>
-                <div class="profile">
-                    <div class="profileWrapper">
-                        <div class="inner">
-                            <div class="title">
-                                작성한 글
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div class="my-post">
+        <div class="my-post-header">
+            <span>내가 작성한 글</span>
+        </div>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

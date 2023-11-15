@@ -2,13 +2,14 @@ package com.project.web.service.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.my.dto.*;
+import com.project.web.domain.member.Level;
+import com.project.web.domain.member.Member;
 import com.project.web.domain.member.MemberDetail;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.comment.CommentRepository;
 import com.project.web.repository.member.MemberDetailRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostRepository;
-import com.project.web.service.board.S3UploaderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,60 +36,25 @@ public class MyService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @Transactional(readOnly = true)
-    public Boolean checkValidNickname(String nickname) {
-        return memberDetailRepository.existsByNickname(nickname);
-    }
-
     @Transactional
-    public void editMemberProfile(String prevNickname, MyEditFormRequestDto requestDto, PrincipalDetails principal) throws IOException {
-        MemberDetail memberDetail = memberDetailRepository.findByNickname(prevNickname)
+    public void updateMy(Integer userId, String nickname, String profileImage, String grade,
+                         String description, String admissionYear, String department) {
+        MemberDetail memberDetail = memberDetailRepository.findByMember_Id(userId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
-        memberDetail.updateNickname(requestDto.getNickname());
-
-        if (requestDto.getFile() != null && !requestDto.getFile().isEmpty()) {
-            String imageUrl = s3UploaderService.upload(requestDto.getFile(), "images");
-            memberDetail.updateProfileImage(imageUrl);
-        }
-        memberDetail.updateGrade(requestDto.getGrade());
-        memberDetail.updateDescription(requestDto.getDescription());
-        memberDetail.updateAdmissionYear(requestDto.getAdmissionYear());
-        memberDetail.updateDepartment(requestDto.getDepartment());
-
-        Map<String, ? extends Session> sessionMap = jdbcIndexedSessionRepository.findByPrincipalName(principal.getUsername());
-
-        for (String sessionId : sessionMap.keySet()) {
-            Session session = sessionMap.get(sessionId);
-
-            SecurityContext securityContext = (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
-            if (securityContext == null) {
-                continue;
+        if (nickname != null) {
+            if (memberDetailRepository.existsByNickname(nickname)) {
+                throw new Error404Exception("이미 존재하는 닉네임입니다.");
             }
-
-            Authentication authentication = securityContext.getAuthentication();
-
-            PrincipalDetails principalDetail = PrincipalDetails.builder()
-                    .userId(principal.getUserId())
-                    .username(principal.getUsername())
-                    .password(principal.getPassword())
-                    .level(principal.getLevel())
-                    .nickname(memberDetail.getNickname())
-                    .profileImage(memberDetail.getProfileImage())
-                    .role(principal.getRole())
-                    .attributes(principal.getAttributes())
-                    .build();
-
-            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
-                    principalDetail,
-                    authentication.getCredentials(),
-                    authentication.getAuthorities()
-            );
-
-            securityContext.setAuthentication(newAuthentication);
-            session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-            jdbcIndexedSessionRepository.save(session);
+            memberDetail.updateNickname(nickname);
         }
+        if (profileImage != null) {
+            memberDetail.updateProfileImage(profileImage);
+        }
+        memberDetail.updateGrade(grade);
+        memberDetail.updateDescription(description);
+        memberDetail.updateAdmissionYear(admissionYear);
+        memberDetail.updateDepartment(department);
     }
 
     @PostAuthorize("returnObject.nickname == #userNickname")
@@ -97,6 +63,7 @@ public class MyService {
         MemberDetail memberDetail = memberDetailRepository.findByNickname(nickname)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
+        Integer memberId = memberDetail.getMember().getId();
         String resultNickname = memberDetail.getNickname();
         String profileImage = memberDetail.getProfileImage();
         String description = memberDetail.getDescription();
@@ -105,6 +72,7 @@ public class MyService {
         String department = memberDetail.getDepartment();
 
         return MyEditDto.builder()
+                .userId(memberId)
                 .nickname(resultNickname)
                 .profileImage(profileImage)
                 .description(description)
@@ -121,14 +89,14 @@ public class MyService {
         Object[] arr = (Object[]) result;
         Boolean isDeleted = (Boolean) arr[0];
         String username = (String) arr[1];
-        String level = (String) arr[2];
+        Level level = (Level) arr[2];
         String userNickname = (String) arr[3];
         String profileImage = (String) arr[4];
         String description = (String) arr[5];
         String grade = (String) arr[6];
         String admissionYear = (String) arr[7];
         String department = (String) arr[8];
-        LocalDateTime createdAt = ((Timestamp) arr[9]).toLocalDateTime();
+        LocalDateTime createdAt = (LocalDateTime) arr[9];
 
         return MyDto.builder()
                 .isDeleted(isDeleted)
@@ -150,8 +118,10 @@ public class MyService {
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
         Integer memberId = memberDetail.getMember().getId();
 
+
         Integer pageSize = 20;
         List<Object[]> results = postRepository.findMyPostByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
+        System.out.println(results.size());
         List<MyPostDto> myPostDtoList = results.stream()
                 .map((result) -> {
                     Integer postId = (Integer) result[0];
@@ -159,7 +129,7 @@ public class MyService {
                     String boardType = (String) result[2];
                     String boardAlias = (String) result[3];
                     String title = (String) result[4];
-                    LocalDateTime createdAt = ((Timestamp) result[5]).toLocalDateTime();
+                    LocalDateTime createdAt = (LocalDateTime) result[5];
 
                     return MyPostDto.builder()
                             .postId(postId)

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-
+                    document.getElementById("previewImage").src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }
@@ -18,88 +18,51 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+function submitHandler(userId){
+    var fileInput = document.getElementById('imageInput');
+    var file = fileInput.files[0]; // 사용자가 선택한 파일
+    var nickname = $("#nickname").val();
+    var description = $("#description").val();
+    var department = $("#department").val();
+    var grade = $("#grade").val()
+    var admissionYear = $("#admissionYear").val()
 
+    if (file) {
+        var formData = new FormData();
+        formData.append("file", file); // 파일 추가
+        formData.append("userId", userId); // 기존 닉네임 추가
+        formData.append("nickname", nickname); // 닉네임 추가
+        formData.append("description", description); // 설명 추가
+        formData.append("grade", grade); // 학년 추가
+        formData.append("admissionYear", admissionYear); // 입학년도 추가
+        formData.append("department", department); // 학과 추가
 
-document.addEventListener("DOMContentLoaded", function () {
-    var editProfileForm = document.getElementById("editProfileForm");
-
-    editProfileForm.addEventListener("submit", function (event) {
-        var inputNickname = $("#nickname").val()
-        var inputDescription = $("#description").val()
-
-        if (inputNickname === "") {
-            alert("닉네임을 입력해주세요");
-            event.preventDefault()
-            return;
-        }
-
-        if (inputNickname.length > 10) {
-            alert("닉네임은 10자 이하만 가능합니다.");
-            event.preventDefault()
-            return;
-        }
-
-        if (inputNickname.length > 50) {
-            alert("자기소개는 50자 이하만 가능합니다.");
-            event.preventDefault()
-            return;
-        }
-
-        if (isValidNickname === false) {
-            alert("중복 검사를 해주세요.");
-            event.preventDefault()
-            return;
-        }
-
-    })
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    let timeout;
-    var prevNickname = $("#nickname").val();
-
-    $("#nickname").change(function() {
-        let currentNickname = $("#nickname").val();
-
-        if(timeout){
-            clearTimeout(timeout);
-        }
-
-        if (currentNickname !== prevNickname) {
-            timeout = setTimeout(function() {
-                $.ajax({
-                    url: "/private/checkValidNickname",
-                    type: "POST",
-                    data: {
-                        nickname: currentNickname
-                    },
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("X-CSRF-TOKEN", token);
-                    },
-                    success: function(data) {
-                        if(data) {
-                            $("#confirmVaildNickname").text("사용 가능한 닉네임입니다.");
-                            isValidNickname = true;
-                        } else {
-                            $("#confirmVaildNickname").text("이미 사용 중인 닉네임입니다. 다른 닉네임을 선택하세요.");
-                            isValidNickname = false;
-                        }
-                    },
-                    error: function() {
-                        if (xhr.status === 401) {
-                            var redirectUrl = xhr.getResponseHeader("Redirect-URL");
-                            if (redirectUrl) {
-                                window.location.href = redirectUrl;
-                            }
-                        }
-                        $("#confirmVaildNickname").text("닉네임 확인 중 오류가 발생했습니다.");
+        $.ajax({
+            url: "/api/update-my",
+            type: "POST",
+            data: formData,
+            processData: false, // FormData를 사용할 때 필요
+            contentType: false, // FormData를 사용할 때 필요
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRF-TOKEN", token);
+            },
+            success: function (data) {
+                alert("수정했습니다.")
+                window.location.href = "/my/" + data.nickname
+            },
+            error: function (error) {
+                if (error.status === 401 || error.status === 403) {
+                    var redirectUrl = error.getResponseHeader("Redirect-URL");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
                     }
-                });
-            }, 500);
-        }
-
-    });
-
-})
-
+                }
+                else {
+                    alert(error.responseText)
+                }
+            }
+        });
+    } else {
+        alert("파일을 선택해주세요.");
+    }
+}

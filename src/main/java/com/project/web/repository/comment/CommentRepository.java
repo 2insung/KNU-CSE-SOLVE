@@ -31,7 +31,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     @Query(nativeQuery = true,
             value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.id, b.type, b.alias, p.title " +
-                    "from (select tc.id from comment tc where tc.member_id = :member_id order by tc.created_at desc limit :limit offset :offset) as temp " +
+                    "from (select tc.id from comment tc where tc.member_id = :memberId order by tc.created_at desc limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
                     "inner join post p on c.post_id = p.id " +
                     "inner join post_content pc on p.id = pc.post_id" +
