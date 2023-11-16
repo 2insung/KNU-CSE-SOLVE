@@ -56,5 +56,5 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name web-project-prod \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=web-project-bucket,bundleType=zip,key=WebProject/$GITHUB_SHA.zip \
+          --s3-location bucket=web-project-2,bundleType=zip,key=WebProject/$GITHUB_SHA.zip \
           --region ap-northeast-2 \
