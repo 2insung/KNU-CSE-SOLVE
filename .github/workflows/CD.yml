@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  S3_BUCKET_NAME: web-project-bucket
+  S3_BUCKET_NAME: web-project-2
   PROJECT_NAME: WebProject
 
 jobs:
