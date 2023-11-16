@@ -30,6 +30,8 @@ spring:
     suffix: .html
 
 
+
+
 image:
   resource:
     location: "file:///C:/Users/user/web_project/image/"
