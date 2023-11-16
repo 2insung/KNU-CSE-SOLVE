@@ -71,7 +71,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
 
     @Query(nativeQuery = true,
-            value = "select p.id, b.id as board_id, b.type, b.alias, pc.title, p.created_at " +
+            value = "select p.id, b.id as board_id, b.type, b.alias, pc.title, p.created_at, p.member_id " +
                     "from (select tp.id from post tp where tp.member_id = :memberId order by tp.created_at desc limit :limit offset :offset) as temp " +
                     "inner join post p on p.id = temp.id " +
                     "inner join board b on p.board_id = b.id " +
@@ -80,7 +80,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Object[]> findMyPostByMemberId(Integer memberId, Integer limit, Integer offset);
 
     @Query(nativeQuery = true,
-            value = "select count(*) from (select * from post where member_id = :memberId limit :limit) as temp")
+            value = "select count(*) from (select id from post where member_id = :memberId limit :limit) as temp")
     int countMyPost(Integer memberId, Integer limit);
 
 
@@ -147,5 +147,59 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Modifying
     @Query("delete from Post p where p.id = :postId")
     int deleteByPostId(Integer postId);
+
+
+    @Query(nativeQuery = true,
+            value = "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 1 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) " +
+                    "union all " +
+                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 2 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) " +
+                    "union all " +
+                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 3 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) " +
+                    "union all " +
+                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 4 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) " +
+                    "union all " +
+                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 5 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) " +
+                    "union all " +
+                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.board_id = 6 " +
+                    "order by p.created_at DESC " +
+                    "limit 10) ")
+    List<Object[]> findTopPostList();
+
+    @Query(nativeQuery = true,
+            value = "select p.id, pc.title, b.type from post p " +
+                    "inner join board b on p.board_id = b.id  " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "where p.is_hot = true " +
+                    "order by p.hot_registered_time DESC " +
+                    "limit 20")
+    List<Object[]> findTopHotPostList();
 
 }

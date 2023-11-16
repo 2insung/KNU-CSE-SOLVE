@@ -48,7 +48,7 @@ function submitHandler(userId){
             },
             success: function (data) {
                 alert("수정했습니다.")
-                window.location.href = "/my/" + data.nickname
+                window.location.href = "/my/" + data.userId
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

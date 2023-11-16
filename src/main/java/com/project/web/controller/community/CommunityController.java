@@ -40,6 +40,12 @@ public class CommunityController {
                        Model model) {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
+
+        List<TopPostListDto> topPostDtoList = postService.getTopPost();
+        model.addAttribute("topPostList", topPostDtoList);
+
+        List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPost();
+        model.addAttribute("topHotPostList", topHotPostDtoList);
         return "RootPage";
     }
 
@@ -283,7 +289,6 @@ public class CommunityController {
         model.addAttribute("subjectBoardList", subjectBoardList);
         return "AllBoardPage";
     }
-
 
 
 }

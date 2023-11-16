@@ -1,9 +1,9 @@
 package com.project.web.controller.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.my.dto.MyEditFormRequestDto;
-import com.project.web.controller.my.dto.UpdateMyRequestDto;
-import com.project.web.controller.my.dto.UpdateMyResponseDto;
+import com.project.web.controller.my.dto.*;
+import com.project.web.service.board.CommentService;
+import com.project.web.service.board.PostService;
 import com.project.web.service.my.MyService;
 import com.project.web.service.upload.ImageUploadService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MyRestController {
     private final MyService myService;
+    private final PostService postService;
+    private final CommentService commentService;
     private final ImageUploadService imageUploadService;
 
     @PreAuthorize("isAuthenticated() and ((#updateMyRequestDto.userId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
@@ -36,7 +38,45 @@ public class MyRestController {
 
         return ResponseEntity.ok(
                 UpdateMyResponseDto.builder()
-                        .nickname(nickname)
+                        .userId(userId)
+                        .build()
+        );
+    }
+
+    @PreAuthorize("isAuthenticated() and ((#deleteMyPostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/api/delete-my-post")
+    public ResponseEntity<DeleteMyPostResponseDto> deleteMyPost(@RequestBody DeleteMyPostRequestDto deleteMyPostRequestDto,
+                                                                @AuthenticationPrincipal PrincipalDetails principal) {
+        Integer boardId = deleteMyPostRequestDto.getBoardId();
+        Integer postId = deleteMyPostRequestDto.getPostId();
+        Integer postAuthorId = deleteMyPostRequestDto.getPostAuthorId();
+        Integer currentPage = deleteMyPostRequestDto.getCurrentPage();
+
+        postService.deletePost(boardId, postId);
+
+        return ResponseEntity.ok(
+                DeleteMyPostResponseDto.builder()
+                        .userId(postAuthorId)
+                        .currentPage(currentPage)
+                        .build()
+        );
+    }
+
+    @PreAuthorize("isAuthenticated() and ((#deleteMyCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/api/delete-my-comment")
+    public ResponseEntity<DeleteMyCommentResponseDto> deleteMyComment(@RequestBody DeleteMyCommentRequestDto deleteMyCommentRequestDto,
+                                                                      @AuthenticationPrincipal PrincipalDetails principal) {
+        Integer postId = deleteMyCommentRequestDto.getPostId();
+        Integer commentId = deleteMyCommentRequestDto.getCommentId();
+        Integer commentAuthorId = deleteMyCommentRequestDto.getCommentAuthorId();
+        Integer currentPage = deleteMyCommentRequestDto.getCurrentPage();
+
+        commentService.deleteComment(postId, commentId);
+
+        return ResponseEntity.ok(
+                DeleteMyCommentResponseDto.builder()
+                        .userId(commentAuthorId)
+                        .currentPage(currentPage)
                         .build()
         );
     }

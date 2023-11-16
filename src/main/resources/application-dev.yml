@@ -1,3 +1,4 @@
+:wq:wq
 spring:
   datasource:
     url: ${datasource_url}

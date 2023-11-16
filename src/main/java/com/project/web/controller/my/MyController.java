@@ -63,24 +63,25 @@ public class MyController {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, page);
-        model.addAttribute("myPostList", myPostDtoList);
         model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         Integer myPostCount = myService.getMyPostCount(userId);
-        Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, 20, page);
+        Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, 3, page);
         if (!page.equals(processedPageNumber)) {
             return "redirect:/my/post/" + userId + "?page=" + processedPageNumber;
         }
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
-        List<Integer> myPostPageNumberList = PageUtil.makePageNumberList(myPostCount, 20, page);
+        List<Integer> myPostPageNumberList = PageUtil.makePageNumberList(myPostCount, 3, page);
         List<MyPostPageNumberDto> myPostPageNumberDtoList = myPostPageNumberList.stream().map(
                 (number) -> MyPostPageNumberDto.builder()
                         .userId(userId)
                         .pageNumber(number)
                         .build()
         ).collect(Collectors.toList());
+
+        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, page);
+        model.addAttribute("myPostList", myPostDtoList);
         model.addAttribute("myPostPageNumberList", myPostPageNumberDtoList);
         model.addAttribute("myPostPageNumber", page);
 
@@ -95,24 +96,25 @@ public class MyController {
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, page);
-        model.addAttribute("myCommentList", myCommentDtoList);
         model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
         Integer myCommentCount = myService.getMyCommentCount(userId);
-        Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, 20, page);
+        Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, 3, page);
         if (!page.equals(processedPageNumber)) {
             return "redirect:/my/comment/" + userId + "?page=" + processedPageNumber;
         }
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
-        List<Integer> myCommentPageNumberList = PageUtil.makePageNumberList(myCommentCount, 20, page);
+        List<Integer> myCommentPageNumberList = PageUtil.makePageNumberList(myCommentCount, 3, page);
         List<MyCommentPageDto> myCommentPageNumberDtoList = myCommentPageNumberList.stream().map(
                 (number) -> MyCommentPageDto.builder()
                         .userId(userId)
                         .pageNumber(number)
                         .build()
         ).collect(Collectors.toList());
+
+        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, page);
+        model.addAttribute("myCommentList", myCommentDtoList);
         model.addAttribute("myCommentPageNumberList", myCommentPageNumberDtoList);
         model.addAttribute("myCommentPageNumber", page);
 

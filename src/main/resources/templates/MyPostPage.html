@@ -14,9 +14,23 @@
             <ul>
                 <li th:each="myPost : ${myPostList}">
                     <div class="my-post-wrapper">
-                        <div class="alias" th:text="${myPost.boardAlias}"></div>
+                        <div class="post-header">
+                            <div class="alias" th:text="${myPost.boardAlias}"></div>
+                            <button th:if="${isMy}"
+                                    th:data-boardId="${myPost.boardId}"
+                                    th:data-userId="${myPost.postAuthorId}"
+                                    th:data-currentPage="${myPostPageNumber}"
+                                    th:data-postId="${myPost.postId}"
+                                    onclick="deleteMyPost(
+                                    this.getAttribute('data-boardId'),
+                                    this.getAttribute('data-userId'),
+                                    this.getAttribute('data-currentPage'),
+                                    this.getAttribute('data-postId'))">삭제
+                            </button>
+                        </div>
                         <div class="title">
-                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myPost.boardType}, postId=${myPost.postId})}" th:text="${myPost.title}"></a>
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myPost.boardType}, postId=${myPost.postId})}"
+                               th:text="${myPost.title}"></a>
                         </div>
                         <div class="createdAt" th:text="${myPost.createdAt}"></div>
                     </div>

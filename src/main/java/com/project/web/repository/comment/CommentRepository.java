@@ -30,17 +30,17 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
 
     @Query(nativeQuery = true,
-            value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.id, b.type, b.alias, p.title " +
+            value = "select c.id, c.member_id, c.post_id, c.is_deleted, c.body, c.created_at, b.id as boardId, b.type, b.alias, pc.title " +
                     "from (select tc.id from comment tc where tc.member_id = :memberId order by tc.created_at desc limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
                     "inner join post p on c.post_id = p.id " +
-                    "inner join post_content pc on p.id = pc.post_id" +
+                    "inner join post_content pc on p.id = pc.post_id " +
                     "inner join board b on b.id = p.board_id " +
                     "order by c.created_at desc")
     List<Object[]> findMyCommentByMemberId(Integer memberId, Integer limit, Integer offset);
 
     @Query(nativeQuery = true,
-            value = "select count(*) from (select * from comment where member_id = :memberId limit :limit) as temp")
+            value = "select count(*) from (select id from comment where member_id = :memberId limit :limit) as temp")
     int countMyComment(Integer memberId, Integer limit);
 
     /*

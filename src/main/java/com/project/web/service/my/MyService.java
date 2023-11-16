@@ -43,8 +43,10 @@ public class MyService {
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
         if (nickname != null) {
-            if (memberDetailRepository.existsByNickname(nickname)) {
-                throw new Error404Exception("이미 존재하는 닉네임입니다.");
+            if(!memberDetail.getNickname().equals(nickname)){
+                if (memberDetailRepository.existsByNickname(nickname)) {
+                    throw new Error404Exception("이미 존재하는 닉네임입니다.");
+                }
             }
             memberDetail.updateNickname(nickname);
         }
@@ -117,7 +119,7 @@ public class MyService {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
 
-        Integer pageSize = 20;
+        Integer pageSize = 3;
         List<Object[]> results = postRepository.findMyPostByMemberId(userId, pageSize, pageSize * (pageNumber - 1));
         List<MyPostDto> myPostDtoList = results.stream()
                 .map((result) -> {
@@ -127,6 +129,7 @@ public class MyService {
                     String boardAlias = (String) result[3];
                     String title = (String) result[4];
                     LocalDateTime createdAt = ((Timestamp) result[5]).toLocalDateTime();
+                    Integer postAuthorId = (Integer) result[6];
 
                     return MyPostDto.builder()
                             .postId(postId)
@@ -135,6 +138,7 @@ public class MyService {
                             .boardAlias(boardAlias)
                             .title(title)
                             .createdAt(createdAt)
+                            .postAuthorId(postAuthorId)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -159,20 +163,24 @@ public class MyService {
         }
 
 
-        Integer pageSize = 20;
+        Integer pageSize = 3;
         List<Object[]> results = commentRepository.findMyCommentByMemberId(userId, pageSize, pageSize * (pageNumber - 1));
         List<MyCommentDto> myCommentDtoList = results.stream()
                 .map((result) -> {
-                    Integer postId = (Integer) result[0];
-                    Boolean isDeleted = (Boolean) result[1];
-                    String body = (String) result[2];
-                    LocalDateTime createdAt = ((Timestamp) result[3]).toLocalDateTime();
-                    Integer boardId = (Integer) result[4];
-                    String boardType = (String) result[5];
-                    String boardAlias = (String) result[6];
-                    String title = (String) result[7];
+                    Integer commentId = (Integer) result[0];
+                    Integer commentAuthorId = (Integer) result[1];
+                    Integer postId = (Integer) result[2];
+                    Boolean isDeleted = (Boolean) result[3];
+                    String body = (String) result[4];
+                    LocalDateTime createdAt = ((Timestamp) result[5]).toLocalDateTime();
+                    Integer boardId = (Integer) result[6];
+                    String boardType = (String) result[7];
+                    String boardAlias = (String) result[8];
+                    String title = (String) result[9];
 
                     return MyCommentDto.builder()
+                            .commentId(commentId)
+                            .commentAuthorId(commentAuthorId)
                             .isDeleted(isDeleted)
                             .postId(postId)
                             .body(body)

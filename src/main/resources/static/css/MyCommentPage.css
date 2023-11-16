@@ -1,31 +1,100 @@
-#container{
-    position: relative;
-    width: 1600px;
+.my-comment{
+    width: 1100px;
     margin: 0 auto;
-    display: flex;
+    margin-left: 0;
 }
 
-main{
-    margin-top: 20px;
+.my-comment-header{
+    border-bottom: 3px solid #837ed7;
+    padding-bottom: 3px;
 }
 
-
-.profile{
-    width: 1200px;
-    height: 700px;
-    margin: 0 auto;
-}
-
-.profileWrapper{
-    width: 100% !important;
-}
-
-.inner{
-    padding: 25px 0px 0 56px;
-    width: calc(100% - 115px) !important;
-}
-
-.inner .title{
+.my-comment-header span{
+    color: #6f6abe;
+    font-weight: bolder;
     font-size: 2rem;
-    border-bottom: 1px solid #e2e2e2;
 }
+
+.my-comment-list-wrapper{
+}
+
+.my-comment-wrapper{
+    padding: 10px 20px;
+    border-bottom: 1px solid #837ed7;
+}
+
+.comment-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-header .alias{
+    font-size: 13px;
+}
+
+.comment-header button{
+    font-size: 10px;
+    padding: 2px;
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+}
+
+.my-comment-wrapper .title{
+    font-size: 14px;
+}
+
+.my-comment-wrapper .title a:hover{
+    text-decoration: underline;
+}
+
+.my-comment-wrapper .body{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.my-comment-wrapper .deleted-body{
+    font-size: 1.2rem;
+    color: silver;
+}
+
+.my-comment-wrapper .createdAt{
+    font-size: 12px;
+}
+
+.my-comment-page-number-list-wrapper ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.my-comment-page-number-list-wrapper li {
+    margin: 0 5px;
+}
+
+.my-comment-active-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: #837ed7;
+    color: white;
+}
+
+.my-comment-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.my-comment-arrow-left {
+    color: #837ed7;
+}
+
+.my-comment-arrow-right {
+    color: #837ed7;
+}
+

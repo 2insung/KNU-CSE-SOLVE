@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyCommentDto {
+    private Integer commentId;
+    private Integer commentAuthorId;
     private Integer boardId;
     private String boardType;
     private String boardAlias;
@@ -18,8 +20,10 @@ public class MyCommentDto {
     private Boolean isDeleted;
 
     @Builder
-    public MyCommentDto(Integer boardId, String boardType, String boardAlias, Integer postId,
+    public MyCommentDto(Integer commentId, Integer commentAuthorId, Integer boardId, String boardType, String boardAlias, Integer postId,
                         String title, String body, LocalDateTime createdAt, Boolean isDeleted){
+        this.commentId = commentId;
+        this.commentAuthorId = commentAuthorId;
         this.boardId = boardId;
         this.boardType = boardType;
         this.boardAlias = boardAlias;

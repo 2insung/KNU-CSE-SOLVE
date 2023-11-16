@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class UpdateMyResponseDto {
-    private String nickname;
+    private Integer userId;
 
     @Builder
-    public UpdateMyResponseDto(String nickname){
-        this.nickname = nickname;
+    public UpdateMyResponseDto(Integer userId){
+        this.userId = userId;
     }
 }

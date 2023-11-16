@@ -1,7 +1,9 @@
 package com.project.web.controller.my.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class MyCommentPageDto {
     private Integer userId;
     private Integer pageNumber;

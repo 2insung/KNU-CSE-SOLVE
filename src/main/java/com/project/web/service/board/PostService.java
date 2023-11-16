@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -406,5 +407,59 @@ public class PostService {
         if (postHitCountRepository.updateByPostId(postId, 1) == 0) {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<TopPostListDto> getTopPost() {
+        List<Object[]> results = postRepository.findTopPostList();
+        List<String> boardResult = boardRepository.findTopSixBoard();
+
+        List<TopPostDto> topPostDtoList = results.stream()
+                .map((result) -> {
+                    Integer postId = (Integer) result[0];
+                    String title = (String) result[1];
+                    Integer boardId = (Integer) result[2];
+                    String boardType = (String) result[3];
+                    return TopPostDto.builder()
+                            .postId(postId)
+                            .title(title)
+                            .boardId(boardId)
+                            .boardType(boardType)
+                            .build();
+                })
+                .collect(Collectors.toList());
+        List<TopPostListDto> topPostListDtoList = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            Integer number = i;
+            String alias = boardResult.get(i);
+            List<TopPostDto> filteredList = topPostDtoList.stream()
+                    .filter(topPostDto -> topPostDto.getBoardId().equals(number + 1))
+                    .collect(Collectors.toList());
+            topPostListDtoList.add(TopPostListDto.builder()
+                    .alias(alias)
+                    .topPostDtoList(filteredList)
+                    .build());
+        }
+
+        return topPostListDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TopHotPostDto> getTopHotPost() {
+        List<Object[]> results = postRepository.findTopHotPostList();
+
+        return results.stream()
+                .map((result) -> {
+                    Integer postId = (Integer) result[0];
+                    String title = (String) result[1];
+                    String boardType = (String) result[2];
+
+                    return TopHotPostDto.builder()
+                            .postId(postId)
+                            .title(title)
+                            .boardType(boardType)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }
