@@ -19,10 +19,7 @@ spring:
 
   session:
     store-type: jdbc
-    jdbc:
-      schema: classpath:org/springframework/session/jdbc/schema-mysql.sql
-      table-name: SPRING_SESSION
-      initialize-schema: always
+
 
   thymeleaf:
     prefix: classpath:/templates/
