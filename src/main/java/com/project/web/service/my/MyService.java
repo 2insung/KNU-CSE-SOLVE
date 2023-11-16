@@ -2,12 +2,12 @@ package com.project.web.service.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.my.dto.*;
-import com.project.web.domain.member.Level;
-import com.project.web.domain.member.Member;
-import com.project.web.domain.member.MemberDetail;
+import com.project.web.domain.member.*;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.comment.CommentRepository;
+import com.project.web.repository.member.MemberAuthRepository;
 import com.project.web.repository.member.MemberDetailRepository;
+import com.project.web.repository.member.MemberPasswordRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,9 @@ import java.util.stream.Collectors;
 public class MyService {
 
     private final MemberRepository memberRepository;
+    private final MemberPasswordRepository memberPasswordRepository;
     private final MemberDetailRepository memberDetailRepository;
+    private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
@@ -203,6 +206,29 @@ public class MyService {
         }
 
         return commentRepository.countMyComment(userId, 20000);
+    }
+
+    @Transactional
+    public void updateMyPassword(Integer userId, String currentPassword, String changePassword){
+        MemberPassword memberPassword = memberPasswordRepository.findByMemberId(userId)
+                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+
+        if(!passwordEncoder.matches(currentPassword, memberPassword.getPassword())){
+            throw new Error404Exception("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        memberPassword.updatePassword(passwordEncoder.encode(changePassword));
+
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getMyId(Integer userId){
+        if(memberRepository.existsById(userId)){
+            return userId;
+        }
+        else{
+            return null;
+        }
     }
 
 }

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{MyLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/MyWithdrawPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
-    <div id="container">
-        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-        <main>
-            <section>
-                <div class="profile">
-                    <div class="profileWrapper">
-                        <div class="inner">
-                            <div class="title">
-                                회원 탈퇴
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div class="my-withdraw">
+        <div class="my-withdraw-header">
+            <span>회원탈퇴</span>
+        </div>
+        <form class="withdraw-wrapper">
+            <div class="title">
+                회원탈퇴 하기
+            </div>
+            <div class="warning">
+                사용자 기록은 삭제되지 않으며, 탈퇴 후 로그인이 불가능합니다.
+            </div>
+            <div class="button-wrapper">
+                <button type="button" th:data-userId="${userId}">회원탈퇴 하기</button>
+            </div>
+        </form>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

@@ -3,7 +3,7 @@ $(document).ready(function () {
     const $ckUploadPath = "/image/upload?_csrf=" + token;
     CKEDITOR.replace('content', {
         filebrowserUploadUrl: $ckUploadPath,
-        width: '1200px',
+        width: '1100px',
         height: '500px',
         resize_enabled: false
     })

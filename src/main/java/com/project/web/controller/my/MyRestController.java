@@ -81,5 +81,22 @@ public class MyRestController {
         );
     }
 
+    @PreAuthorize("isAuthenticated() and ((#updatePasswordRequestDto.userId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/api/update-my-password")
+    public ResponseEntity<UpdatePasswordResponseDto> deleteMyComment(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto,
+                                                                     @AuthenticationPrincipal PrincipalDetails principal) {
+        Integer userId = updatePasswordRequestDto.getUserId();
+        String currentPassword = updatePasswordRequestDto.getCurrentPassword();
+        String changePassword = updatePasswordRequestDto.getChangePassword();
+
+        myService.updateMyPassword(userId, currentPassword, changePassword);
+
+        return ResponseEntity.ok(
+                UpdatePasswordResponseDto.builder()
+                        .userId(userId)
+                        .build()
+        );
+    }
+
 
 }

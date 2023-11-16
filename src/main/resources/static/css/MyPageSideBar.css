@@ -6,7 +6,7 @@
 
 .my-side-bar a {
     background-color: white; /* 메뉴의 배경색 */
-    color: #837ed7; /* 메뉴의 텍스트 색상 */
+    color: black; /* 메뉴의 텍스트 색상 */
     border-bottom : 1px solid #837ed7;
     display: block; /* 블록 요소로 설정하여 수직 배열 */
     padding: 12px; /* 내부 여백 */

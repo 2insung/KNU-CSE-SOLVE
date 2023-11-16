@@ -32,6 +32,14 @@
     border-bottom: 1px solid #e2e2e2;
 }
 
+.hot-post-list-wrapper ul li:last-of-type{
+    border-bottom: 0px;
+}
+
+.hot-post-list-wrapper ul li a{
+    font-weight: bold;
+}
+
 .root .right-section {
     display: flex;
     flex-wrap: wrap;
@@ -63,5 +71,15 @@
 .post-list-wrapper ul li{
     padding: 7px;
     border-bottom: 1px solid #e2e2e2;
+
 }
 
+.post-list-wrapper ul li:last-of-type{
+    border-bottom: 0px;
+
+}
+
+.post-list-wrapper ul li a{
+    font-size: 14px;
+
+}

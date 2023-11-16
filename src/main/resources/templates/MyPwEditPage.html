@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{MyLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/MyPwEditPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
-    <div id="container">
-        <div th:replace="MyPageSideBar :: MyPageSideBarFragment"></div>
-        <main>
-            <section>
-                <div class="profile">
-                    <div class="profileWrapper">
-                        <div class="inner">
-                            <div class="title">
-                                비밀번호 변경
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div class="my-pw-edit">
+        <div class="my-pw-edit-header">
+            <span>비밀번호 변경</span>
+        </div>
+        <form class="pw-edit-wrapper">
+            <div class="input-wrapper">
+                <div class="title">현재 비밀번호</div>
+                <input id="currentPassword" name="currentPassword" type="password"/>
+            </div>
+            <div class="input-wrapper">
+                <div class="title">변경할 비밀번호</div>
+                <input id="changePassword" name="changePassword" type="password"/>
+            </div>
+            <div class="input-wrapper">
+                <div class="title">비밀번호 재확인</div>
+                <input id="confirmPassword" name="confirmPassword" type="password"/>
+            </div>
+            <div class="button-wrapper">
+                <button type="button" th:data-userId="${userId}" onclick="pwEdit(this.getAttribute('data-userId'))">비밀번호 변경하기</button>
+            </div>
+        </form>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

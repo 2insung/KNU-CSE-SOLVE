@@ -6,6 +6,7 @@ import com.project.web.domain.member.Authority;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,7 @@ public class UserService {
             String nickname = (String) arr[0];
             String profileImage = (String) arr[1];
             Authority role = (Authority) arr[2];
+            Boolean isDeleted = (Boolean) arr[3];
 
             return UserDto.builder()
                     .isLogin(true)

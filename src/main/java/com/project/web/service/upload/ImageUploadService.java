@@ -26,7 +26,6 @@ public class ImageUploadService {
             throw new Error500Exception("1MB 미만의 파일만 가능합니다.");
         }
 
-        System.out.println(updatePath);
 
         String uuidStr = UUID.randomUUID().toString();
         File saveFile = new File(updatePath + "/" + uuidStr);
