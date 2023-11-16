@@ -29,7 +29,7 @@ public class ImageUploadService {
         System.out.println(updatePath);
 
         String uuidStr = UUID.randomUUID().toString();
-        File saveFile = new File(updatePath + "\\" + uuidStr);
+        File saveFile = new File(updatePath + "/" + uuidStr);
         try {
             file.transferTo(saveFile);
         }

@@ -1,4 +1,3 @@
-:wq:wq
 spring:
   datasource:
     url: ${datasource_url}
@@ -35,4 +34,4 @@ spring:
 image:
   resource:
     location: "file:///C:/Users/user/web_project/image/"
-  path: "C:\\Users\\user\\web_project\\image"
+  path: "C:/Users/user/web_project/image"
