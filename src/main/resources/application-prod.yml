@@ -5,12 +5,9 @@ spring:
     password: ${DATASOURCE_PASSWORD_PROD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  session:
-    store-type: jdbc
-
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
     properties:
       hibernate:
         id:
@@ -19,6 +16,13 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
         ddl-auto: none
+
+  session:
+    store-type: jdbc
+    jdbc:
+      schema: classpath:org/springframework/session/jdbc/schema-mysql.sql
+      table-name: SPRING_SESSION
+      initialize-schema: always
 
   thymeleaf:
     prefix: classpath:/templates/
