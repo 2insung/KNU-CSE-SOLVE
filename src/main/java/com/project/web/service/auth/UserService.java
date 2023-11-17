@@ -7,12 +7,14 @@ import com.project.web.exception.Error404Exception;
 import com.project.web.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final MemberRepository memberRepository;
+
 
     public UserDto getUserDto(PrincipalDetails principal) {
         if (principal != null) {

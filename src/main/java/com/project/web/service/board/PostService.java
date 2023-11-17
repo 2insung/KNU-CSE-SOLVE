@@ -303,7 +303,6 @@ public class PostService {
                 .collect(Collectors.toList());
         commentRecommendMemberRepository.deleteByCommentIds(commentIds);
         commentRecommendCountRepository.deleteByCommentIds(commentIds);
-        commentChildCountRepository.deleteByCommentIds(commentIds);
         commentRepository.deleteByCommentIds(commentIds);
 
         postRecommendMemberRepository.deleteByPostId(postId);

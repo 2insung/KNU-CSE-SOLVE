@@ -56,10 +56,13 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "child_count")
+    private Integer childCount;
+
     @Builder
     public Comment(Integer id, Member member, Post post, Member parentMember, Integer rootCommentId,
                    Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body,
-                   LocalDateTime createdAt) {
+                   LocalDateTime createdAt, Integer childCount) {
         this.id = id;
         this.member = member;
         this.post = post;
@@ -71,6 +74,7 @@ public class Comment {
         this.isDeleted = isDeleted;
         this.body = body;
         this.createdAt = createdAt;
+        this.childCount = childCount;
     }
 
     @PostPersist

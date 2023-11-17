@@ -107,9 +107,6 @@ public class CommentServiceTest {
                 .post(post)
                 .isDeleted(false)
                 .isRoot(true)
-                .build();
-        CommentChildCount commentChildCount1 = CommentChildCount.builder()
-                .comment(comment1)
                 .childCount(2)
                 .build();
         CommentRecommendCount commentRecommendCount1 = CommentRecommendCount.builder()
@@ -117,7 +114,6 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment1);
-        commentChildCountRepository.save(commentChildCount1);
         commentRecommendCountRepository.save(commentRecommendCount1);
 
         Comment comment2 = Comment.builder()
@@ -128,9 +124,6 @@ public class CommentServiceTest {
                 .post(post)
                 .isDeleted(false)
                 .isRoot(false)
-                .build();
-        CommentChildCount commentChildCount2 = CommentChildCount.builder()
-                .comment(comment2)
                 .childCount(0)
                 .build();
         CommentRecommendCount commentRecommendCount2 = CommentRecommendCount.builder()
@@ -138,7 +131,6 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment2);
-        commentChildCountRepository.save(commentChildCount2);
         commentRecommendCountRepository.save(commentRecommendCount2);
 
         Comment comment3 = Comment.builder()
@@ -149,9 +141,6 @@ public class CommentServiceTest {
                 .post(post)
                 .isDeleted(false)
                 .isRoot(false)
-                .build();
-        CommentChildCount commentChildCount3 = CommentChildCount.builder()
-                .comment(comment3)
                 .childCount(0)
                 .build();
         CommentRecommendCount commentRecommendCount3 = CommentRecommendCount.builder()
@@ -159,7 +148,6 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment3);
-        commentChildCountRepository.save(commentChildCount3);
         commentRecommendCountRepository.save(commentRecommendCount3);
 
         int numberOfThreads = 2;
@@ -178,8 +166,8 @@ public class CommentServiceTest {
         service.shutdown();
 
         // 1. 루트 댓글의 자식이 0인지. 2. postCommentCount 가 1인지. 3. 각 멤버의 댓글 수가  -1인지
-        CommentChildCount rootCommentChildCount = commentChildCountRepository.findById(1).orElseThrow(() -> new Error404Exception("존재하지 않는,."));
-        assertEquals(rootCommentChildCount.getChildCount(), 0);
+        Comment comment = commentRepository.findById(1).orElseThrow(() -> new Error404Exception("존재하지 않는,."));
+        assertEquals(comment.getChildCount(), 0);
 
     }
 
@@ -222,7 +210,7 @@ public class CommentServiceTest {
         postRepository.save(post);
         PostCommentCount postCommentCount = PostCommentCount.builder()
                 .post(post)
-                .commentCount(2)
+                .commentCount(3)
                 .totalCommentCount(3)
                 .build();
         postCommentCountRepository.save(postCommentCount);
@@ -234,11 +222,8 @@ public class CommentServiceTest {
                 .member(member2)
                 .parentMember(member2)
                 .post(post)
-                .isDeleted(true)
+                .isDeleted(false)
                 .isRoot(true)
-                .build();
-        CommentChildCount commentChildCount1 = CommentChildCount.builder()
-                .comment(comment1)
                 .childCount(2)
                 .build();
         CommentRecommendCount commentRecommendCount1 = CommentRecommendCount.builder()
@@ -246,7 +231,6 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment1);
-        commentChildCountRepository.save(commentChildCount1);
         commentRecommendCountRepository.save(commentRecommendCount1);
 
         Comment comment2 = Comment.builder()
@@ -257,9 +241,6 @@ public class CommentServiceTest {
                 .post(post)
                 .isDeleted(false)
                 .isRoot(false)
-                .build();
-        CommentChildCount commentChildCount2 = CommentChildCount.builder()
-                .comment(comment2)
                 .childCount(0)
                 .build();
         CommentRecommendCount commentRecommendCount2 = CommentRecommendCount.builder()
@@ -267,7 +248,6 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment2);
-        commentChildCountRepository.save(commentChildCount2);
         commentRecommendCountRepository.save(commentRecommendCount2);
 
         Comment comment3 = Comment.builder()
@@ -278,9 +258,6 @@ public class CommentServiceTest {
                 .post(post)
                 .isDeleted(false)
                 .isRoot(false)
-                .build();
-        CommentChildCount commentChildCount3 = CommentChildCount.builder()
-                .comment(comment3)
                 .childCount(0)
                 .build();
         CommentRecommendCount commentRecommendCount3 = CommentRecommendCount.builder()
@@ -288,16 +265,15 @@ public class CommentServiceTest {
                 .recommendCount(0)
                 .build();
         commentRepository.save(comment3);
-        commentChildCountRepository.save(commentChildCount3);
         commentRecommendCountRepository.save(commentRecommendCount3);
 
-        int numberOfThreads = 2;
+        int numberOfThreads = 3;
         ExecutorService service = Executors.newFixedThreadPool(numberOfThreads);
         CountDownLatch latch = new CountDownLatch(numberOfThreads);
 
         for (int i = 0; i < numberOfThreads; i++) {
             Integer postId = 1;
-            Integer commentId = i == 0 ? 2 : 3;
+            Integer commentId = i == 0 ? 2 : i == 1 ? 1 : 3;
             service.submit(() -> {
                 commentService.deleteComment(postId, commentId);
                 latch.countDown();

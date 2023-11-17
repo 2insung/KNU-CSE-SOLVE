@@ -111,14 +111,10 @@ public class CommentService {
                 .isRootChild(parentComment != null ? parentComment.getIsRoot() : false)
                 .isDeleted(false)
                 .body(commentBody)
+                .childCount(0)
                 .build();
         commentRepository.save(comment);
 
-        CommentChildCount commentChildCount = CommentChildCount.builder()
-                .comment(comment)
-                .childCount(0)
-                .build();
-        commentChildCountRepository.save(commentChildCount);
 
         CommentRecommendCount commentRecommendCount = CommentRecommendCount.builder()
                 .comment(comment)
@@ -131,7 +127,7 @@ public class CommentService {
         }
 
         if (parentCommentId != null) {
-            if (commentChildCountRepository.updateByCommentId(parentComment.getRootCommentId(), 1) == 0) {
+            if (commentRepository.updateChildCountByCommentId(parentComment.getRootCommentId(), 1) == 0) {
                 throw new Error404Exception("존재하지 않는 댓글입니다.");
             }
         }
@@ -155,29 +151,26 @@ public class CommentService {
             throw new Error404Exception("존재하지 않는 댓글입니다.");
         }
 
-        Object result = commentRepository.fetchCommentRelationsByCommentId(commentId)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
-        Object[] arr = (Object[]) result;
-        Comment comment = (Comment) arr[0];
-        CommentChildCount commentChildCount = (CommentChildCount) arr[1];
+
 
         Integer dropCommentCount = 0;
         Integer dropTotalCommentCount = 0;
 
-        if (commentChildCount.getChildCount() == 0) {
+        if (comment.getChildCount() == 0) {
             List<Integer> deleteCommentIds = new ArrayList<>();
             deleteCommentIds.add(comment.getId());
 
             if (!comment.getIsRoot()) {
-                if (commentChildCountRepository.updateByCommentId(comment.getRootCommentId(), -1) == 0) {
+                if (commentRepository.updateChildCountByCommentId(comment.getRootCommentId(), -1) == 0) {
                     throw new Error404Exception("존재하지 않는 댓글입니다.");
                 }
 
-                CommentChildCount rootCommentChildCount = commentChildCountRepository.findByCommentIdWithComment(comment.getRootCommentId())
+                Comment rootComment = commentRepository.findById(comment.getRootCommentId())
                         .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
-                Comment rootComment = rootCommentChildCount.getComment();
 
-                if (rootCommentChildCount.getChildCount() == 0 && rootComment.getIsDeleted()) {
+                if (rootComment.getChildCount() == 0 && rootComment.getIsDeleted()) {
                     deleteCommentIds.add(rootComment.getId());
                 }
             }
@@ -193,7 +186,6 @@ public class CommentService {
 
             commentRecommendMemberRepository.deleteByCommentIds(deleteCommentIds);
             commentRecommendCountRepository.deleteByCommentIds(deleteCommentIds);
-            commentChildCountRepository.deleteByCommentIds(deleteCommentIds);
             commentRepository.deleteByCommentIds(deleteCommentIds);
         }
         else {
