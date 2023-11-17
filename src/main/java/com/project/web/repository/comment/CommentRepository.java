@@ -1,7 +1,6 @@
 package com.project.web.repository.comment;
 
 import com.project.web.domain.comment.Comment;
-import com.project.web.domain.comment.CommentChildCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,29 +43,15 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
             value = "select count(*) from (select id from comment where member_id = :memberId limit :limit) as temp")
     int countMyComment(Integer memberId, Integer limit);
 
-    /*
-     Comment 와 매핑된 모든 엔티티 출력 함수(By CommentId).
-     * Comment table을 기준으로 연관된 테이블을 조인함.
-     * Comment Id가 where 절의 조건이기 때문에 출력되는 행은 하나임.
-    */
-    @Query("select c, ccc, crc " +
-            "from Comment c " +
-            "inner join CommentChildCount ccc on ccc.comment = c " +
-            "inner join CommentRecommendCount crc on crc.comment = c " +
-            "where c.id = :commentId")
-    Optional<Object> fetchCommentRelationsByCommentId(Integer commentId);
+
 
     /*
      Comment 와 매핑된 모든 엔티티 출력 함수(By PostId).
      * Comment table을 기준으로 연관된 테이블을 조인함.
      * Post Id가 where 절의 조건이기 떄문에 출력되는 행은 여러 행임.
     */
-    @Query("select c, ccc, crc " +
-            "from Comment c " +
-            "inner join CommentChildCount ccc on ccc.comment = c " +
-            "inner join CommentRecommendCount crc on crc.comment = c " +
-            "where c.post.id = :postId")
-    List<Object[]> fetchCommentRelationsByPostId(Integer postId);
+    @Query("select c.id from Comment c where c.post.id = :postId")
+    List<Integer> findIdsByPostId(Integer postId);
 
     /*
      댓글의 isDeleted 속성 업데이트 함수.

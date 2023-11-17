@@ -2,8 +2,6 @@ package com.project.web.controller.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.auth.dto.UserDto;
-import com.project.web.controller.community.Constants;
-import com.project.web.controller.community.dto.post.PostPageNumberDto;
 import com.project.web.controller.my.dto.*;
 import com.project.web.service.auth.UserService;
 import com.project.web.service.my.MyService;
@@ -20,136 +18,156 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// My 관련 뷰 반환
 @Controller
 @RequiredArgsConstructor
 public class MyController {
     private final MyService myService;
     private final UserService userService;
 
-    @GetMapping("/my/{userId}")
-    public String viewMyPage(@PathVariable(name = "userId") Integer userId,
-                             @AuthenticationPrincipal PrincipalDetails principal,
-                             Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @GetMapping("/my/{memberId}")
+    public String my(@PathVariable(name = "memberId") Integer memberId,
+                     @AuthenticationPrincipal PrincipalDetails principal,
+                     Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
 
-        MyDto myDto = myService.getMy(userId);
+        // 사용자 정보를 제공.
+        MyDto myDto = myService.getMy(memberId);
         model.addAttribute("my", myDto);
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyPage";
     }
 
-    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
-    @GetMapping("/my/edit/{userId}")
-    public String viewMyPageEdit(@PathVariable(name = "userId") Integer userId,
-                                 @AuthenticationPrincipal PrincipalDetails principal,
-                                 Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
+    @GetMapping("/my/edit/{memberId}")
+    public String myEdit(@PathVariable(name = "memberId") Integer memberId,
+                         @AuthenticationPrincipal PrincipalDetails principal,
+                         Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
 
-        MyEditDto myEditDto = myService.getMyEdit(userId);
+        // 이전 사용자 정보를 제공.
+        MyEditDto myEditDto = myService.getMyEdit(memberId);
         model.addAttribute("myEdit", myEditDto);
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyEditPage";
     }
 
-    @GetMapping("/my/post/{userId}")
-    public String viewMyPagePost(@PathVariable(name = "userId") Integer userId,
-                                 @AuthenticationPrincipal PrincipalDetails principal,
-                                 @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                 Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @GetMapping("/my/post/{memberId}")
+    public String myPost(@PathVariable(name = "memberId") Integer memberId,
+                         @AuthenticationPrincipal PrincipalDetails principal,
+                         @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
+                         Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
 
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
-
-        Integer myPostCount = myService.getMyPostCount(userId);
-        Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, 3, page);
-        if (!page.equals(processedPageNumber)) {
-            return "redirect:/my/post/" + userId + "?page=" + processedPageNumber;
+        // 사용자의 게시글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+        Integer myPostCount = myService.getMyPostCount(memberId);
+        Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, MyConstants.POST_PAGE_SIZE, pageNumber);
+        if (!pageNumber.equals(processedPageNumber)) {
+            return "redirect:/my/post/" + memberId + "?page=" + processedPageNumber;
         }
-
-        // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
-        List<Integer> myPostPageNumberList = PageUtil.makePageNumberList(myPostCount, 3, page);
-        List<MyPostPageNumberDto> myPostPageNumberDtoList = myPostPageNumberList.stream().map(
-                (number) -> MyPostPageNumberDto.builder()
-                        .userId(userId)
-                        .pageNumber(number)
-                        .build()
-        ).collect(Collectors.toList());
-
-        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, page);
+        List<MyPostDto> myPostDtoList = myService.getMyPostList(memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("myPostList", myPostDtoList);
+
+        // 사용자 게시글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
+        List<Integer> myPostPageNumberList = PageUtil.makePageNumberList(myPostCount, MyConstants.POST_PAGE_SIZE, pageNumber);
+        List<MyPostPageNumberDto> myPostPageNumberDtoList =
+                myPostPageNumberList.stream().map(
+                        (number) -> MyPostPageNumberDto.builder()
+                                .memberId(memberId)
+                                .pageNumber(number)
+                                .build()
+                ).collect(Collectors.toList());
+        model.addAttribute("myPostPageNumber", pageNumber);
         model.addAttribute("myPostPageNumberList", myPostPageNumberDtoList);
-        model.addAttribute("myPostPageNumber", page);
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyPostPage";
     }
 
-    @GetMapping("/my/comment/{userId}")
-    public String viewMyPageComment(@PathVariable(name = "userId") Integer userId,
-                                    @AuthenticationPrincipal PrincipalDetails principal,
-                                    @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                    Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @GetMapping("/my/comment/{memberId}")
+    public String myComment(@PathVariable(name = "memberId") Integer memberId,
+                            @AuthenticationPrincipal PrincipalDetails principal,
+                            @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
+                            Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
 
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
-
-        Integer myCommentCount = myService.getMyCommentCount(userId);
-        Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, 3, page);
-        if (!page.equals(processedPageNumber)) {
-            return "redirect:/my/comment/" + userId + "?page=" + processedPageNumber;
+        // 사용자의 댓글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+        Integer myCommentCount = myService.getMyCommentCount(memberId);
+        Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
+        if (!pageNumber.equals(processedPageNumber)) {
+            return "redirect:/my/comment/" + memberId + "?page=" + processedPageNumber;
         }
+        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(memberId, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
+        model.addAttribute("myCommentList", myCommentDtoList);
 
-        // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트, 이전 페이지, 다음 페이지)
-        List<Integer> myCommentPageNumberList = PageUtil.makePageNumberList(myCommentCount, 3, page);
-        List<MyCommentPageDto> myCommentPageNumberDtoList = myCommentPageNumberList.stream().map(
-                (number) -> MyCommentPageDto.builder()
-                        .userId(userId)
+        // 사용자 댓글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
+        List<Integer> myCommentPageNumberList = PageUtil.makePageNumberList(myCommentCount, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
+        List<MyCommentPageNumberDto> myCommentPageNumberDtoList = myCommentPageNumberList.stream().map(
+                (number) -> MyCommentPageNumberDto.builder()
+                        .memberId(memberId)
                         .pageNumber(number)
                         .build()
         ).collect(Collectors.toList());
-
-        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, page);
-        model.addAttribute("myCommentList", myCommentDtoList);
+        model.addAttribute("myCommentPageNumber", pageNumber);
         model.addAttribute("myCommentPageNumberList", myCommentPageNumberDtoList);
-        model.addAttribute("myCommentPageNumber", page);
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyCommentPage";
     }
 
-    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
-    @GetMapping("/my/pwEdit/{userId}")
-    public String viewMyPagePwEdit(@PathVariable(name = "userId") Integer userId,
-                                   @AuthenticationPrincipal PrincipalDetails principal,
-                                   Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
+    @GetMapping("/my/pwEdit/{memberId}")
+    public String myPwEdit(@PathVariable(name = "memberId") Integer memberId,
+                           @AuthenticationPrincipal PrincipalDetails principal,
+                           Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
-        Integer myId = myService.getMyId(userId);
+        // 사용자의 id 정보
+        Integer myId = myService.getMyId(memberId);
         model.addAttribute("myId", myId);
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyPwEditPage";
     }
 
-    @PreAuthorize("isAuthenticated() and #userId == authentication.principal.userId")
-    @GetMapping("/my/withdraw/{userId}")
-    public String viewMyPageWithdraw(@PathVariable(name = "userId") Integer userId,
-                                     @AuthenticationPrincipal PrincipalDetails principal,
-                                     Model model) {
-        UserDto userDto = userService.getUserDto(principal);
+    @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
+    @GetMapping("/my/withdraw/{memberId}")
+    public String myWithdraw(@PathVariable(name = "memberId") Integer memberId,
+                             @AuthenticationPrincipal PrincipalDetails principal,
+                             Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUser(principal);
         model.addAttribute("user", userDto);
-        model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
-        Integer myId = myService.getMyId(userId);
+        // 사용자의 id 정보
+        Integer myId = myService.getMyId(memberId);
         model.addAttribute("myId", myId);
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
         return "MyWithdrawPage";
     }
-
-
 }

@@ -2,14 +2,12 @@ package com.project.web;
 
 import com.project.web.domain.board.Board;
 import com.project.web.domain.comment.Comment;
-import com.project.web.domain.comment.CommentChildCount;
 import com.project.web.domain.comment.CommentRecommendCount;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
 import com.project.web.domain.post.PostCommentCount;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.board.BoardRepository;
-import com.project.web.repository.comment.CommentChildCountRepository;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;

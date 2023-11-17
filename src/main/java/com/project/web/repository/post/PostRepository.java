@@ -71,7 +71,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
 
     @Query(nativeQuery = true,
-            value = "select p.id, b.id as board_id, b.type, b.alias, pc.title, p.created_at, p.member_id " +
+            value = "select p.id, p.member_id, b.id as boardId, b.type, b.alias, pc.title, p.created_at,  " +
                     "from (select tp.id from post tp where tp.member_id = :memberId order by tp.created_at desc limit :limit offset :offset) as temp " +
                     "inner join post p on p.id = temp.id " +
                     "inner join board b on p.board_id = b.id " +

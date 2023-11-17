@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostPreviewDto {
-    private final Integer postId;
+    private final Integer id;
     private final Integer authorId;
     private final Boolean isNotice;
     private final Boolean isHot;
@@ -23,11 +23,10 @@ public class PostPreviewDto {
     private final Integer commentCount;
 
     @Builder
-    public PostPreviewDto(Integer postId, Integer authorId, Boolean isNotice, Boolean isHot,
-                          LocalDateTime createdAt, String authorNickname, String authorProfileImage, String title,
-                          String summary, String thumbnail, Integer hitCount, Integer recommendCount,
-                          Integer commentCount) {
-        this.postId = postId;
+    public PostPreviewDto(Integer id, Integer authorId, Boolean isNotice, Boolean isHot, LocalDateTime createdAt,
+                          String authorNickname, String authorProfileImage, String title, String summary, String thumbnail,
+                          Integer hitCount, Integer recommendCount, Integer commentCount) {
+        this.id = id;
         this.authorId = authorId;
         this.isNotice = isNotice;
         this.isHot = isHot;

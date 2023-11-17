@@ -12,7 +12,7 @@ $(document).ready(function () {
 function savePost(boardType) {
     var title = $("#title").val()
     var content = CKEDITOR.instances.content.getData();
-    var isNotification = $("#isNotification").is(":checked")
+    var isNotice = $("#isNotice").is(":checked")
 
     if (title === "") {
         alert("제목을 입력해주세요.")
@@ -35,9 +35,9 @@ function savePost(boardType) {
             type: "POST",
             data: JSON.stringify({
                 boardType: boardType,
-                title: title,
-                body: content,
-                isNotice: isNotification
+                postTitle: title,
+                postBody: content,
+                postIsNotice: isNotice
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -65,7 +65,7 @@ function savePost(boardType) {
 function updatePost(boardType, postId, postAuthorId) {
     var title = $("#title").val()
     var content = CKEDITOR.instances.content.getData();
-    var isNotification = $("#isNotification").is(":checked")
+    var isNotification = $("#isNotice").is(":checked")
 
     if (title === "") {
         alert("제목을 입력해주세요.")
@@ -92,7 +92,7 @@ function updatePost(boardType, postId, postAuthorId) {
                 postAuthorId: postAuthorId,
                 title: title,
                 body: content,
-                isNotice: isNotification
+                isNotice: isNotice
             }),
             contentType: 'application/json',
             dataType: 'json',

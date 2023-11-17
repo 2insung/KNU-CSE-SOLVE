@@ -1,7 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-
-function deleteMyPost(boardId, userId, currentPage, postId) {
+function deleteMyPost(boardId, postId, memberId, currentPageNumber) {
     $.ajax(
         {
             url: "/api/delete-my-post",
@@ -9,8 +8,8 @@ function deleteMyPost(boardId, userId, currentPage, postId) {
             data: JSON.stringify({
                 boardId: boardId,
                 postId: postId,
-                postAuthorId: userId,
-                currentPage: currentPage
+                postAuthorId: memberId,
+                currentPageNumber: currentPageNumber
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -19,7 +18,7 @@ function deleteMyPost(boardId, userId, currentPage, postId) {
             },
             success: function (response) {
                 alert("삭제되었습니다..")
-                window.location.href = "/my/post/" + response.userId + "?page=" + response.currentPage
+                window.location.href = "/my/post/" + response.memberId + "?page=" + response.pageNumber
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

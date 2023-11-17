@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class CommentPageNumberDto {
-    private Integer postId;
-    private Integer pageNumber;
+    private final Integer postId;
+    private final Integer pageNumber;
 
     @Builder
-    public CommentPageNumberDto(Integer postId, Integer pageNumber){
+    public CommentPageNumberDto(Integer postId, Integer pageNumber) {
         this.postId = postId;
         this.pageNumber = pageNumber;
     }

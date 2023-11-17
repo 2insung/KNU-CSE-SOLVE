@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-function submitHandler(userId){
+function submitHandler(memberId) {
     var fileInput = document.getElementById('imageInput');
     var file = fileInput.files[0]; // 사용자가 선택한 파일
     var nickname = $("#nickname").val();
@@ -30,7 +30,7 @@ function submitHandler(userId){
     if (file) {
         var formData = new FormData();
         formData.append("file", file); // 파일 추가
-        formData.append("userId", userId); // 기존 닉네임 추가
+        formData.append("memberId", memberId); // 기존 닉네임 추가
         formData.append("nickname", nickname); // 닉네임 추가
         formData.append("description", description); // 설명 추가
         formData.append("grade", grade); // 학년 추가
@@ -46,9 +46,9 @@ function submitHandler(userId){
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
-            success: function (data) {
+            success: function (response) {
                 alert("수정했습니다.")
-                window.location.href = "/my/" + data.userId
+                window.location.href = "/my/" + response.memberId
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {
@@ -62,7 +62,8 @@ function submitHandler(userId){
                 }
             }
         });
-    } else {
+    }
+    else {
         alert("파일을 선택해주세요.");
     }
 }

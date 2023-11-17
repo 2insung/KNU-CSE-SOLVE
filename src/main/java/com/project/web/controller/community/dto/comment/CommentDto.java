@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CommentDto {
-    private final Integer commentId;
+    private final Integer id;
     private final Integer postId;
     private final Integer authorId;
     private final String authorNickname;
@@ -25,11 +25,10 @@ public class CommentDto {
     private final Boolean isMine;
 
     @Builder
-    public CommentDto(Integer commentId, Integer postId, Integer authorId, String authorNickname,
-                      String authorProfileImage, Integer parentAuthorId, String parentAuthorNickname, Boolean isPostAuthor,
-                      Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body,
-                      LocalDateTime createdAt, Integer recommendCount, Boolean isMine) {
-        this.commentId = commentId;
+    public CommentDto(Integer id, Integer postId, Integer authorId, String authorNickname, String authorProfileImage,
+                      Integer parentAuthorId, String parentAuthorNickname, Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild,
+                      Boolean isDeleted, String body, LocalDateTime createdAt, Integer recommendCount, Boolean isMine) {
+        this.id = id;
         this.postId = postId;
         this.authorId = authorId;
         this.authorNickname = authorNickname;

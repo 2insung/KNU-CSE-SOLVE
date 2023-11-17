@@ -1,26 +1,26 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-function pwEdit(userId){
+function pwEdit(memberId) {
     var currentPassword = $("#currentPassword").val()
     var changePassword = $("#changePassword").val()
     var confirmPassword = $("#confirmPassword").val()
 
-    if(currentPassword === ""){
+    if (currentPassword === "") {
         alert("현재 비밀번호를 입력해주세요.")
         return
     }
 
-    if(changePassword === ""){
+    if (changePassword === "") {
         alert("변경할 비밀번호를 입력해주세요.")
         return
     }
 
-    if(confirmPassword === ""){
+    if (confirmPassword === "") {
         alert("변경할 비밀번호를 재확인해주세요.")
         return
     }
 
-    if(changePassword !== confirmPassword){
+    if (changePassword !== confirmPassword) {
         alert("변경할 비밀번호를 재확인해주세요.")
         return
     }
@@ -30,7 +30,7 @@ function pwEdit(userId){
             url: "/api/update-my-password",
             type: "PATCH",
             data: JSON.stringify({
-                userId : userId,
+                memberId: memberId,
                 currentPassword: currentPassword,
                 changePassword: changePassword
             }),
@@ -41,7 +41,7 @@ function pwEdit(userId){
             },
             success: function (response) {
                 alert("정상적으로 변경되었습니다.")
-                window.location.href = "/my/" + response.userId
+                window.location.href = "/my/" + response.memberId
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

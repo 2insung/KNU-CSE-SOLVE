@@ -1,15 +1,14 @@
 package com.project.web.service.board;
 
 import com.project.web.controller.community.dto.comment.CommentDto;
-import com.project.web.controller.community.dto.comment.IncCommentRecommendResponseDto;
+import com.project.web.controller.community.dto.comment.rest.IncCommentRecommendResponseDto;
 import com.project.web.domain.comment.Comment;
-import com.project.web.domain.comment.CommentChildCount;
 import com.project.web.domain.comment.CommentRecommendCount;
 import com.project.web.domain.comment.CommentRecommendMember;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
+import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
-import com.project.web.repository.comment.CommentChildCountRepository;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
@@ -33,52 +32,56 @@ public class CommentService {
     private final PostRepository postRepository;
     private final PostCommentCountRepository postCommentCountRepository;
     private final CommentRepository commentRepository;
-    private final CommentChildCountRepository commentChildCountRepository;
     private final CommentRecommendCountRepository commentRecommendCountRepository;
     private final CommentRecommendMemberRepository commentRecommendMemberRepository;
 
-
+    /*
+      댓글 출력 함수.
+     * postId에 해당하는 게시글의 댓글을 pageSize 개수만큼 출력함.
+     * pageNumber는 댓글 페이지 번호임.
+     * 댓글 생성일의 오름차순으로 출력함. 가장 먼저 저장된 댓글은 1페이지의 첫 댓글이며, 가장 마지막에 저장된 댓글은 마지막 페이지의 마지막 댓글임.
+    */
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentList(Integer userId, Integer postId, Integer pageSize, Integer pageNumber) {
         List<Object[]> results = commentRepository.findPageByPostId(postId, pageSize, pageSize * (pageNumber - 1));
-        List<CommentDto> commentDtoList = results.stream()
+
+        return results.stream()
                 .map((result) -> {
-                    Integer commentId = (Integer) result[0];
-                    Integer commentPostId = (Integer) result[1];
-                    Integer authorId = (Integer) result[2];
-                    String authorNickname = (String) result[3];
-                    String authorProfileImage = (String) result[4];
-                    Integer parentAuthorId = (Integer) result[5];
-                    String parentAuthorNickname = (String) result[6];
-                    Boolean isPostAuthor = (Boolean) result[7];
-                    Boolean isRoot = (Boolean) result[8];
-                    Boolean isRootChild = (Boolean) result[9];
-                    Boolean isDeleted = (Boolean) result[10];
-                    String body = (String) result[11];
-                    LocalDateTime createdAt = ((Timestamp) result[12]).toLocalDateTime();
-                    Integer recommendCount = (Integer) result[13];
-                    Boolean isMine = userId != null && userId.equals(authorId);
+                    Integer resultCommentId = (Integer) result[0];
+                    Integer resultCommentPostId = (Integer) result[1];
+                    Integer resultAuthorId = (Integer) result[2];
+                    String resultAuthorNickname = (String) result[3];
+                    String resultAuthorProfileImage = (String) result[4];
+                    Integer resultParentAuthorId = (Integer) result[5];
+                    String resultParentAuthorNickname = (String) result[6];
+                    Boolean resultIsPostAuthor = (Boolean) result[7];
+                    Boolean resultIsRoot = (Boolean) result[8];
+                    Boolean resultIsRootChild = (Boolean) result[9];
+                    Boolean resultIsDeleted = (Boolean) result[10];
+                    String resultBody = (String) result[11];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[12]).toLocalDateTime();
+                    Integer resultRecommendCount = (Integer) result[13];
+                    Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return CommentDto.builder()
-                            .commentId(commentId)
-                            .postId(commentPostId)
-                            .authorId(authorId)
-                            .authorNickname(authorNickname)
-                            .authorProfileImage(authorProfileImage)
-                            .parentAuthorId(parentAuthorId)
-                            .parentAuthorNickname(parentAuthorNickname)
-                            .isPostAuthor(isPostAuthor)
-                            .isRoot(isRoot)
-                            .isRootChild(isRootChild)
-                            .isDeleted(isDeleted)
-                            .body(body)
-                            .createdAt(createdAt)
-                            .recommendCount(recommendCount)
+                            .id(resultCommentId)
+                            .postId(resultCommentPostId)
+                            .authorId(resultAuthorId)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
+                            .parentAuthorId(resultParentAuthorId)
+                            .parentAuthorNickname(resultParentAuthorNickname)
+                            .isPostAuthor(resultIsPostAuthor)
+                            .isRoot(resultIsRoot)
+                            .isRootChild(resultIsRootChild)
+                            .isDeleted(resultIsDeleted)
+                            .body(resultBody)
+                            .createdAt(resultCreatedAt)
+                            .recommendCount(resultRecommendCount)
                             .isMine(isMine)
                             .build();
                 })
                 .collect(Collectors.toList());
-        return commentDtoList;
     }
 
     /*
@@ -87,10 +90,13 @@ public class CommentService {
      * 입력하는 댓글이 대댓글인 경우, parentCommentId가 null이 아님. 루트 댓글의 Child Count를 1 증가.
      * Comment 와 관련된 엔티티들을 모두 save.
      * 현재 Post의 댓글 수와 현재 댓글 작성자의 댓글 수를 1 증가.
-     * 반환값은 댓글 등록 후의 게시글 댓글 개수임.
     */
     @Transactional
     public void saveComment(Integer userId, Integer postId, Integer parentCommentId, String commentBody) {
+        if(commentBody == null){
+            throw new Error400Exception("댓글의 본문을 입력해주세요.");
+        }
+
         Comment parentComment = null;
         if (parentCommentId != null) {
             parentComment = commentRepository.findById(parentCommentId)
@@ -115,7 +121,6 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
 
-
         CommentRecommendCount commentRecommendCount = CommentRecommendCount.builder()
                 .comment(comment)
                 .recommendCount(0)
@@ -126,12 +131,11 @@ public class CommentService {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
 
-        if (parentCommentId != null) {
+        if (parentComment != null) {
             if (commentRepository.updateChildCountByCommentId(parentComment.getRootCommentId(), 1) == 0) {
                 throw new Error404Exception("존재하지 않는 댓글입니다.");
             }
         }
-
     }
 
     /*
@@ -153,7 +157,6 @@ public class CommentService {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
-
 
         Integer dropCommentCount = 0;
         Integer dropTotalCommentCount = 0;
@@ -199,6 +202,13 @@ public class CommentService {
 
     }
 
+    /*
+      댓글 추천수 증가 함수.
+     * 사용자가 이 댓글을 처음 추천하면, 댓글의 추천수를 1 증가시킴.
+     * 증가된 추천수를 반환함.
+     * 사용자가 댓글에 추천한 사용자로 기록됨.(CommentRecommendMember)
+     * 만약 사용자가 이미 추천한 댓글인 경우 isSuccess는 false임.
+    */
     @Transactional
     public IncCommentRecommendResponseDto incCommentRecommend(Integer userId, Integer commentId) {
         Member member = memberRepository.getReferenceById(userId);

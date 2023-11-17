@@ -8,29 +8,32 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyCommentDto {
-    private Integer commentId;
-    private Integer commentAuthorId;
-    private Integer boardId;
-    private String boardType;
-    private String boardAlias;
-    private Integer postId;
-    private String title;
-    private String body;
-    private String createdAt;
-    private Boolean isDeleted;
+    private final Integer id;
+    private final Integer authorId;
+    private final Integer postId;
+    private final Boolean isDeleted;
+    private final String body;
+    private final String createdAt;
+    private final Integer boardId;
+    private final String boardType;
+    private final String boardAlias;
+    private final String title;
+    private final Boolean isMine;
 
     @Builder
-    public MyCommentDto(Integer commentId, Integer commentAuthorId, Integer boardId, String boardType, String boardAlias, Integer postId,
-                        String title, String body, LocalDateTime createdAt, Boolean isDeleted){
-        this.commentId = commentId;
-        this.commentAuthorId = commentAuthorId;
+    public MyCommentDto(Integer id, Integer authorId, Integer postId, Boolean isDeleted, Integer boardId,
+                        String boardType, String boardAlias, String title, String body, LocalDateTime createdAt,
+                        Boolean isMine) {
+        this.id = id;
+        this.authorId = authorId;
+        this.postId = postId;
+        this.isDeleted = isDeleted;
         this.boardId = boardId;
         this.boardType = boardType;
         this.boardAlias = boardAlias;
-        this.postId = postId;
         this.title = title;
         this.body = body.length() > 50 ? body.substring(0, 50) + "..." : body;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
-        this.isDeleted = isDeleted;
+        this.isMine = isMine;
     }
 }

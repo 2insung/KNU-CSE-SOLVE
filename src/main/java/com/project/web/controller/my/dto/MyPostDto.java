@@ -8,25 +8,25 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyPostDto {
-    private Integer boardId;
-    private String boardType;
-    private String boardAlias;
-    private Integer postId;
-    private Integer postAuthorId;
-    private String title;
-    private String createdAt;
+    private final Integer id;
+    private final Integer authorId;
+    private final Integer boardId;
+    private final String boardType;
+    private final String boardAlias;
+    private final String title;
+    private final String createdAt;
+    private final Boolean isMine;
 
     @Builder
-    public MyPostDto(Integer boardId, String boardType, String boardAlias, Integer postId,
-                     Integer postAuthorId, String title, LocalDateTime createdAt) {
+    public MyPostDto(Integer id, Integer authorId, Integer boardId, String boardType, String boardAlias,
+                     String title, LocalDateTime createdAt, Boolean isMine) {
+        this.id = id;
+        this.authorId = authorId;
         this.boardId = boardId;
         this.boardType = boardType;
         this.boardAlias = boardAlias;
-        this.postId = postId;
-        this.postAuthorId = postAuthorId;
         this.title = title;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
+        this.isMine = isMine;
     }
-
-
 }

@@ -42,14 +42,14 @@
         </div>
         <div class="post-option-wrapper">
             <div class="post-rewrite-button" th:if="${post.isMine || (user.isLogin && user.isAdmin)}">
-                <a th:href="@{/rewrite/{postAuthor}/{boardType}/{postId}(postAuthor=${post.authorNickname},boardType=${board.type},postId=${postId})}">
+                <a th:href="@{/rewrite/{postAuthor}/{boardType}/{postId}(postAuthor=${post.authorNickname},boardType=${board.type},postId=${post.id})}">
                     수정
                 </a>
             </div>
             <button class="post-delete-button"
                     th:if="${post.isMine || (user.isLogin && user.isAdmin)}"
                     th:data-boardType="${board.type}"
-                    th:data-postId="${post.postId}"
+                    th:data-postId="${post.id}"
                     th:data-postAuthorId="${post.authorId}"
                     onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
                 삭제
@@ -58,7 +58,7 @@
         <div class="post-body-wrapper">
             <div class="post-body" th:utext="${post.body}"></div>
             <div class="post-recommend"
-                 th:data-postId="${post.postId}"
+                 th:data-postId="${post.id}"
                  onclick="incPostRecommend(this.getAttribute('data-postId'))">
                 <div class="post-recommend-image">
                     <img src="/img/thumb.png">
@@ -96,18 +96,18 @@
                                 <div class="comment-button-wrapper">
                                     <button type="button"
                                             class="recommend-comment-button"
-                                            th:data-commentId="${comment.commentId}"
+                                            th:data-commentId="${comment.id}"
                                             onclick="incCommentRecommend(this.getAttribute('data-commentId'))"
                                     >
                                         <span>추천</span>
-                                        <span th:id="'commentRecommendCount-' + ${comment.commentId}"
+                                        <span th:id="'commentRecommendCount-' + ${comment.id}"
                                               th:text="${comment.recommendCount}"></span>
                                     </button>
                                     <button type="button"
                                             class="delete-comment-button"
                                             th:if="${comment.isMine || (user.isLogin && user.isAdmin)}"
                                             th:data-postId="${comment.postId}"
-                                            th:data-commentId="${comment.commentId}"
+                                            th:data-commentId="${comment.id}"
                                             th:data-commentAuthorId="${comment.authorId}"
                                             th:data-currentPageNumber="${commentPageNumber}"
                                             onclick="
@@ -140,11 +140,11 @@
                             </div>
                         </div>
                         <form id="childCommentForm" class="child-comment-form" style="display: none;">
-                            <textarea class="comment-input" th:id="'childComment-' + ${comment.commentId}"
+                            <textarea class="comment-input" th:id="'childComment-' + ${comment.id}"
                                       name="body"></textarea>
                             <div class="submit-button-wrapper">
                                 <button type="button"
-                                        th:data-commentId="${comment.commentId}"
+                                        th:data-commentId="${comment.id}"
                                         th:data-postId="${comment.postId}"
                                         th:data-currentPageNumber="${commentPageNumber}"
                                         onclick="saveChildComment(this.getAttribute('data-commentId'), this.getAttribute('data-postId'), this.getAttribute('data-currentPageNumber'))">

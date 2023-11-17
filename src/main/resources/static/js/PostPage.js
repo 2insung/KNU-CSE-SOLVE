@@ -65,7 +65,7 @@ function deleteComment(postId, commentId, commentAuthorId, currentPageNumber) {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                readComment(postId, response.commentPageNumber)
+                readComment(postId, response.pageNumber)
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {
@@ -96,7 +96,7 @@ function saveChildComment(commentId, postId, currentPageNumber) {
                 postId: postId,
                 parentCommentId: commentId,
                 currentPageNumber: currentPageNumber,
-                body: body
+                commentBody: body
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -104,7 +104,7 @@ function saveChildComment(commentId, postId, currentPageNumber) {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                readComment(postId, response.commentPageNumber)
+                readComment(postId, response.pageNumber)
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {
@@ -136,7 +136,7 @@ function saveRootComment(postId) {
                 postId: postId,
                 parentCommentId: null,
                 currentPageNumber: null,
-                body: body
+                commentBody: body
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -144,7 +144,7 @@ function saveRootComment(postId) {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                readComment(postId, response.commentPageNumber)
+                readComment(postId, response.pageNumber)
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {
@@ -184,7 +184,7 @@ function readComment(postId, pageNumber) {
     )
 }
 
-function incPostRecommend(postId){
+function incPostRecommend(postId) {
     $.ajax(
         {
             url: "/api/inc-post-recommend",
@@ -198,10 +198,10 @@ function incPostRecommend(postId){
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                if(response.isSuccess){
+                if (response.isSuccess) {
                     $("#postRecommendCount").replaceWith(response.recommendCount)
                 }
-                else{
+                else {
                     alert("이미 추천한 게시글입니다.")
                 }
             },
@@ -220,7 +220,7 @@ function incPostRecommend(postId){
     )
 }
 
-function incCommentRecommend(commentId){
+function incCommentRecommend(commentId) {
     $.ajax(
         {
             url: "/api/inc-comment-recommend",
@@ -234,11 +234,11 @@ function incCommentRecommend(commentId){
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                if(response.isSuccess){
+                if (response.isSuccess) {
                     var commentCountElementId = "#commentRecommendCount-" + commentId
                     $(commentCountElementId).replaceWith(response.recommendCount)
                 }
-                else{
+                else {
                     alert("이미 추천한 게시글입니다.")
                 }
             },

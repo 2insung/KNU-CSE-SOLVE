@@ -1,16 +1,16 @@
 var token = $("meta[name='_csrf']").attr("content")
 
 
-function deleteMyComment(commentId, userId, currentPage, postId) {
+function deleteMyComment(commentId, memberId, postId, currentPageNumber) {
     $.ajax(
         {
             url: "/api/delete-my-comment",
             type: "DELETE",
             data: JSON.stringify({
-                commentId: commentId,
                 postId: postId,
-                commentAuthorId: userId,
-                currentPage: currentPage
+                commentId: commentId,
+                commentAuthorId: memberId,
+                currentPageNumber: currentPageNumber
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -19,7 +19,7 @@ function deleteMyComment(commentId, userId, currentPage, postId) {
             },
             success: function (response) {
                 alert("삭제되었습니다..")
-                window.location.href = "/my/comment/" + response.userId + "?page=" + response.currentPage
+                window.location.href = "/my/comment/" + response.memberId + "?page=" + response.pageNumber
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

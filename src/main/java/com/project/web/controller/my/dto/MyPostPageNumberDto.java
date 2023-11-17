@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class MyPostPageNumberDto {
-    private Integer userId;
-    private Integer pageNumber;
+    private final Integer memberId;
+    private final Integer pageNumber;
 
     @Builder
-    public MyPostPageNumberDto(Integer userId, Integer pageNumber) {
-        this.userId = userId;
+    public MyPostPageNumberDto(Integer memberId, Integer pageNumber) {
+        this.memberId = memberId;
         this.pageNumber = pageNumber;
     }
 }

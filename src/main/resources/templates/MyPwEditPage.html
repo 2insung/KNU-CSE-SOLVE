@@ -24,7 +24,7 @@
                 <input id="confirmPassword" name="confirmPassword" type="password"/>
             </div>
             <div class="button-wrapper">
-                <button type="button" th:data-userId="${userId}" onclick="pwEdit(this.getAttribute('data-userId'))">비밀번호 변경하기</button>
+                <button type="button" th:data-memberId="${myId}" onclick="pwEdit(this.getAttribute('data-memberId'))">비밀번호 변경하기</button>
             </div>
         </form>
     </div>

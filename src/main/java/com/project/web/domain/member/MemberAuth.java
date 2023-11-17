@@ -25,20 +25,15 @@ public class MemberAuth {
     @Size(max = 50)
     private String username;
 
-    @Column(name = "level")
-    @Enumerated(EnumType.STRING)
-    private Level level;
-
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Authority role;
+    private Role role;
 
     @Builder
-    public MemberAuth(Integer id, Member member, String username, Level level, Authority role) {
+    public MemberAuth(Integer id, Member member, String username, Role role) {
         this.id = id;
         this.member = member;
         this.username = username;
-        this.level = level;
         this.role = role;
     }
 

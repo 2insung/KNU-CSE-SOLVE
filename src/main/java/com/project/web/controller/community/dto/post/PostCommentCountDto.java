@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostCommentCountDto {
-    private Integer commentCount;
-    private Integer totalCommentCount;
+    private final Integer commentCount;
+    private final Integer totalCommentCount;
 
     @Builder
     public PostCommentCountDto(Integer commentCount, Integer totalCommentCount) {

@@ -2,25 +2,21 @@ package com.project.web.controller.my.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
 public class MyEditDto {
-    private Integer userId;
-    private String nickname;
-    private String profileImage;
-    private String description;
-    private String grade;
-    private String admissionYear;
-    private String department;
+    private final Integer memberId;
+    private final String nickname;
+    private final String profileImage;
+    private final String description;
+    private final String grade;
+    private final String admissionYear;
+    private final String department;
 
     @Builder
-    private MyEditDto(Integer userId, String nickname, String profileImage, String description,
+    private MyEditDto(Integer memberId, String nickname, String profileImage, String description,
                       String grade, String admissionYear, String department) {
-        this.userId = userId;
+        this.memberId = memberId;
         this.nickname = nickname;
         this.profileImage = profileImage;
         this.description = description;

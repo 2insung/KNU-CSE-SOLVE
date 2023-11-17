@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Getter
 public class TopHotPostDto {
-    private Integer postId;
-    private String boardType;
-    private String title;
+    private final Integer id;
+    private final String boardType;
+    private final String title;
 
     @Builder
-    public TopHotPostDto(Integer postId, String boardType, String title){
-        this.postId = postId;
+    public TopHotPostDto(Integer id, String boardType, String title) {
+        this.id = id;
         this.boardType = boardType;
         this.title = title;
     }

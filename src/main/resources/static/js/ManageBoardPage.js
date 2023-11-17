@@ -1,4 +1,5 @@
 var token = $("meta[name='_csrf']").attr("content")
+
 function makeBoard() {
     var alias = $("#alias").val()
     var type = $("#type").val()
@@ -32,10 +33,10 @@ function makeBoard() {
             url: "/api/save-board",
             type: "POST",
             data: JSON.stringify({
-                type: type,
-                alias: alias,
-                description: description,
-                category: category
+                boardType: type,
+                boardAlias: alias,
+                boardDescription: description,
+                boardCategory: category
             }),
             contentType: 'application/json',
             dataType: 'json',

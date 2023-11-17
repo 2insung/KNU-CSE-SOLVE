@@ -1,15 +1,15 @@
 package com.project.web.service.board;
 
 import com.project.web.controller.community.dto.post.*;
+import com.project.web.controller.community.dto.post.rest.IncPostRecommendResponseDto;
 import com.project.web.domain.board.Board;
-import com.project.web.domain.comment.Comment;
-import com.project.web.domain.member.Level;
 import com.project.web.domain.member.Member;
+import com.project.web.domain.member.Role;
 import com.project.web.domain.post.*;
+import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.board.BoardPostCountRepository;
 import com.project.web.repository.board.BoardRepository;
-import com.project.web.repository.comment.CommentChildCountRepository;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
@@ -42,174 +42,165 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentRecommendCountRepository commentRecommendCountRepository;
-    private final CommentChildCountRepository commentChildCountRepository;
     private final CommentRecommendMemberRepository commentRecommendMemberRepository;
-    private final int noticePriority = 100000000;
 
+    /*
+     게시글 미리보기 출력 함수.
+     * boardId에 해당하는 게시판의 게시글 미리보기를 pageSize 개수만큼 출력함.
+     * pageNumber는 게시글 페이지 번호임.
+     * [일반 + 공지 + 인기], 모든 카테고리에 대한 게시글을 출력함.
+    */
     @Transactional(readOnly = true)
     public List<PostPreviewDto> getPostPreviewListByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
         List<Object[]> results = postRepository.findPostPreviewByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
-                    Integer postId = (Integer) result[0];
-                    Integer authorId = (Integer) result[1];
-                    Boolean isNotice = (Boolean) result[2];
-                    Boolean isHot = (Boolean) result[3];
-                    LocalDateTime createdAt = ((Timestamp) result[4]).toLocalDateTime();
-                    String authorNickname = (String) result[5];
-                    String authorProfileImage = (String) result[6];
-                    String title = (String) result[7];
-                    String summary = (String) result[8];
-                    String thumbnail = (String) result[9];
-                    Integer hitCount = (Integer) result[10];
-                    Integer recommendCount = (Integer) result[11];
-                    Integer commentCount = (Integer) result[12];
+                    Integer resultPostId = (Integer) result[0];
+                    Integer resultAuthorId = (Integer) result[1];
+                    Boolean resultIsNotice = (Boolean) result[2];
+                    Boolean resultIsHot = (Boolean) result[3];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[4]).toLocalDateTime();
+                    String resultAuthorNickname = (String) result[5];
+                    String resultAuthorProfileImage = (String) result[6];
+                    String resultTitle = (String) result[7];
+                    String resultSummary = (String) result[8];
+                    String resultThumbnail = (String) result[9];
+                    Integer resultHitCount = (Integer) result[10];
+                    Integer resultRecommendCount = (Integer) result[11];
+                    Integer resultCommentCount = (Integer) result[12];
 
                     return PostPreviewDto.builder()
-                            .postId(postId)
-                            .authorId(authorId)
-                            .isNotice(isNotice)
-                            .isHot(isHot)
-                            .createdAt(createdAt)
-                            .authorNickname(authorNickname)
-                            .authorProfileImage(authorProfileImage)
-                            .title(title)
-                            .summary(summary)
-                            .thumbnail(thumbnail)
-                            .hitCount(hitCount)
-                            .recommendCount(recommendCount)
-                            .commentCount(commentCount)
+                            .id(resultPostId)
+                            .authorId(resultAuthorId)
+                            .isNotice(resultIsNotice)
+                            .isHot(resultIsHot)
+                            .createdAt(resultCreatedAt)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
+                            .title(resultTitle)
+                            .summary(resultSummary)
+                            .thumbnail(resultThumbnail)
+                            .hitCount(resultHitCount)
+                            .recommendCount(resultRecommendCount)
+                            .commentCount(resultCommentCount)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<PostPreviewDto> getHotPostPreviewListAll(Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = postRepository.findHotPostPreviewAll(pageSize, pageSize * (pageNumber - 1));
-
-        return results.stream()
-                .map((result) -> {
-                    Integer postId = (Integer) result[0];
-                    Integer authorId = (Integer) result[1];
-                    Boolean isNotice = (Boolean) result[2];
-                    Boolean isHot = (Boolean) result[3];
-                    LocalDateTime createdAt = ((Timestamp) result[4]).toLocalDateTime();
-                    String authorNickname = (String) result[5];
-                    String authorProfileImage = (String) result[6];
-                    String title = (String) result[7];
-                    String summary = (String) result[8];
-                    String thumbnail = (String) result[9];
-                    Integer hitCount = (Integer) result[10];
-                    Integer recommendCount = (Integer) result[11];
-                    Integer commentCount = (Integer) result[12];
-
-                    return PostPreviewDto.builder()
-                            .postId(postId)
-                            .authorId(authorId)
-                            .isNotice(isNotice)
-                            .isHot(isHot)
-                            .createdAt(createdAt)
-                            .authorNickname(authorNickname)
-                            .authorProfileImage(authorProfileImage)
-                            .title(title)
-                            .summary(summary)
-                            .thumbnail(thumbnail)
-                            .hitCount(hitCount)
-                            .recommendCount(recommendCount)
-                            .commentCount(commentCount)
-                            .build();
-                })
-                .collect(Collectors.toList());
-    }
-
+    /*
+      인기글 미리보기 출력 함수.
+     * boardId에 해당하는 게시판의 게시글 미리보기를 pageSize 개수만큼 출력함.
+     * pageNumber는 게시글 페이지 번호임.
+     * [인기], 인기 카테고리에 대한 게시글을 출력함.
+    */
     @Transactional(readOnly = true)
     public List<PostPreviewDto> getHotPostPreviewListByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
         List<Object[]> results = postRepository.findHotPostPreviewByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
-                    Integer postId = (Integer) result[0];
-                    Integer authorId = (Integer) result[1];
-                    Boolean isNotice = (Boolean) result[2];
-                    Boolean isHot = (Boolean) result[3];
-                    LocalDateTime createdAt = ((Timestamp) result[4]).toLocalDateTime();
-                    String authorNickname = (String) result[5];
-                    String authorProfileImage = (String) result[6];
-                    String title = (String) result[7];
-                    String summary = (String) result[8];
-                    String thumbnail = (String) result[9];
-                    Integer hitCount = (Integer) result[10];
-                    Integer recommendCount = (Integer) result[11];
-                    Integer commentCount = (Integer) result[12];
+                    Integer resultPostId = (Integer) result[0];
+                    Integer resultAuthorId = (Integer) result[1];
+                    Boolean resultIsNotice = (Boolean) result[2];
+                    Boolean resultIsHot = (Boolean) result[3];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[4]).toLocalDateTime();
+                    String resultAuthorNickname = (String) result[5];
+                    String resultAuthorProfileImage = (String) result[6];
+                    String resultTitle = (String) result[7];
+                    String resultSummary = (String) result[8];
+                    String resultThumbnail = (String) result[9];
+                    Integer resultHitCount = (Integer) result[10];
+                    Integer resultRecommendCount = (Integer) result[11];
+                    Integer resultCommentCount = (Integer) result[12];
 
                     return PostPreviewDto.builder()
-                            .postId(postId)
-                            .authorId(authorId)
-                            .isNotice(isNotice)
-                            .isHot(isHot)
-                            .createdAt(createdAt)
-                            .authorNickname(authorNickname)
-                            .authorProfileImage(authorProfileImage)
-                            .title(title)
-                            .summary(summary)
-                            .thumbnail(thumbnail)
-                            .hitCount(hitCount)
-                            .recommendCount(recommendCount)
-                            .commentCount(commentCount)
+                            .id(resultPostId)
+                            .authorId(resultAuthorId)
+                            .isNotice(resultIsNotice)
+                            .isHot(resultIsHot)
+                            .createdAt(resultCreatedAt)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
+                            .title(resultTitle)
+                            .summary(resultSummary)
+                            .thumbnail(resultThumbnail)
+                            .hitCount(resultHitCount)
+                            .recommendCount(resultRecommendCount)
+                            .commentCount(resultCommentCount)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
 
+    /*
+      게시글 출력 함수.
+     * postId에 해당하는 게시글을 출력하는 함수임.
+    */
     @Transactional(readOnly = true)
     public PostDto getPost(Integer userId, Integer postId) {
         Object result = postRepository.findPostById(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
 
         Object[] arr = (Object[]) result;
-        Integer authorId = (Integer) arr[1];
-        Boolean isNotice = (Boolean) arr[2];
-        Boolean isHot = (Boolean) arr[3];
-        LocalDateTime createdAt = (LocalDateTime) arr[4];
-        String category = (String) arr[5];
-        String boardType = (String) arr[6];
-        String authorNickname = (String) arr[7];
-        String authorProfileImage = (String) arr[8];
-        String title = (String) arr[9];
-        String body = (String) arr[10];
-        LocalDateTime updatedAt = (LocalDateTime) arr[11];
-        Integer hitCount = (Integer) arr[12];
-        Integer recommendCount = (Integer) arr[13];
-        Integer commentCount = (Integer) arr[14];
-        Integer totalCommentCount = (Integer) arr[15];
-        Boolean isMine = userId != null && userId.equals(authorId);
+        Integer resultPostId = (Integer) arr[0];
+        Integer resultAuthorId = (Integer) arr[1];
+        Boolean resultIsNotice = (Boolean) arr[2];
+        Boolean resultIsHot = (Boolean) arr[3];
+        LocalDateTime resultCreatedAt = (LocalDateTime) arr[4];
+        String resultCategory = (String) arr[5];
+        String resultBoardType = (String) arr[6];
+        String resultAuthorNickname = (String) arr[7];
+        String resultAuthorProfileImage = (String) arr[8];
+        String resultTitle = (String) arr[9];
+        String resultBody = (String) arr[10];
+        LocalDateTime resultUpdatedAt = (LocalDateTime) arr[11];
+        Integer resultHitCount = (Integer) arr[12];
+        Integer resultRecommendCount = (Integer) arr[13];
+        Integer resultCommentCount = (Integer) arr[14];
+        Integer resultTotalCommentCount = (Integer) arr[15];
+        Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
         return PostDto.builder()
-                .postId(postId)
-                .authorId(authorId)
-                .isNotice(isNotice)
-                .isHot(isHot)
-                .createdAt(createdAt)
-                .category(category)
-                .boardType(boardType)
-                .authorNickname(authorNickname)
-                .authorProfileImage(authorProfileImage)
-                .title(title)
-                .body(body)
-                .updatedAt(updatedAt)
-                .hitCount(hitCount)
-                .recommendCount(recommendCount)
-                .commentCount(commentCount)
-                .totalCommentCount(totalCommentCount)
+                .id(resultPostId)
+                .authorId(resultAuthorId)
+                .isNotice(resultIsNotice)
+                .isHot(resultIsHot)
+                .createdAt(resultCreatedAt)
+                .category(resultCategory)
+                .boardType(resultBoardType)
+                .authorNickname(resultAuthorNickname)
+                .authorProfileImage(resultAuthorProfileImage)
+                .title(resultTitle)
+                .body(resultBody)
+                .updatedAt(resultUpdatedAt)
+                .hitCount(resultHitCount)
+                .recommendCount(resultRecommendCount)
+                .commentCount(resultCommentCount)
+                .totalCommentCount(resultTotalCommentCount)
                 .isMine(isMine)
                 .build();
     }
 
+    /*
+      게시글 저장 함수.
+     * boardId에 해당하는 게시판에 게시글을 저장하는 함수임.
+     * 만약 게시할 글이 공지라면 priority 는 1임. 모든 카테고리의 게시글 중 가장 먼저 출력됨.
+     * 저장 후 게시판의 게시글 수를 1 증가. (게시글을 저장하는 시점에서는 게시글이 인기글이 아니기 때문에, 인기글 수는 0 증가)
+    */
     @Transactional
-    public void savePost(Integer userId, Integer boardId, String title, String body,
-                         Boolean isNotice) {
+    public void savePost(Integer userId, Integer boardId, String title, String body, Boolean isNotice) {
+        if (title == null) {
+            throw new Error400Exception("제목을 입력하세요.");
+        }
+        if (body == null) {
+            throw new Error400Exception("본문을 입력하세요.");
+        }
+        if (isNotice == null) {
+            throw new Error400Exception("공지사항인가요?");
+        }
+
         Board board = boardRepository.getReferenceById(boardId);
         Member postAuthor = memberRepository.getReferenceById(userId);
 
@@ -262,8 +253,23 @@ public class PostService {
         }
     }
 
+    /*
+      게시글 수정 함수.
+     * postId에 해당하는 게시글을 수정하는 함수임.
+     * 수정이기 때문에 게시판 글 수는 update하지 않음.
+    */
     @Transactional
     public void updatePost(Integer postId, String title, String body, Boolean isNotice) {
+        if (title == null) {
+            throw new Error400Exception("제목을 입력하세요.");
+        }
+        if (body == null) {
+            throw new Error400Exception("본문을 입력하세요.");
+        }
+        if (isNotice == null) {
+            throw new Error400Exception("공지사항인가요?");
+        }
+
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
         Post post = postContent.getPost();
@@ -278,13 +284,18 @@ public class PostService {
         postContent.updateBody(body);
         postContent.updateSummary(summary);
         postContent.updateThumbnail(thumbnail);
-        if (isNotice != null) {
-            post.updatePriority(isNotice ? 1 : 0);
-            post.updateCategory(isNotice ? "공지" : "일반");
-            post.updateIsNotice(isNotice);
-        }
+        post.updatePriority(isNotice ? 1 : 0);
+        post.updateCategory(isNotice ? "공지" : "일반");
+        post.updateIsNotice(isNotice);
     }
 
+    /*
+      게시글 삭제 함수.
+     * postId에 해당하는 게시글을 삭제하는 함수임.
+     * 게시글이 삭제되는 중에 게시글에 관한 내용을 업데이트 할 수 없음.
+     * 게시글에 존재하는 댓글 전체 삭제 후 게시글 삭제.
+     * 삭제하고자 하는 게시글이 인기글인 경우, 인기글 개수도 1 감소.
+    */
     @Transactional
     public void deletePost(Integer boardId, Integer postId) {
         if (postRepository.updateIsDeleted(postId, true) == 0) {
@@ -294,13 +305,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
 
-        List<Object[]> commentResults = commentRepository.fetchCommentRelationsByPostId(postId);
-        List<Integer> commentIds = commentResults.stream()
-                .map((commentResult) -> {
-                    Comment comment = (Comment) commentResult[0];
-                    return comment.getId();
-                })
-                .collect(Collectors.toList());
+        List<Integer> commentIds = commentRepository.findIdsByPostId(postId);
         commentRecommendMemberRepository.deleteByCommentIds(commentIds);
         commentRecommendCountRepository.deleteByCommentIds(commentIds);
         commentRepository.deleteByCommentIds(commentIds);
@@ -316,13 +321,22 @@ public class PostService {
         if (boardPostCountRepository.updateByBoardId(boardId, -1, dropHotPostCount) == 0) {
             throw new Error404Exception("존재하지 않는 게시판입니다.");
         }
-
     }
 
-    public Boolean hasNoticeAccess(Level level) {
-        return level.getValue() >= 2;
+    /*
+      현재 사용자가 [공지] 카테고리의 게시글을 작성할 수 있는지 true/false로 반환하는 함수.
+     * 현재 사용자의 Role을 통해서 판단함.
+     * role의 value가 2이상인 것은 admint 이상의 role인 경우임.
+     * 현재는 role이 user와 admin 밖에 없기때문에 admin만 공지사항을 올릴 수 있음.
+    */
+    public Boolean hasNoticeAccess(Role role) {
+        return role.getValue() >= 2;
     }
 
+    /*
+      게시글의 댓글 개수를 반환하는 함수.
+     * 게시글의 실제 댓글 수(commentCount)와 총 댓글 수(totalCommentCount)를 반환함.
+    */
     @Transactional(readOnly = true)
     public PostCommentCountDto getPostCommentCount(Integer postId) {
         PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
@@ -334,6 +348,10 @@ public class PostService {
                 .build();
     }
 
+    /*
+      게시글의 댓글 개수를 반환하는 함수(2).
+     * 게시글의 총 댓글 수(totalCommentCount)를 반환함.
+    */
     @Transactional(readOnly = true)
     public Integer getTotalCommentCount(Integer postId) {
         PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
@@ -342,6 +360,10 @@ public class PostService {
         return postCommentCount.getTotalCommentCount();
     }
 
+    /*
+      게시글 수정 시 게시글의 이전 내용을 출력하는 함수.
+     * 게시글의 이전 내용을 출력함.
+    */
     @Transactional(readOnly = true)
     public RewriteDto getRewrite(Integer postId) {
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
@@ -349,14 +371,22 @@ public class PostService {
         Post post = postContent.getPost();
 
         return RewriteDto.builder()
-                .postId(post.getId())
-                .postAuthorId(post.getMember().getId())
+                .id(post.getId())
+                .authorId(post.getMember().getId())
                 .title(postContent.getTitle())
                 .body(postContent.getBody())
                 .isNotice(post.getIsNotice())
                 .build();
     }
 
+    /*
+      게시글 추천수 증가 함수.
+     * 사용자가 이 게시글을 처음 추천하면, 게시글의 추천수를 1 증가시킴.
+     * 증가된 추천수를 반환함.
+     * 만약 게시글의 추천수가 특정 수를 넘어가면, 게시글의 카테고리는 [인기]로 업데이트 되며, 사용자가 게시글에 추천한 사용자로 기록됨.(PostRecommendMember)
+     * 인기글로 업데이트하며, 인기글로 업데이트된 시간을 설정한 뒤, 인기글 수(hotPostCount) 가 1 증가함.
+     * 만약 사용자가 이미 추천한 게시글인 경우 isSuccess는 false임.
+    */
     @Transactional
     public IncPostRecommendResponseDto incPostRecommend(Integer userId, Integer postId) {
         if (!postRecommendMemberRepository.existsByPostAndMemberId(postId, userId)) {
@@ -401,6 +431,10 @@ public class PostService {
         }
     }
 
+    /*
+      게시글 조회수 증가 함수.
+     * 게시글의 조회수를 1 증가시킴.
+    */
     @Transactional
     public void incPostHit(Integer postId) {
         if (postHitCountRepository.updateByPostId(postId, 1) == 0) {
@@ -408,8 +442,14 @@ public class PostService {
         }
     }
 
+    /*
+      상위 6개 게시판의 상위 10개 게시글 출력 함수.(생성일 기준)
+     * boardId가 1~6인 게시판의 상위 10개 게시글을 출력함.
+     * 60개의 게시글을 얻은 다음, boardId가 같은 것끼리 분류하여 List로 만듦.
+     * 따라서 10개의 게시글이 존재하는 6개의 List가 반환됨.
+    */
     @Transactional(readOnly = true)
-    public List<TopPostListDto> getTopPost() {
+    public List<TopBoardDto> getTopBoardList() {
         List<Object[]> results = postRepository.findTopPostList();
         List<String> boardResult = boardRepository.findTopSixBoard();
 
@@ -420,31 +460,39 @@ public class PostService {
                     Integer boardId = (Integer) result[2];
                     String boardType = (String) result[3];
                     return TopPostDto.builder()
-                            .postId(postId)
+                            .id(postId)
                             .title(title)
                             .boardId(boardId)
                             .boardType(boardType)
                             .build();
                 })
                 .collect(Collectors.toList());
-        List<TopPostListDto> topPostListDtoList = new ArrayList<>();
+
+        List<TopBoardDto> topBoard = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            Integer number = i;
-            String alias = boardResult.get(i);
+            Integer boardId = i;
+            String alias = boardResult.get(boardId);
+
             List<TopPostDto> filteredList = topPostDtoList.stream()
-                    .filter(topPostDto -> topPostDto.getBoardId().equals(number + 1))
+                    .filter(topPostDto -> topPostDto.getBoardId().equals(boardId + 1))
                     .collect(Collectors.toList());
-            topPostListDtoList.add(TopPostListDto.builder()
-                    .alias(alias)
+
+            topBoard.add(TopBoardDto.builder()
+                    .boardAlias(alias)
                     .topPostDtoList(filteredList)
                     .build());
         }
 
-        return topPostListDtoList;
+        return topBoard;
     }
 
+
+    /*
+      모든 게시판에 대한 상위 20개 게시글 출력 함수.(인기글 등록 시간 기준)
+     * 게시판 구분없이 총 20개의 인기글을 출력함.
+    */
     @Transactional(readOnly = true)
-    public List<TopHotPostDto> getTopHotPost() {
+    public List<TopHotPostDto> getTopHotPostList() {
         List<Object[]> results = postRepository.findTopHotPostList();
 
         return results.stream()
@@ -454,7 +502,7 @@ public class PostService {
                     String boardType = (String) result[2];
 
                     return TopHotPostDto.builder()
-                            .postId(postId)
+                            .id(postId)
                             .title(title)
                             .boardType(boardType)
                             .build();

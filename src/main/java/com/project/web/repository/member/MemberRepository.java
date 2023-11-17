@@ -10,16 +10,15 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-    @Query("SELECT m.id, ma.username, mpw.password, md.nickname, md.profileImage, ma.role, ma.level " +
+    @Query("SELECT m.id, ma.username, mpw.password, ma.role " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberPassword mpw ON mpw.member = m " +
-            "INNER JOIN MemberDetail md ON md.member = m " +
             "WHERE ma.username = :username and m.isDeleted = false")
     Optional<Object> findByUsernameForLogin(String username);
 
 
-    @Query("SELECT m.isDeleted, ma.username, ma.level, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
+    @Query("SELECT m.isDeleted, ma.username, ma.role, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberDetail md ON md.member = m " +

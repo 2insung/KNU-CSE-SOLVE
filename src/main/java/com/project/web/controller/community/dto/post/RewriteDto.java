@@ -5,16 +5,16 @@ import lombok.Getter;
 
 @Getter
 public class RewriteDto {
-    private Integer postId;
-    private Integer postAuthorId;
-    private String title;
-    private String body;
-    private Boolean isNotice;
+    private final Integer id;
+    private final Integer authorId;
+    private final String title;
+    private final String body;
+    private final Boolean isNotice;
 
     @Builder
-    public RewriteDto(Integer postId, Integer postAuthorId, String title, String body, Boolean isNotice) {
-        this.postId = postId;
-        this.postAuthorId = postAuthorId;
+    public RewriteDto(Integer id, Integer authorId, String title, String body, Boolean isNotice) {
+        this.id = id;
+        this.authorId = authorId;
         this.title = title;
         this.body = body;
         this.isNotice = isNotice;

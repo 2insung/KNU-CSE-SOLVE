@@ -1,7 +1,6 @@
 package com.project.web.controller.auth.dto;
 
-import com.project.web.domain.member.Authority;
-import com.project.web.domain.member.Level;
+import com.project.web.domain.member.Role;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,23 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
+// 사용자(세션) 정보
+// 권한 체크 및 CRUD 연산 시 사용. (Controller, RestController)
+// 로그인하지 않은 경우, null임.
 @Getter
 public class PrincipalDetails implements UserDetails {
     private Integer userId;
     private String username;
     private String password;
-    private Authority role;
-    private Level level;
+    private Role role;
 
     @Builder
-    public PrincipalDetails(Integer userId, String username, String password, Authority role, Level level) {
+    public PrincipalDetails(Integer userId, String username, String password, Role role) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.level = level;
     }
 
     @Override

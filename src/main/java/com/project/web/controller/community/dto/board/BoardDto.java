@@ -3,21 +3,19 @@ package com.project.web.controller.community.dto.board;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 @Getter
 public class BoardDto {
-    private Integer boardId;
-    private String type;
-    private String alias;
-    private String description;
-    private Integer postCount;
-    private Integer hotPostCount;
+    private final Integer id;
+    private final String type;
+    private final String alias;
+    private final String description;
+    private final Integer postCount;
+    private final Integer hotPostCount;
 
     @Builder
-    public BoardDto(String type, Integer boardId, String alias, String description,
-                    Integer postCount, Integer hotPostCount) {
-        this.boardId = boardId;
+    public BoardDto(Integer id, String type, String alias, String description, Integer postCount,
+                    Integer hotPostCount) {
+        this.id = id;
         this.type = type;
         this.alias = alias;
         this.description = description;

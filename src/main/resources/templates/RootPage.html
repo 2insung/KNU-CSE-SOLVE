@@ -16,19 +16,19 @@
                 </div>
                 <ul>
                     <li th:each="post : ${topHotPostList}">
-                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.postId})}"></a>
+                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
                     </li>
                 </ul>
             </div>
         </section>
         <section class="right-section">
-            <div th:each="topPost : ${topPostList}" class="post-list-wrapper">
+            <div th:each="topBoard : ${topBoardList}" class="post-list-wrapper">
                 <div class="post-list-header">
-                    <div th:text="${topPost.alias}" class="post-list-header-text"></div>
+                    <div th:text="${topBoard.boardAlias}" class="post-list-header-text"></div>
                 </div>
                 <ul>
-                    <li th:each="post : ${topPost.topPostDtoList}">
-                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.postId})}"></a>
+                    <li th:each="post : ${topBoard.topPostDtoList}">
+                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
                     </li>
                 </ul>
             </div>

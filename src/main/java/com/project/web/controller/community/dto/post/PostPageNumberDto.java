@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class PostPageNumberDto {
-    private String boardType;
-    private Integer pageNumber;
+    private final String boardType;
+    private final Integer pageNumber;
 
     @Builder
-    public PostPageNumberDto(String boardType, Integer pageNumber){
+    public PostPageNumberDto(String boardType, Integer pageNumber) {
         this.boardType = boardType;
         this.pageNumber = pageNumber;
     }

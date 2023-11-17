@@ -18,15 +18,15 @@
                             <div class="alias" th:text="${myComment.boardAlias}"></div>
                             <button th:if="${isMy}"
                                     th:unless="${myComment.isDeleted}"
-                                    th:data-commentId="${myComment.commentId}"
-                                    th:data-userId="${myComment.commentAuthorId}"
-                                    th:data-currentPage="${myCommentPageNumber}"
                                     th:data-postId="${myComment.postId}"
+                                    th:data-commentId="${myComment.id}"
+                                    th:data-memberId="${myComment.authorId}"
+                                    th:data-currentPageNumber="${myCommentPageNumber}"
                                     onclick="deleteMyComment(
+                                    this.getAttribute('data-postId')),
                                     this.getAttribute('data-commentId'),
-                                    this.getAttribute('data-userId'),
-                                    this.getAttribute('data-currentPage'),
-                                    this.getAttribute('data-postId'))">삭제
+                                    this.getAttribute('data-memberId'),
+                                    this.getAttribute('data-currentPageNumber')">삭제
                             </button>
                         </div>
                         <div class="title">
@@ -42,8 +42,9 @@
         </div>
         <div class="my-comment-page-number-list-wrapper">
             <ul>
-                <li th:each="myCommentPage, stat : ${myCommentPageNumberList}" th:if="${myCommentPage.pageNumber != null}">
-                    <a th:href="@{/my/comment/{userId}(userId=${myCommentPage.userId}, page=${myCommentPage.pageNumber})}">
+                <li th:each="myCommentPage, stat : ${myCommentPageNumberList}"
+                    th:if="${myCommentPage.pageNumber != null}">
+                    <a th:href="@{/my/comment/{memberId}(memberId=${myCommentPage.memberId}, page=${myCommentPage.pageNumber})}">
                         <div th:if="${stat.first}" class="my-comment-arrow-left">◀</div>
                         <div th:if="${!stat.first && !stat.last}"
                              th:text="${myCommentPage.pageNumber}"

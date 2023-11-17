@@ -10,7 +10,7 @@
                     </div>
                     <div class="notice-post-preview-content-wrapper">
                         <div class="notice-post-preview-title">
-                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId})}"
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id})}"
                                th:text="${postPreview.title}"></a>
                         </div>
                     </div>
@@ -24,10 +24,10 @@
                     <div class="post-preview-content-wrapper">
                         <div class="post-preview-title">
                             <a th:if="${boardIsViewHotPostPreviewList}"
-                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, hot=true, page=${postPageNumber})}"
+                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id}, hot=true, page=${postPageNumber})}"
                                th:text="${postPreview.title}"></a>
                             <a th:unless="${boardIsViewHotPostPreviewList}"
-                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.postId}, page=${postPageNumber})}"
+                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id}, page=${postPageNumber})}"
                                th:text="${postPreview.title}"></a>
                         </div>
                         <div class="post-preview-summary" th:text="${postPreview.summary}"></div>
