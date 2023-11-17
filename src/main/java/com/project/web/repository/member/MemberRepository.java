@@ -33,4 +33,15 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "where m.id = :memberId")
     Optional<Object> findUserByMemberId(Integer memberId);
 
+    @Modifying
+    @Query("update Member m set m.isDeleted = :value where m.id = :memberId")
+    int updateIsDeleted(Boolean value, Integer memberId);
+
+    @Query("select m.id, m.isDeleted, ma.username, md.nickname, mp.password " +
+            "from Member m " +
+            "inner join MemberAuth ma on ma.member = m " +
+            "inner join MemberPassword mp on mp.member = m " +
+            "inner join MemberDetail md on md.member = m " +
+            "where ma.username = :username")
+    Optional<Object> findUserByUsername(String username);
 }

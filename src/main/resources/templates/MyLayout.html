@@ -20,9 +20,7 @@
 <body>
 <th:block th:replace="Header :: headerFragment"></th:block>
 <main>
-    <div>
-        <th:block th:replace="MyPageSideBar :: MyPageSideBarFragment"></th:block>
-    </div>
+    <th:block th:replace="MyPageSideBar :: MyPageSideBarFragment"></th:block>
     <th:block layout:fragment="contentFragment"></th:block>
 </main>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

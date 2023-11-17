@@ -8,17 +8,18 @@
 <th:block layout:fragment="contentFragment">
     <div class="my-withdraw">
         <div class="my-withdraw-header">
-            <span>회원탈퇴</span>
+            <span>계정 비활성화</span>
         </div>
         <form class="withdraw-wrapper">
             <div class="title">
-                회원탈퇴 하기
+                계정 비활성화 하기
             </div>
             <div class="warning">
-                사용자 기록은 삭제되지 않으며, 탈퇴 후 로그인이 불가능합니다.
+                사용자 기록은 삭제되지 않으며, 비활성화 후 로그인이 불가능합니다.
             </div>
             <div class="button-wrapper">
-                <button type="button" th:data-userId="${userId}">회원탈퇴 하기</button>
+                <button type="button" th:data-userId="${userId}" onclick="withdraw(this.getAttribute('data-userId'))">계정 비활성화 하기
+                </button>
             </div>
         </form>
     </div>

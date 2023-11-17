@@ -23,7 +23,24 @@ public class SignUpService {
     @Transactional
     public void signup(String username, String password, String nickname) {
         if (memberAuthRepository.existsByUsername(username)) {
-            throw new Error404Exception("이미 가입되어 있는 유저입니다.");
+            Object result = memberRepository.findUserByUsername(username)
+                    .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+            Object[] arr = (Object[]) result;
+            Integer memberId = (Integer) arr[0];
+            Boolean isDeleted = (Boolean) arr[1];
+            String resultUsername = (String) arr[2];
+            String resultNickname = (String) arr[3];
+            String resultPassword = (String) arr[4];
+
+            if (isDeleted && resultUsername.equals(username) && resultNickname.equals(nickname) && passwordEncoder.matches(password, resultPassword)) {
+                if (memberRepository.updateIsDeleted(false, memberId) == 0) {
+                    throw new Error404Exception("존재하지 않는 사용자입니다.");
+                }
+                return;
+            }
+            else {
+                throw new Error404Exception("이미 가입되어 있는 유저입니다.");
+            }
         }
 
         if (memberDetailRepository.existsByNickname(nickname)) {
@@ -56,7 +73,6 @@ public class SignUpService {
                 .admissionYear(null)
                 .department(null)
                 .build();
-
 
 
         memberRepository.save(member);

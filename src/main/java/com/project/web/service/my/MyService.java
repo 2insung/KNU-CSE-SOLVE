@@ -231,4 +231,16 @@ public class MyService {
         }
     }
 
+    @Transactional
+    public Boolean withdraw(Integer userId){
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+        if(memberRepository.updateIsDeleted(true, member.getId()) == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }

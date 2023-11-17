@@ -145,6 +145,9 @@ public class MyController {
         model.addAttribute("user", userDto);
         model.addAttribute("isMy", userId.equals(userDto.getUserId()));
 
+        Integer myId = myService.getMyId(userId);
+        model.addAttribute("myId", myId);
+
         return "MyWithdrawPage";
     }
 

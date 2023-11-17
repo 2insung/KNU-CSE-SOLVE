@@ -98,5 +98,18 @@ public class MyRestController {
         );
     }
 
+    @PreAuthorize("isAuthenticated() and ((#withdrawRequestDto.userId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PatchMapping("/api/withdraw")
+    public ResponseEntity<WithdrawResponseDto> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto,
+                                                        @AuthenticationPrincipal PrincipalDetails principal) {
+        Integer userId = withdrawRequestDto.getUserId();
+        Boolean result = myService.withdraw(userId);
+        return ResponseEntity.ok(
+                WithdrawResponseDto.builder()
+                        .result(result)
+                        .build()
+        );
+    }
+
 
 }
