@@ -7,50 +7,47 @@
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="write">
-        <div class="writeWrapper">
-            <form id="writeForm">
-                <div class="boardHeader">
-                    <div class="boardAlias">
-                        <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
-                    </div>
-                    <div class="option">
-                        <div class="description" th:text="${board.alias} + ' 게시판에 글을 작성합니다.'"></div>
-                        <div class="inputWrapper">
-                            <div class="checkBoxWrapper" th:if="${hasNoticeAccess}">
+        <form id="writeForm">
+            <div class="board-header">
+                <div class="board-alias">
+                    <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
+                </div>
+                <div class="option">
+                    <div class="description" th:text="${board.alias} + ' 게시판에 글을 작성합니다.'"></div>
+                    <div class="input-wrapper">
+                        <div class="check-box-wrapper" th:if="${hasNoticeAccess}">
                                 <span>
                                     <input th:checked="${isRewrite == true ? rewrite.isNotice : false}"
                                            type="checkbox" id="isNotice" name="isNotice"/>
                                     <label id="checkBoxLabel" for="isNotice"></label>
                                     <label for="isNotice">공지로 올리기</label>
                                 </span>
-                            </div>
-                            <div class="submitButtonWrapper">
-                                <button th:if="${isRewrite}"
-                                        th:data-boardType="${board.type}"
-                                        th:data-postId="${rewrite.postId}"
-                                        th:data-postAuthorId="${rewrite.postAuthorId}"
-                                        type="button"
-                                        onclick="updatePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
-                                    수정하기
-                                </button>
-                                <button th:unless="${isRewrite}"
-                                        th:data-boardType="${board.type}"
-                                        type="button"
-                                        onclick="savePost(this.getAttribute('data-boardType'))">제출하기
-                                </button>
-                            </div>
+                        </div>
+                        <div class="submit-button-wrapper">
+                            <button th:if="${isRewrite}"
+                                    th:data-boardType="${board.type}"
+                                    th:data-postId="${rewrite.id}"
+                                    th:data-postAuthorId="${rewrite.authorId}"
+                                    type="button"
+                                    onclick="updatePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
+                                수정하기
+                            </button>
+                            <button th:unless="${isRewrite}"
+                                    th:data-boardType="${board.type}"
+                                    type="button"
+                                    onclick="savePost(this.getAttribute('data-boardType'))">제출하기
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div class="ckEditorWrapper">
-                    <input th:value="${isRewrite == true ? rewrite.title : ''}" type="text" id="title" name="title"
-                           placeholder="제목을 입력해주세요."/>
-                    <textarea th:utext="${isRewrite == true ? rewrite.body : ''}" rows="5" id="content"
-                              name="body"></textarea>
-                </div>
-            </form>
-
-        </div>
+            </div>
+            <div class="ckEditor-wrapper">
+                <input th:value="${isRewrite == true ? rewrite.title : ''}" type="text" id="title" name="title"
+                       placeholder="제목을 입력해주세요."/>
+                <textarea th:utext="${isRewrite == true ? rewrite.body : ''}" rows="5" id="content"
+                          name="body"></textarea>
+            </div>
+        </form>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

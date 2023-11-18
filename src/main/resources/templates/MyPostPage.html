@@ -16,7 +16,7 @@
                     <div class="my-post-wrapper">
                         <div class="post-header">
                             <div class="alias" th:text="${myPost.boardAlias}"></div>
-                            <button th:if="${isMy}"
+                            <button th:if="${myPost.isMine}"
                                     th:data-boardId="${myPost.boardId}"
                                     th:data-postId="${myPost.id}"
                                     th:data-memberId="${myPost.authorId}"
@@ -25,7 +25,7 @@
                                     this.getAttribute('data-boardId'),
                                     this.getAttribute('data-postId'),
                                     this.getAttribute('data-memberId'),
-                                    this.getAttribute('data-currentPage'))">삭제
+                                    this.getAttribute('data-currentPageNumber'))">삭제
                             </button>
                         </div>
                         <div class="title">

@@ -3,11 +3,8 @@ package com.project.web.domain.post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,33 +21,31 @@ public class PostContent {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Column(name = "title")
-    @Size(max = 30)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "body")
+    @Column(name = "body", nullable = false)
     private String body;
 
-    @Column(name = "summary")
-    @Size(max = 50)
+    @Column(name = "summary", nullable = false)
     private String summary;
 
     @Column(name = "thumbnail")
     private String thumbnail;
 
     @Column(name = "updated_at")
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @Builder
     public PostContent(Integer id, Post post, String title, String body, String summary,
-                       String thumbnail) {
+                       String thumbnail, LocalDateTime updatedAt) {
         this.id = id;
         this.post = post;
         this.title = title;
         this.body = body;
         this.summary = summary;
         this.thumbnail = thumbnail;
+        this.updatedAt = updatedAt;
     }
 
     public void updateTitle(String title){
@@ -65,4 +60,5 @@ public class PostContent {
     public void updateThumbnail(String thumbnail){
         this.thumbnail = thumbnail;
     }
+    public void updateUpdatedAt(LocalDateTime updatedAt) {this.updatedAt = updatedAt;}
 }

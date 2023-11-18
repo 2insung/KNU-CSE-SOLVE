@@ -107,21 +107,21 @@ public class MyService {
                 .map((result) -> {
                     Integer resultPostId = (Integer) result[0];
                     Integer resultPostAuthorId = (Integer) result[1];
-                    Integer resultBoardId = (Integer) result[2];
-                    String resultBoardType = (String) result[3];
-                    String resultBoardAlias = (String) result[4];
-                    String resultTitle = (String) result[5];
-                    LocalDateTime resultCreatedAt = ((Timestamp) result[6]).toLocalDateTime();
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                    Integer resultBoardId = (Integer) result[3];
+                    String resultBoardType = (String) result[4];
+                    String resultBoardAlias = (String) result[5];
+                    String resultTitle = (String) result[6];
                     Boolean isMine = memberId != null && memberId.equals(resultPostAuthorId);
 
                     return MyPostDto.builder()
                             .id(resultPostId)
                             .authorId(resultPostAuthorId)
+                            .createdAt(resultCreatedAt)
                             .boardId(resultBoardId)
                             .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
                             .title(resultTitle)
-                            .createdAt(resultCreatedAt)
                             .isMine(isMine)
                             .build();
                 })

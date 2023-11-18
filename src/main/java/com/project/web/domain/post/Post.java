@@ -47,7 +47,7 @@ public class Post {
     @Column(name = "hot_registered_time")
     private LocalDateTime hotRegisteredTime;
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     private String category;
 
     @Builder

@@ -28,9 +28,5 @@ spring:
 
 image:
   resource:
-    location: ${IMAGE_RESOURCE_LOCATION}
-  path: ${IMAGE_PATH}
-
-
-
-
+    location: ${IMAGE_RESOURCE_LOCATION_PROD}
+  path: ${IMAGE_PATH_PROD}

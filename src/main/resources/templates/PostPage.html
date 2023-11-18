@@ -31,7 +31,7 @@
             <div class="post-info-wrapper">
                 <div class="time">
                     <span th:text="${post.createdAt}"></span>
-                    <span th:text="'(수정 : ' + ${post.updatedAt} + ')'"></span>
+                    <span th:if="${post.updatedAt != null}" th:text="'(수정 : ' + ${post.updatedAt} + ')'"></span>
                 </div>
                 <div class="count">
                     <span th:text="'조회수 ' + ${post.hitCount}"></span>
@@ -42,7 +42,7 @@
         </div>
         <div class="post-option-wrapper">
             <div class="post-rewrite-button" th:if="${post.isMine || (user.isLogin && user.isAdmin)}">
-                <a th:href="@{/rewrite/{postAuthor}/{boardType}/{postId}(postAuthor=${post.authorNickname},boardType=${board.type},postId=${post.id})}">
+                <a th:href="@{/rewrite/{postAuthorId}/{boardType}/{postId}(postAuthorId=${post.authorId},boardType=${board.type},postId=${post.id})}">
                     수정
                 </a>
             </div>

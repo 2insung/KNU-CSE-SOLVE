@@ -32,8 +32,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         Object[] arr = (Object[]) result;
         Integer memberId = (Integer) arr[0];
         String username = (String) arr[1];
-        String password = (String) arr[2];
-        Role role = (Role) arr[3];
+        Role role = (Role) arr[2];
+        String password = (String) arr[3];
 
         return PrincipalDetails.builder()
                 .userId(memberId)

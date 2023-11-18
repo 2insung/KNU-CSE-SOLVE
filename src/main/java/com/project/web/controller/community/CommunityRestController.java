@@ -6,14 +6,19 @@ import com.project.web.controller.community.dto.board.rest.SaveBoardRequestDto;
 import com.project.web.controller.community.dto.board.rest.SaveBoardResponseDto;
 import com.project.web.controller.community.dto.comment.rest.*;
 import com.project.web.controller.community.dto.post.rest.*;
+import com.project.web.exception.Error400Exception;
 import com.project.web.service.board.BoardService;
 import com.project.web.service.board.CommentService;
 import com.project.web.service.board.PostService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 // Community(게시판/게시글/댓글) REST API
 @RestController
@@ -25,8 +30,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/save-post")
-    public ResponseEntity<SavePostResponseDto> savePost(@RequestBody SavePostRequestDto savePostRequestDto,
-                                                        @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<SavePostResponseDto> savePost(@Valid @RequestBody SavePostRequestDto savePostRequestDto,
+                                                        @AuthenticationPrincipal PrincipalDetails principal,
+                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         String boardType = savePostRequestDto.getBoardType();
         String title = savePostRequestDto.getPostTitle();
         String body = savePostRequestDto.getPostBody();
@@ -47,8 +58,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated() and ((#updatePostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @PatchMapping("/api/update-post")
-    public ResponseEntity<UpdatePostResponseDto> updatePost(@RequestBody UpdatePostRequestDto updatePostRequestDto,
-                                                            @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<UpdatePostResponseDto> updatePost(@Valid @RequestBody UpdatePostRequestDto updatePostRequestDto,
+                                                            @AuthenticationPrincipal PrincipalDetails principal,
+                                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         String boardType = updatePostRequestDto.getBoardType();
         Integer postId = updatePostRequestDto.getPostId();
         String title = updatePostRequestDto.getPostTitle();
@@ -70,8 +87,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated() and ((#deletePostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-post")
-    public ResponseEntity<DeletePostResponseDto> deletePost(@RequestBody DeletePostRequestDto deletePostRequestDto,
-                                                            @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<DeletePostResponseDto> deletePost(@Valid @RequestBody DeletePostRequestDto deletePostRequestDto,
+                                                            @AuthenticationPrincipal PrincipalDetails principal,
+                                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         String boardType = deletePostRequestDto.getBoardType();
         Integer postId = deletePostRequestDto.getPostId();
 
@@ -89,8 +112,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/save-comment")
-    public ResponseEntity<SaveCommentResponseDto> saveComment(@RequestBody SaveCommentRequestDto saveCommentRequestDto,
-                                                              @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveCommentRequestDto saveCommentRequestDto,
+                                                              @AuthenticationPrincipal PrincipalDetails principal,
+                                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer postId = saveCommentRequestDto.getPostId();
         Integer parentCommentId = saveCommentRequestDto.getParentCommentId();
         Integer currentPageNumber = saveCommentRequestDto.getCurrentPageNumber();
@@ -116,8 +145,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated() and ((#deleteCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-comment")
-    public ResponseEntity<DeleteCommentResponseDto> deleteComment(@RequestBody DeleteCommentRequestDto deleteCommentRequestDto,
-                                                                  @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<DeleteCommentResponseDto> deleteComment(@Valid @RequestBody DeleteCommentRequestDto deleteCommentRequestDto,
+                                                                  @AuthenticationPrincipal PrincipalDetails principal,
+                                                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer postId = deleteCommentRequestDto.getPostId();
         Integer commentId = deleteCommentRequestDto.getCommentId();
         Integer currentPageNumber = deleteCommentRequestDto.getCurrentPageNumber();
@@ -139,8 +174,14 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/inc-post-recommend")
-    public ResponseEntity<IncPostRecommendResponseDto> incPostRecommend(@RequestBody IncPostRecommendRequestDto incPostRecommendRequestDto,
-                                                                        @AuthenticationPrincipal PrincipalDetails pricipal) {
+    public ResponseEntity<IncPostRecommendResponseDto> incPostRecommend(@Valid @RequestBody IncPostRecommendRequestDto incPostRecommendRequestDto,
+                                                                        @AuthenticationPrincipal PrincipalDetails pricipal,
+                                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer userId = pricipal.getUserId();
         Integer postId = incPostRecommendRequestDto.getPostId();
         IncPostRecommendResponseDto incPostRecommendResponseDto = postService.incPostRecommend(userId, postId);
@@ -150,7 +191,13 @@ public class CommunityRestController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/inc-comment-recommend")
     public ResponseEntity<IncCommentRecommendResponseDto> incPostRecommend(@RequestBody IncCommentRecommendRequestDto incCommentRecommendRequestDto,
-                                                                           @AuthenticationPrincipal PrincipalDetails principal) {
+                                                                           @AuthenticationPrincipal PrincipalDetails principal,
+                                                                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer userId = principal.getUserId();
         Integer commentId = incCommentRecommendRequestDto.getCommentId();
         IncCommentRecommendResponseDto incCommentRecommendResponseDto = commentService.incCommentRecommend(userId, commentId);
@@ -160,7 +207,13 @@ public class CommunityRestController {
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     @PostMapping("/api/save-board")
     public ResponseEntity<SaveBoardResponseDto> saveBoard(@RequestBody SaveBoardRequestDto saveBoardRequestDto,
-                                                          @AuthenticationPrincipal PrincipalDetails principal) {
+                                                          @AuthenticationPrincipal PrincipalDetails principal,
+                                                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         // 게시판의 생성은 어드민에게만 권한이 있음.
         String type = saveBoardRequestDto.getBoardType();
         String description = saveBoardRequestDto.getBoardDescription();

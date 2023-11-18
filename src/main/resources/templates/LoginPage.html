@@ -7,29 +7,29 @@
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="login">
-        <div class="loginWrapper">
+        <div class="login-wrapper">
             <div class="inner">
                 <div class="title">
                     로그인
                 </div>
                 <form id="loginForm" th:action="@{/login}" method="post">
                     <fieldset>
-                        <div class="errorWrapper">
+                        <div class="error-wrapper">
                             <p id="errorMessage" th:text="${exception}"></p>
                         </div>
                         <div>
                             <input id="username" name="username" type="text" placeholder="Username"/>
                             <input id="password" name="password" type="password" placeholder="Password"/>
                         </div>
-                        <div class="checkBoxWrapper">
+                        <div class="check-box-wrapper">
                             <span>
                                 <input type="checkbox" id="remember" name="remember"/>
                                 <label id="checkBoxLabel" for="remember"></label>
                                 <label for="remember">로그인 상태 유지</label>
                             </span>
                         </div>
-                        <button type="submit" class="loginFormButton">로그인</button>
-                        <div class="optionWrapper">
+                        <button type="submit" class="login-form-button">로그인</button>
+                        <div class="option-wrapper">
                             <a href="/signup">회원가입</a>
                             <a>비밀번호 찾기</a>
                         </div>

@@ -217,7 +217,7 @@ public class PostService {
 
         Document document = Jsoup.parse(body);
         String bodyText = document.text();
-        String summary = bodyText.length() > 40 ? bodyText.substring(0, 40) + "..." : bodyText;
+        String summary = bodyText.length() > 90 ? bodyText.substring(0, 90) + "..." : bodyText;
         Element imgElement = document.select("img").first();
         String thumbnail = imgElement != null ? imgElement.attr("src") : null;
         PostContent postContent = PostContent.builder()
@@ -226,6 +226,7 @@ public class PostService {
                 .body(body)
                 .summary(summary)
                 .thumbnail(thumbnail)
+                .updatedAt(null)
                 .build();
         postContentRepository.save(postContent);
 
@@ -276,10 +277,12 @@ public class PostService {
 
         Document document = Jsoup.parse(body);
         String bodyText = document.text();
-        String summary = bodyText.length() > 40 ? bodyText.substring(0, 40) + "..." : bodyText;
+        String summary = bodyText.length() > 90 ? bodyText.substring(0, 90) + "..." : bodyText;
         Element imgElement = document.select("img").first();
         String thumbnail = imgElement != null ? imgElement.attr("src") : null;
 
+        LocalDateTime now = LocalDateTime.now();
+        postContent.updateUpdatedAt(now);
         postContent.updateTitle(title);
         postContent.updateBody(body);
         postContent.updateSummary(summary);
@@ -451,7 +454,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<TopBoardDto> getTopBoardList() {
         List<Object[]> results = postRepository.findTopPostList();
-        List<String> boardResult = boardRepository.findTopSixBoard();
+        List<Board> boardResult = boardRepository.findTopSixBoard();
 
         List<TopPostDto> topPostDtoList = results.stream()
                 .map((result) -> {
@@ -471,14 +474,15 @@ public class PostService {
         List<TopBoardDto> topBoard = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             Integer boardId = i;
-            String alias = boardResult.get(boardId);
+            Board board = boardResult.get(boardId);
 
             List<TopPostDto> filteredList = topPostDtoList.stream()
                     .filter(topPostDto -> topPostDto.getBoardId().equals(boardId + 1))
                     .collect(Collectors.toList());
 
             topBoard.add(TopBoardDto.builder()
-                    .boardAlias(alias)
+                    .boardAlias(board.getAlias())
+                    .boardType(board.getType())
                     .topPostDtoList(filteredList)
                     .build());
         }

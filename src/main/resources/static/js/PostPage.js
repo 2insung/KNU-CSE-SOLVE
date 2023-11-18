@@ -88,6 +88,12 @@ function saveChildComment(commentId, postId, currentPageNumber) {
         alert("내용을 입력해주세요.")
         return;
     }
+
+    if(body > 500){
+        alert("댓글은 500자 내로 입력해주세요.")
+        return;
+    }
+
     $.ajax(
         {
             url: "/api/save-comment",
@@ -124,10 +130,17 @@ function saveChildComment(commentId, postId, currentPageNumber) {
 
 function saveRootComment(postId) {
     var body = $("#rootContent").val()
+
     if (body === "") {
         alert("내용을 입력해주세요.")
         return;
     }
+
+    if(body > 500){
+        alert("댓글은 500자 내로 입력해주세요.")
+        return;
+    }
+
     $.ajax(
         {
             url: "/api/save-comment",

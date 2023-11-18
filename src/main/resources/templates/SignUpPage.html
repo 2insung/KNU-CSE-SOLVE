@@ -7,7 +7,7 @@
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="signup">
-        <div class="signupWrapper">
+        <div class="signup-wrapper">
             <div class="inner">
                 <div class="title">
                     회원가입
@@ -15,10 +15,10 @@
                 <form>
                     <div id="inputUserInfo">
                         <fieldset>
-                            <div class="errorWrapper">
+                            <div class="error-wrapper">
                                 <p id="errorMessage"></p>
                             </div>
-                            <div class="inputWrapper">
+                            <div class="input-wrapper">
                                 <label for="nickname">닉네임</label>
                                 <input id="nickname" name="nickname" type="text"
                                        placeholder="Nickname"/>
@@ -33,11 +33,11 @@
                                        name="passwordConfirm" type="password"
                                        placeholder="Confirm password"/>
                             </div>
-                            <button type="button" class="signupFormButton" id="sendEmailButton"
+                            <button type="button" class="signup-form-button" id="sendEmailButton"
                                     onclick="signup()"> 회원가입 하기
                             </button>
-                            <div class="optionWrapper">
-                                이미 회원이라면? <a href="/login-page">로그인 하기</a>
+                            <div class="option-wrapper">
+                                이미 회원이라면? <a href="/login">로그인 하기</a>
                             </div>
                         </fieldset>
                     </div>

@@ -15,7 +15,7 @@ function withdraw(memberId) {
             },
             success: function (response) {
                 if (response.isSuccess) {
-                    alert("정상적으로 비활성화되었습니다.\n 다음 로그인부터 계정이 바활성화됩니다.\n 재가입을 원할 시 동일한 정보로 회원가입하세요.")
+                    alert("정상적으로 비활성화되었습니다.\n다음 로그인부터 계정이 바활성화됩니다.\n 재가입을 원할 시 동일한 정보로 회원가입하세요.")
                     window.location.href = "/"
                 }
                 else {

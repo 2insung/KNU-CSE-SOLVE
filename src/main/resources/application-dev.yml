@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${datasource_url}
-    username: ${datasource_username}
-    password: ${datasource_password}
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -28,5 +28,5 @@ spring:
 
 image:
   resource:
-    location: "file:///C:/Users/user/web_project/image/"
-  path: "C:/Users/user/web_project/image"
+    location: ${IMAGE_RESOURCE_LOCATION}
+  path: ${IMAGE_PATH}

@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -19,18 +17,15 @@ public class Board {
     private Integer id;
 
     @Column(name = "type", unique = true, nullable = false)
-    @Size(max = 50)
     private String type;
 
-    @Column(name = "alias")
-    @Size(max = 50)
+    @Column(name = "alias", unique = true, nullable = false)
     private String alias;
 
     @Column(name = "description")
-    @Size(max = 100)
     private String description;
 
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     private String category;
 
     @Builder

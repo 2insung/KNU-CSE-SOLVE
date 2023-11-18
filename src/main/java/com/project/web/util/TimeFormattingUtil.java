@@ -8,12 +8,20 @@ public class TimeFormattingUtil {
     }
 
     public static String localDateTimeFormattingAll(LocalDateTime time) {
+        if(time == null){
+            return null;
+        }
+
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm:ss");
         return time.format(formatter);
     }
 
     public static String localDateTimeFormatting(LocalDateTime time) {
+        if(time == null){
+            return null;
+        }
+
         LocalDateTime now = LocalDateTime.now();
 
         if (time.toLocalDate().isEqual(now.toLocalDate())) {

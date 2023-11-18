@@ -1,7 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-
-function deleteMyComment(commentId, memberId, postId, currentPageNumber) {
+function deleteMyComment(postId, commentId, memberId, currentPageNumber) {
     $.ajax(
         {
             url: "/api/delete-my-comment",

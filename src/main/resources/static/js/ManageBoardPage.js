@@ -23,8 +23,18 @@ function makeBoard() {
         return
     }
 
+    if (type.length < 5 || type.length > 50) {
+        alert("게시판 타입은 5~50자 내로 입력해주세요.")
+        return
+    }
+
+    if (alias.length < 5 || alias.length > 50) {
+        alert("게시판 이름은 4~20자 내로 입력해주세요.")
+        return
+    }
+
     if (description.length > 100) {
-        alert("100자 이하로 입력해주세요.")
+        alert("게시판 설명은 100자 내로 입력해주세요.")
         return
     }
 

@@ -1,7 +1,5 @@
 package com.project.web.util;
 
-import org.springframework.security.core.parameters.P;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ public class PageUtil {
     private PageUtil() {
     }
 
-    private static final int PAGE_NUMBER_LIST_SIZE = 2;
+    private static final int PAGE_NUMBER_LIST_SIZE = 10;
     private static final int PAGE_NUMBER_LIMIT = 1000;
 
 

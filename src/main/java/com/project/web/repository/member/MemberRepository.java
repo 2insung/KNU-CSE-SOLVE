@@ -10,14 +10,22 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-    @Query("SELECT m.id, ma.username, mpw.password, ma.role " +
+    /*
+     로그인 시 사용자 정보 출력 함수.
+     * 사용자 정보를 출력하여 로그인에 성공한다면, 사용자 정보를 PrincipalDetail에 저장함.
+     * 비활성화된 사용자는 출력하지 않음.
+    */
+    @Query("SELECT m.id, ma.username, ma.role, mpw.password " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberPassword mpw ON mpw.member = m " +
             "WHERE ma.username = :username and m.isDeleted = false")
     Optional<Object> findByUsernameForLogin(String username);
 
-
+    /*
+     사용자 정보 출력 함수.
+     * '/my/{memberId}' 에서 출력할 사용자 정보.
+    */
     @Query("SELECT m.isDeleted, ma.username, ma.role, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
@@ -25,17 +33,21 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "WHERE m.id = :memberId")
     Optional<Object> findMyById(Integer memberId);
 
-    @Query("select md.nickname, md.profileImage, ma.role, m.isDeleted " +
+    /*
+     사용자 정보 출력 함수.
+     * 현재 로그인한 사용자의 정보를 출력함.
+    */
+    @Query("select ma.role, md.nickname, md.profileImage " +
             "from Member m " +
-            "inner join MemberDetail md on md.member = m " +
             "inner join MemberAuth ma on ma.member = m " +
+            "inner join MemberDetail md on md.member = m " +
             "where m.id = :memberId")
     Optional<Object> findUserByMemberId(Integer memberId);
 
-    @Modifying
-    @Query("update Member m set m.isDeleted = :value where m.id = :memberId")
-    int updateIsDeleted(Boolean value, Integer memberId);
-
+    /*
+     사용자 정보 출력 함수.
+     * 회원가입 시 이미 가입된 사용자의 정보를 출력함.
+    */
     @Query("select m.id, m.isDeleted, ma.username, md.nickname, mp.password " +
             "from Member m " +
             "inner join MemberAuth ma on ma.member = m " +
@@ -43,4 +55,12 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "inner join MemberDetail md on md.member = m " +
             "where ma.username = :username")
     Optional<Object> findUserByUsername(String username);
+
+    /*
+     사용자 계정 상태 변경 함수.
+     * isDeleted가 true하면 비활성화된 계정임.
+    */
+    @Modifying
+    @Query("update Member m set m.isDeleted = :value where m.id = :memberId")
+    int updateIsDeleted(Boolean value, Integer memberId);
 }

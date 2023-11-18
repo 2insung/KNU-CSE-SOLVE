@@ -11,10 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 @ControllerAdvice
 public class Error400ExceptionHandler {
     @ExceptionHandler(Error400Exception.class)
-    public Object handleError400Exception(HttpServletRequest request, HttpServletResponse response, Error400Exception exception){
+    public Object handleError400Exception(HttpServletRequest request, HttpServletResponse response, Error400Exception exception) {
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(exception.getMessage());
-        } else {
+        }
+        else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return "error/400";
         }

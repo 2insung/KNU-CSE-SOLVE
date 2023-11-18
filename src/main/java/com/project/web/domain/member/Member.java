@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor

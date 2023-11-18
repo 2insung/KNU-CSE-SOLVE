@@ -8,32 +8,30 @@
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="board">
-        <div class="boardWrapper">
-            <div class="boardHeader">
-                <div class="boardAlias">
-                    <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
-                </div>
-                <div th:text="${board.description}" class="description"></div>
+        <div class="board-header">
+            <div class="board-alias">
+                <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
             </div>
-            <div class="option">
-                <div class="selectView">
-                    <a th:href="@{/board/{boardType}(boardType=${board.type})}">
-                        <div th:class="${boardIsViewHotPostPreviewList == false} ? 'activeSelectViewButton' : 'selectViewButton'">
-                            전체글
-                        </div>
-                    </a>
-                    <a th:href="@{/board/{boardType}(boardType=${board.type}, hot=true)}">
-                        <div th:class="${boardIsViewHotPostPreviewList == true} ? 'activeSelectViewButton' : 'selectViewButton'">
-                            인기글
-                        </div>
-                    </a>
-                </div>
-                <a th:href="@{/write/{boardType}(boardType=${board.type})}">
-                    <div class="writePostButton">게시글 작성하기</div>
+            <div th:text="${board.description}" class="description"></div>
+        </div>
+        <div class="option">
+            <div class="select-view">
+                <a th:href="@{/board/{boardType}(boardType=${board.type})}">
+                    <div th:class="${boardIsViewHotPostPreviewList == false} ? 'active-select-view-button' : 'select-view-button'">
+                        전체글
+                    </div>
+                </a>
+                <a th:href="@{/board/{boardType}(boardType=${board.type}, hot=true)}">
+                    <div th:class="${boardIsViewHotPostPreviewList == true} ? 'active-select-view-button' : 'select-view-button'">
+                        인기글
+                    </div>
                 </a>
             </div>
-            <th:block th:replace="PostPreviewList :: postPreviewListFragment"></th:block>
+            <a th:href="@{/write/{boardType}(boardType=${board.type})}">
+                <div class="write-post-button">게시글 작성하기</div>
+            </a>
         </div>
+        <th:block th:replace="PostPreviewList :: postPreviewListFragment"></th:block>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">

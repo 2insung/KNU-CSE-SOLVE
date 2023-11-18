@@ -1,4 +1,4 @@
-package com.project.web.service.upload;
+package com.project.web.service.file;
 
 import com.project.web.exception.Error500Exception;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class ImageUploadService {
-
+public class FileService {
     @Value("${image.path}")
     private String updatePath;
 
@@ -25,7 +24,6 @@ public class ImageUploadService {
         if (fileSizeInMB >= 1) {
             throw new Error500Exception("1MB 미만의 파일만 가능합니다.");
         }
-
 
         String uuidStr = UUID.randomUUID().toString();
         File saveFile = new File(updatePath + "/" + uuidStr);

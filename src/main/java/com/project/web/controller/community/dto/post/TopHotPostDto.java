@@ -13,6 +13,6 @@ public class TopHotPostDto {
     public TopHotPostDto(Integer id, String boardType, String title) {
         this.id = id;
         this.boardType = boardType;
-        this.title = title;
+        this.title = title.length() > 20 ? title.substring(0,20) + ".." : title;
     }
 }

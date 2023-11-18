@@ -19,13 +19,13 @@ function savePost(boardType) {
         return
     }
 
-    if (title.length > 30) {
-        alert("제목은 30자 이하만 가능합니다.");
+    if (content === "") {
+        alert("내용을 입력해주세요.")
         return;
     }
 
-    if (content === "") {
-        alert("내용을 입력해주세요.")
+    if (title.length > 40) {
+        alert("게시글 제목은 40자 내로 입력해주세요.")
         return;
     }
 
@@ -65,20 +65,20 @@ function savePost(boardType) {
 function updatePost(boardType, postId, postAuthorId) {
     var title = $("#title").val()
     var content = CKEDITOR.instances.content.getData();
-    var isNotification = $("#isNotice").is(":checked")
+    var isNotice = $("#isNotice").is(":checked")
 
     if (title === "") {
         alert("제목을 입력해주세요.")
         return
     }
 
-    if (title.length > 30) {
-        alert("제목은 30자 이하만 가능합니다.");
+    if (content === "") {
+        alert("내용을 입력해주세요.")
         return;
     }
 
-    if (content === "") {
-        alert("내용을 입력해주세요.")
+    if (title.length > 40) {
+        alert("게시글 제목은 40자 내로 입력해주세요.")
         return;
     }
 
@@ -90,9 +90,9 @@ function updatePost(boardType, postId, postAuthorId) {
                 boardType: boardType,
                 postId: postId,
                 postAuthorId: postAuthorId,
-                title: title,
-                body: content,
-                isNotice: isNotice
+                postTitle: title,
+                postBody: content,
+                postIsNotice: isNotice
             }),
             contentType: 'application/json',
             dataType: 'json',

@@ -5,14 +5,14 @@
         <h1 class="logo">
             <a href="/">KNU CSE Solve</a>
         </h1>
-        <div class="headRight">
-            <span class="loginStatus" th:if="${user.isLogin}" th:text="${user.nickname} + '님, 환영합니다.'"></span>
+        <div class="head-right">
+            <span class="login-status" th:if="${user.isLogin}" th:text="${user.nickname} + '님, 환영합니다.'"></span>
             <a th:unless="${user.isLogin}" href="/login">
-                <button class="loginButton">로그인</button>
+                <button class="login-button">로그인</button>
             </a>
             <div th:if="${user.isLogin}">
                 <a onclick="toggleDropdown()">
-                    <div class="userProfileImage">
+                    <div class="user-profile-image">
                         <img th:src="${user.profileImage != null ? user.profileImage : '/img/tempProfile.jpg'}">
                     </div>
                 </a>
@@ -25,14 +25,14 @@
             </div>
         </div>
     </div>
-    <div class="headerNavWrapper">
+    <div class="header-nav-wrapper">
         <nav>
-            <div class="hamburgerWrapper">
+            <div class="hamburger-wrapper">
                 <img src='/img/hamburger.png' id="hamburger">
             </div>
         </nav>
         <div id="boardMenu" style="display: none;">
-            <div class="boardList">
+            <div class="board-list">
                 <dl>
                     <dt><a href="/board/free">자유게시판</a></dt>
                     <dt><a href="/board/school">학교게시판</a></dt>

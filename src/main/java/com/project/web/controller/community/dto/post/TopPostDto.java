@@ -13,7 +13,7 @@ public class TopPostDto {
     @Builder
     public TopPostDto(Integer id, String title, Integer boardId, String boardType) {
         this.id = id;
-        this.title = title;
+        this.title = title.length() > 20 ? title.substring(0,20) + ".." : title;
         this.boardId = boardId;
         this.boardType = boardType;
     }

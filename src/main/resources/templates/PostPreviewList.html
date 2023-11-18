@@ -19,7 +19,7 @@
                      th:classappend="${postPreview.isHot == true ? 'hot-post' : ''}">
                     <div class="post-thumbnail-wrapper">
                         <img id="previewImage"
-                             th:src="${postPreview.thumbnail != null ? postPreview.thumbnail : '/img/tempProfile.jpg'}">
+                             th:src="${postPreview.thumbnail != null ? postPreview.thumbnail : '/img/void.png'}">
                     </div>
                     <div class="post-preview-content-wrapper">
                         <div class="post-preview-title">
@@ -47,7 +47,7 @@
                         </div>
                         <div class="post-count">
                             <div class="post-count-image">
-                                <img src="/img/comment2.png">
+                                <img src="/img/comment.png">
                             </div>
                             <span th:text="${postPreview.commentCount}"></span>
                         </div>

@@ -15,11 +15,6 @@ function signup() {
         return
     }
 
-    if (inputNickname.length > 10) {
-        showErrorMessage("닉네임은 10자 이하로 입력해주세요.")
-        return
-    }
-
     if (inputUsername === "") {
         showErrorMessage("이메일을 입력해주세요.")
         return
@@ -32,6 +27,21 @@ function signup() {
 
     if (inputPassword !== inputPasswordConfirm) {
         showErrorMessage("비밀번호를 올바르게 입력해주세요.")
+        return
+    }
+
+    if (inputUsername.length < 5 || inputUsername.length > 50) {
+        showErrorMessage("유저네임은 5~20자 내로 입력해주세요.")
+        return
+    }
+
+    if (inputPassword.length < 6 || inputPassword.length > 20) {
+        showErrorMessage("패스워드는 6~20자 내로 입력해주세요.")
+        return
+    }
+
+    if (inputNickname.length < 2 || inputNickname.length > 20) {
+        showErrorMessage("닉네임은 2~20자 내로 입력해주세요.")
         return
     }
 
@@ -49,7 +59,7 @@ function signup() {
             xhr.setRequestHeader("X-CSRF-TOKEN", token);
         },
         success: function (response) {
-            if (response.result) {
+            if (response.isSuccess) {
                 alert("회원가입이 완료되었습니다.")
                 window.location.href = "/login"
             }
@@ -61,11 +71,8 @@ function signup() {
                     window.location.href = redirectUrl;
                 }
             }
-            else if (error.status === 404) {
-                showErrorMessage(error.responseText)
-            }
             else {
-                showErrorMessage("알 수 없는 오류입니다.")
+                showErrorMessage(error.responseText)
             }
         }
     })

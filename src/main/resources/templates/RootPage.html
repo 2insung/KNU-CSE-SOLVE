@@ -24,7 +24,9 @@
         <section class="right-section">
             <div th:each="topBoard : ${topBoardList}" class="post-list-wrapper">
                 <div class="post-list-header">
-                    <div th:text="${topBoard.boardAlias}" class="post-list-header-text"></div>
+                    <div class="post-list-header-text">
+                        <a th:text="${topBoard.boardAlias}" th:href="@{/board/{boardType}(boardType=${topBoard.boardType})}"></a>
+                    </div>
                 </div>
                 <ul>
                     <li th:each="post : ${topBoard.topPostDtoList}">

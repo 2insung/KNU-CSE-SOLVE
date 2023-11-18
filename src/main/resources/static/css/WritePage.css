@@ -1,25 +1,20 @@
-.write{
+.write {
     width: 1100px;
-    height: 700px;
     margin: 0 auto;
 }
 
-.writeWrapper{
-    width: 100% !important;
-}
-
-.boardHeader{
+.board-header {
     padding-bottom: 3px;
     border-bottom: 3px solid #837ed7;
 }
 
-.boardAlias a{
+.board-alias a {
     color: #6f6abe;
     font-weight: bolder;
     font-size: 2rem;
 }
 
-.option{
+.option {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -27,28 +22,28 @@
     height: 2rem;
 }
 
-.option .description{
+.option .description {
     font-size: 1rem;
 }
 
-.inputWrapper{
+.input-wrapper {
     display: flex;
 }
 
-.inputWrapper .checkBoxWrapper{
+.input-wrapper .check-box-wrapper {
     display: flex;
     align-items: center;
     margin-right: 10px;
 }
 
-.inputWrapper .checkBoxWrapper span {
+.input-wrapper .check-box-wrapper span {
     display: flex;
     align-items: center;
     padding-left: 5px;
     font-size: 15px;
 }
 
-.inputWrapper .checkBoxWrapper span label:last-of-type {
+.input-wrapper .check-box-wrapper span label:last-of-type {
     padding-left: 5px;
 }
 
@@ -79,7 +74,7 @@ input[type="checkbox"] {
     display: none;
 }
 
-.inputWrapper .submitButtonWrapper button{
+.input-wrapper .submit-button-wrapper button {
     display: block;
     font-size: 1rem;
     padding: 5px 10px;
@@ -88,12 +83,11 @@ input[type="checkbox"] {
     border-radius: 4px;
 }
 
-
-.ckEditorWrapper{
+.ckEditor-wrapper {
     margin-top: 5px;
 }
 
-.ckEditorWrapper input {
+.ckEditor-wrapper input {
     margin-top: 7px;
     margin-bottom: 10px;
     height: 2rem;
@@ -106,6 +100,3 @@ input[type="checkbox"] {
     background: white;
     border: 1px solid #837ed7;
 }
-
-
-

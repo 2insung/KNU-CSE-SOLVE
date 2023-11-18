@@ -11,7 +11,7 @@ import com.project.web.service.auth.UserService;
 import com.project.web.service.board.BoardService;
 import com.project.web.service.board.CommentService;
 import com.project.web.service.board.PostService;
-import com.project.web.service.upload.ImageUploadService;
+import com.project.web.service.file.FileService;
 import com.project.web.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +34,6 @@ public class CommunityController {
     private final PostService postService;
     private final CommentService commentService;
     private final UserService userService;
-    private final ImageUploadService imageUploadService;
 
     @GetMapping("/")
     public String root(@AuthenticationPrincipal PrincipalDetails principal,
@@ -262,19 +261,6 @@ public class CommunityController {
         model.addAttribute("postId", postId);
 
         return "PostPage :: #commentFragment";
-    }
-
-    @PostMapping("/image/upload")
-    public ModelAndView imageUpload(MultipartHttpServletRequest request) throws Exception {
-        ModelAndView modelAndView = new ModelAndView("jsonView");
-        MultipartFile uploadFile = request.getFile("upload");
-
-        // '/write' 에서 ckeditor에 이미지를 업로드하면 이미지의 url을 제공해줌.
-        String url = imageUploadService.uploadImage(uploadFile);
-        modelAndView.addObject("uploaded", true);
-        modelAndView.addObject("url", url);
-
-        return modelAndView;
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")

@@ -23,7 +23,7 @@ header {
     font-weight: bold;
 }
 
-.headRight {
+.head-right {
     display: flex;
     align-items: center;
     position: absolute;
@@ -31,11 +31,11 @@ header {
     bottom: 30px;
 }
 
-.loginStatus {
+.login-status {
     margin-right: 10px;
 }
 
-.loginButton {
+.login-button {
     padding: 5px 15px;
     border: none;
     border-radius: 5px;
@@ -44,7 +44,7 @@ header {
     cursor: pointer;
 }
 
-.userProfileImage {
+.user-profile-image {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -52,7 +52,7 @@ header {
     border: 1px solid #e2e2e2;
 }
 
-.userProfileImage img {
+.user-profile-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -90,7 +90,7 @@ header {
 }
 
 
-.headerNavWrapper {
+.header-nav-wrapper {
     min-width: 1100px;
     position: relative;
     background-color: #afa8ed;
@@ -107,7 +107,7 @@ nav {
     position: relative;
 }
 
-.hamburgerWrapper{
+.hamburger-wrapper{
     position: absolute;
     width: 25px;
     height: 25px;
@@ -115,7 +115,7 @@ nav {
     overflow: hidden;
 }
 
-.hamburgerWrapper img {
+.hamburger-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -133,7 +133,7 @@ nav {
 }
 
 
-.boardList {
+.board-list {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap; /* 너무 많아지면 다음 행으로 내려감 */

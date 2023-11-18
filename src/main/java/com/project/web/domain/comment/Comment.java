@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -48,8 +47,7 @@ public class Comment {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @Column(name = "body")
-    @Size(max = 500)
+    @Column(name = "body", nullable = false)
     private String body;
 
     @Column(name = "created_at")

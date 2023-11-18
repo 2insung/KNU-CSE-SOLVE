@@ -2,15 +2,19 @@ package com.project.web.controller.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.my.dto.rest.*;
+import com.project.web.exception.Error400Exception;
 import com.project.web.service.board.CommentService;
 import com.project.web.service.board.PostService;
 import com.project.web.service.my.MyService;
-import com.project.web.service.upload.ImageUploadService;
+import com.project.web.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 // My REST API
 @RestController
@@ -19,15 +23,21 @@ public class MyRestController {
     private final MyService myService;
     private final PostService postService;
     private final CommentService commentService;
-    private final ImageUploadService imageUploadService;
+    private final FileService fileService;
 
     @PreAuthorize("isAuthenticated() and ((#updateMyRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @PostMapping("/api/update-my")
-    public ResponseEntity<UpdateMyResponseDto> updateMy(@ModelAttribute UpdateMyRequestDto updateMyRequestDto,
-                                                        @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<UpdateMyResponseDto> updateMy(@Valid @ModelAttribute UpdateMyRequestDto updateMyRequestDto,
+                                                        @AuthenticationPrincipal PrincipalDetails principal,
+                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer memberId = updateMyRequestDto.getMemberId();
         String nickname = updateMyRequestDto.getNickname();
-        String imageURL = imageUploadService.uploadImage(updateMyRequestDto.getFile());
+        String imageURL = fileService.uploadImage(updateMyRequestDto.getFile());
         String description = updateMyRequestDto.getDescription();
         String grade = updateMyRequestDto.getGrade();
         String admissionYear = updateMyRequestDto.getAdmissionYear();
@@ -46,8 +56,14 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() and ((#deleteMyPostRequestDto.postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-my-post")
-    public ResponseEntity<DeleteMyPostResponseDto> deleteMyPost(@RequestBody DeleteMyPostRequestDto deleteMyPostRequestDto,
-                                                                @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<DeleteMyPostResponseDto> deleteMyPost(@Valid @RequestBody DeleteMyPostRequestDto deleteMyPostRequestDto,
+                                                                @AuthenticationPrincipal PrincipalDetails principal,
+                                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer boardId = deleteMyPostRequestDto.getBoardId();
         Integer postId = deleteMyPostRequestDto.getPostId();
         Integer postAuthorId = deleteMyPostRequestDto.getPostAuthorId();
@@ -71,12 +87,19 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() and ((#deleteMyCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-my-comment")
-    public ResponseEntity<DeleteMyCommentResponseDto> deleteMyComment(@RequestBody DeleteMyCommentRequestDto deleteMyCommentRequestDto,
-                                                                      @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<DeleteMyCommentResponseDto> deleteMyComment(@Valid @RequestBody DeleteMyCommentRequestDto deleteMyCommentRequestDto,
+                                                                      @AuthenticationPrincipal PrincipalDetails principal,
+                                                                      BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer postId = deleteMyCommentRequestDto.getPostId();
         Integer commentId = deleteMyCommentRequestDto.getCommentId();
         Integer commentAuthorId = deleteMyCommentRequestDto.getCommentAuthorId();
         Integer currentPageNumber = deleteMyCommentRequestDto.getCurrentPageNumber();
+
 
         // 사용자 작성 댓글 삭제.
         commentService.deleteComment(postId, commentId);
@@ -96,8 +119,14 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() and ((#updatePasswordRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @PatchMapping("/api/update-my-password")
-    public ResponseEntity<UpdatePasswordResponseDto> deleteMyComment(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto,
-                                                                     @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<UpdatePasswordResponseDto> deleteMyComment(@Valid @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto,
+                                                                     @AuthenticationPrincipal PrincipalDetails principal,
+                                                                     BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer memberId = updatePasswordRequestDto.getMemberId();
         String currentPassword = updatePasswordRequestDto.getCurrentPassword();
         String changePassword = updatePasswordRequestDto.getChangePassword();
@@ -114,8 +143,14 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() and ((#withdrawRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @PatchMapping("/api/withdraw")
-    public ResponseEntity<WithdrawResponseDto> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto,
-                                                        @AuthenticationPrincipal PrincipalDetails principal) {
+    public ResponseEntity<WithdrawResponseDto> withdraw(@Valid @RequestBody WithdrawRequestDto withdrawRequestDto,
+                                                        @AuthenticationPrincipal PrincipalDetails principal,
+                                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
         Integer memberId = withdrawRequestDto.getMemberId();
         Boolean isSuccess = myService.withdraw(memberId);
         return ResponseEntity.ok(

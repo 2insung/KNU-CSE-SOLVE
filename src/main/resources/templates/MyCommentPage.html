@@ -16,17 +16,17 @@
                     <div class="my-comment-wrapper">
                         <div class="comment-header">
                             <div class="alias" th:text="${myComment.boardAlias}"></div>
-                            <button th:if="${isMy}"
+                            <button th:if="${myComment.isMine}"
                                     th:unless="${myComment.isDeleted}"
                                     th:data-postId="${myComment.postId}"
                                     th:data-commentId="${myComment.id}"
                                     th:data-memberId="${myComment.authorId}"
                                     th:data-currentPageNumber="${myCommentPageNumber}"
                                     onclick="deleteMyComment(
-                                    this.getAttribute('data-postId')),
+                                    this.getAttribute('data-postId'),
                                     this.getAttribute('data-commentId'),
                                     this.getAttribute('data-memberId'),
-                                    this.getAttribute('data-currentPageNumber')">삭제
+                                    this.getAttribute('data-currentPageNumber'))">삭제
                             </button>
                         </div>
                         <div class="title">

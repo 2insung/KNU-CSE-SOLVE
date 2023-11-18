@@ -6,7 +6,7 @@
     border-radius: 10px;
 }
 
-.signupWrapper {
+.signup-wrapper {
     width: 100% !important;
 }
 
@@ -31,7 +31,7 @@ fieldset {
     min-inline-size: min-content;
 }
 
-.errorWrapper {
+.error-wrapper {
     margin-top: 2px;
     margin-bottom: 10px;
     height: 1rem;
@@ -57,7 +57,7 @@ fieldset input {
     border-radius: 4px;
 }
 
-.signupFormButton {
+.signup-form-button {
     width: 100%;
     height: 41px;
     line-height: 39px;
@@ -70,20 +70,20 @@ fieldset input {
 }
 
 
-.optionWrapper {
+.option-wrapper {
     border-top: 1px #6f6bad dotted;
     margin-top: 16px;
     padding-top: 15px;
     text-align: center;
 }
 
-.optionWrapper a {
+.option-wrapper a {
     font-size: 14px;
     text-decoration: underline;
     color: blue;
 }
 
-.optionWrapper a:not(:first-child)::before {
+.option-wrapper a:not(:first-child)::before {
     content: "|";
     display: inline-block;
     font-size: 13px;
@@ -91,34 +91,3 @@ fieldset input {
     padding: 0 4px 0 1px;
     vertical-align: top;
 }
-
-.confirmCodeTitle {
-    margin-top: 10px;
-}
-
-.confirmCodeTitle p {
-    margin-top: 5px;
-}
-
-.checkCodeResultWrapper {
-    margin: 10px 0;
-    height: 1rem;
-}
-
-#inputCodeWrapper input {
-    height: 41px;
-    line-height: 41px;
-    width: 100%;
-    padding: 0px 9px 0 9px;
-    box-sizing: border-box;
-    font-size: 14px;
-    color: #555;
-    background: white;
-    border: 1px solid #837ed7;
-    border-radius: 4px;
-}
-
-
-
-
-

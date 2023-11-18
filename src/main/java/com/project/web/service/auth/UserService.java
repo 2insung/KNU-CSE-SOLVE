@@ -23,9 +23,9 @@ public class UserService {
                     .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
             Object[] arr = (Object[]) result;
-            String nickname = (String) arr[0];
-            String profileImage = (String) arr[1];
-            Role role = (Role) arr[2];
+            Role role = (Role) arr[0];
+            String nickname = (String) arr[1];
+            String profileImage = (String) arr[2];
 
             return UserDto.builder()
                     .isLogin(true)
