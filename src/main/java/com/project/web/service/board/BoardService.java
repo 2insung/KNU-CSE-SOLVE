@@ -89,6 +89,25 @@ public class BoardService {
     }
 
     /*
+      게시판 리스트 출력 함수(2).
+     * 상위 30개의 게시판의 정보를 출력하는 함수.
+    */
+    @Transactional(readOnly = true)
+    public List<BoardPreviewDto> getTopThirtyBoardPreviewList() {
+        List<Board> boardList = boardRepository.findTopThirtyBoard();
+
+        return boardList.stream()
+                .map((board) ->
+                        BoardPreviewDto.builder()
+                                .type(board.getType())
+                                .alias(board.getAlias())
+                                .category(board.getCategory())
+                                .build()
+                )
+                .collect(Collectors.toList());
+    }
+
+    /*
       게시판 저장 함수.
      * 새로운 게시판을 저장하는 함수.
     */

@@ -32,46 +32,12 @@
             </div>
         </nav>
         <div id="boardMenu" style="display: none;">
-            <div class="board-list">
-                <dl>
-                    <dt><a href="/board/free">자유게시판</a></dt>
-                    <dt><a href="/board/school">학교게시판</a></dt>
-                    <dt><a href="/board/information">정보게시판</a></dt>
-                    <dt><a href="/board/promotion">홍보게시판</a></dt>
-                    <dt><a href="/board/employ">취업게시판</a></dt>
-                    <dt><a href="/board/coding">코딩게시판</a></dt>
-                </dl>
-                <dl>
-                    <dt><a href="/board/discrete_mathematics">이산수학</a></dt>
-                    <dt><a href="/board/engineering_mathematics">공학수학</a></dt>
-                    <dt><a href="/board/introduction_to_computer_science">컴퓨터학개론</a></dt>
-                    <dt><a href="/board/programming_fundamentals">프로그래밍기초</a></dt>
-                    <dt><a href="/board/cpp_programming">c++ 프로그래밍</a></dt>
-                    <dt><a href="/board/python_programming">파이썬 프로그래밍</a></dt>
-                </dl>
-                <dl>
-                    <dt><a href="/board/java_programming">자바 프로그래밍</a></dt>
-                    <dt><a href="/board/data_structures">자료구조</a></dt>
-                    <dt><a href="/board/advanced_data_structures">자료구조응용</a></dt>
-                    <dt><a href="/board/data_structure_programming">자료구조프로그래밍</a></dt>
-                    <dt><a href="/board/computer_architecture">컴퓨터구조</a></dt>
-                    <dt><a href="/board/operating_systems">운영체제</a></dt>
-                </dl>
-                <dl>
-                    <dt><a href="/board/system_programming">시스템프로그래밍</a></dt>
-                    <dt><a href="/board/digital_design_and_experiment">디지털설계및실험</a></dt>
-                    <dt><a href="/board/software_design">소프트웨어설계</a></dt>
-                    <dt><a href="/board/linear_algebra">선형대수</a></dt>
-                    <dt><a href="/board/probability_and_statistics">확률과통계</a></dt>
-                    <dt><a href="/board/logic_circuits">논리회로</a></dt>
-                </dl>
-                <dl>
-                    <dt><a href="/board/algorithms_1">알고리즘1</a></dt>
-                    <dt><a href="/board/algorithms_2">알고리즘2</a></dt>
-                    <dt><a href="/board/compiler">컴파일러</a></dt>
-                    <dt><a href="/board/database_systems">데이터베이스</a></dt>
-                    <dt><a href="/board/capstone_design_project_1">종합설계프로젝트1</a></dt>
-                    <dt><a href="/board/capstone_design_project_2">종합설계프로젝트2</a></dt>
+            <div id="boardMenuList" class="board-list">
+                <dl th:each="boardMenu : ${boardMenuList}">
+                    <dt th:each="boardPreview : ${boardMenu.boardPreviewList}">
+                        <a th:href="@{/board/{boardType}(boardType=${boardPreview.type})}"
+                           th:text="${boardPreview.alias}"></a>
+                    </dt>
                 </dl>
             </div>
             <div class="more">

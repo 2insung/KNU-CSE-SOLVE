@@ -21,4 +21,10 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     */
     @Query("select b from Board b where b.id in (1,2,3,4,5,6)")
     List<Board> findTopSixBoard();
+
+    /*
+     상위 30개 게시판 출력
+    */
+    @Query("select b from Board b where b.id <= 30")
+    List<Board> findTopThirtyBoard();
 }

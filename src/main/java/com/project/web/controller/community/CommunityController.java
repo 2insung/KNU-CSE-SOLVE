@@ -3,6 +3,7 @@ package com.project.web.controller.community;
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.auth.dto.UserDto;
 import com.project.web.controller.community.dto.board.BoardDto;
+import com.project.web.controller.community.dto.board.BoardMenuDto;
 import com.project.web.controller.community.dto.board.BoardPreviewDto;
 import com.project.web.controller.community.dto.comment.CommentDto;
 import com.project.web.controller.community.dto.comment.CommentPageNumberDto;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.util.ListUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -294,5 +297,27 @@ public class CommunityController {
         model.addAttribute("subjectBoardList", subjectBoardList);
 
         return "AllBoardPage";
+    }
+
+    @GetMapping("/board-menu")
+    public String boardList(Model model) {
+        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopThirtyBoardPreviewList();
+        int totalBoardCount = boardPreviewDtoList.size();
+        int chunkCount = totalBoardCount / 6;
+
+        List<BoardMenuDto> boardMenuDtoList = new ArrayList<>();
+        for (int i = 0; i < chunkCount; i++) {
+            boardMenuDtoList.add(
+                    BoardMenuDto.builder()
+                            .number(i)
+                            .boardPreviewList(boardPreviewDtoList.subList(6 * i, 6 * (i + 1)))
+                            .build()
+            );
+        }
+
+        //Heeader의 Board Menu List에 사용됨.
+        model.addAttribute("boardMenuList", boardMenuDtoList);
+
+        return "Header :: #boardMenuList";
     }
 }
