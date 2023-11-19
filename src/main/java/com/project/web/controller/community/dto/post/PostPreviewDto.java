@@ -31,9 +31,9 @@ public class PostPreviewDto {
         this.isNotice = isNotice;
         this.isHot = isHot;
         this.createdAt = TimeFormattingUtil.localDateTimeFormatting(createdAt);
-        this.authorNickname = authorNickname.length() >= 6 ? authorNickname.substring(0,6) + ".." : authorNickname;
+        this.authorNickname = authorNickname;
         this.authorProfileImage = authorProfileImage;
-        this.title = title.length() > 30 ? title.substring(0, 30) + ".." : title;
+        this.title = title;
         this.summary = summary;
         this.thumbnail = thumbnail;
         this.hitCount = hitCount;

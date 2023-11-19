@@ -24,8 +24,8 @@ function savePost(boardType) {
         return;
     }
 
-    if (title.length > 40) {
-        alert("게시글 제목은 40자 내로 입력해주세요.")
+    if (title.length > 50) {
+        alert("게시글 제목은 50자 내로 입력해주세요.")
         return;
     }
 
@@ -77,8 +77,8 @@ function updatePost(boardType, postId, postAuthorId) {
         return;
     }
 
-    if (title.length > 40) {
-        alert("게시글 제목은 40자 내로 입력해주세요.")
+    if (title.length > 50) {
+        alert("게시글 제목은 50자 내로 입력해주세요.")
         return;
     }
 

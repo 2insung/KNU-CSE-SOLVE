@@ -48,16 +48,49 @@ function deletePost(boardType, postId, postAuthorId) {
     )
 }
 
-function deleteComment(postId, commentId, commentAuthorId, currentPageNumber) {
+function readComment(postId, pageNumber) {
     $.ajax(
         {
-            url: "/api/delete-comment",
-            type: "DELETE",
+            url: "/read-comment/" + postId + "?page=" + pageNumber,
+            type: "GET",
+            success: function (response) {
+                $("#commentFragment").replaceWith(response)
+            },
+            error: function (error) {
+                if (error.status === 401 || error.status === 403) {
+                    var redirectUrl = error.getResponseHeader("Redirect-URL");
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }
+                else {
+                    alert(error.responseText)
+                }
+            }
+        }
+    )
+}
+
+function saveRootComment(postId) {
+    var body = $("#rootContent").val()
+
+    if (body === "") {
+        alert("내용을 입력해주세요.")
+        return;
+    }
+
+    if (body > 500) {
+        alert("댓글은 500자 내로 입력해주세요.")
+        return;
+    }
+
+    $.ajax(
+        {
+            url: "/api/save-root-comment",
+            type: "POST",
             data: JSON.stringify({
                 postId: postId,
-                commentId: commentId,
-                commentAuthorId: commentAuthorId,
-                currentPageNumber: currentPageNumber
+                commentBody: body
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -82,6 +115,7 @@ function deleteComment(postId, commentId, commentAuthorId, currentPageNumber) {
     )
 }
 
+
 function saveChildComment(commentId, postId, currentPageNumber) {
     var body = document.getElementById('childComment-' + commentId).value;
     if (body === "") {
@@ -89,14 +123,14 @@ function saveChildComment(commentId, postId, currentPageNumber) {
         return;
     }
 
-    if(body > 500){
+    if (body > 500) {
         alert("댓글은 500자 내로 입력해주세요.")
         return;
     }
 
     $.ajax(
         {
-            url: "/api/save-comment",
+            url: "/api/save-child-comment",
             type: "POST",
             data: JSON.stringify({
                 postId: postId,
@@ -128,28 +162,16 @@ function saveChildComment(commentId, postId, currentPageNumber) {
     )
 }
 
-function saveRootComment(postId) {
-    var body = $("#rootContent").val()
-
-    if (body === "") {
-        alert("내용을 입력해주세요.")
-        return;
-    }
-
-    if(body > 500){
-        alert("댓글은 500자 내로 입력해주세요.")
-        return;
-    }
-
+function deleteComment(postId, commentId, commentAuthorId, currentPageNumber) {
     $.ajax(
         {
-            url: "/api/save-comment",
-            type: "POST",
+            url: "/api/delete-comment",
+            type: "DELETE",
             data: JSON.stringify({
                 postId: postId,
-                parentCommentId: null,
-                currentPageNumber: null,
-                commentBody: body
+                commentId: commentId,
+                commentAuthorId: commentAuthorId,
+                currentPageNumber: currentPageNumber
             }),
             contentType: 'application/json',
             dataType: 'json',
@@ -158,29 +180,6 @@ function saveRootComment(postId) {
             },
             success: function (response) {
                 readComment(postId, response.pageNumber)
-            },
-            error: function (error) {
-                if (error.status === 401 || error.status === 403) {
-                    var redirectUrl = error.getResponseHeader("Redirect-URL");
-                    if (redirectUrl) {
-                        window.location.href = redirectUrl;
-                    }
-                }
-                else {
-                    alert(error.responseText)
-                }
-            }
-        }
-    )
-}
-
-function readComment(postId, pageNumber) {
-    $.ajax(
-        {
-            url: "/read-comment/" + postId + "?page=" + pageNumber,
-            type: "GET",
-            success: function (response) {
-                $("#commentFragment").replaceWith(response)
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

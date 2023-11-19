@@ -23,7 +23,7 @@ public class UpdatePostRequestDto {
     private Integer postAuthorId;
 
     @NotBlank(message = "게시글 제목을 입력해주세요.")
-    @Size(max = 40, message = "게시글 제목은 40자 내로 입력해주세요.")
+    @Size(max = 50, message = "게시글 제목은 50자 내로 입력해주세요.")
     private String postTitle;
 
     @NotBlank(message = "게시글 본문을 입력해주세요.")

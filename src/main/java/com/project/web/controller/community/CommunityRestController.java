@@ -111,8 +111,8 @@ public class CommunityRestController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/api/save-comment")
-    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveCommentRequestDto saveCommentRequestDto,
+    @PostMapping("/api/save-root-comment")
+    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveRootCommentRequestDto saveRootCommentRequestDto,
                                                               @AuthenticationPrincipal PrincipalDetails principal,
                                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -120,21 +120,16 @@ public class CommunityRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        Integer postId = saveCommentRequestDto.getPostId();
-        Integer parentCommentId = saveCommentRequestDto.getParentCommentId();
-        Integer currentPageNumber = saveCommentRequestDto.getCurrentPageNumber();
-        String commentBody = saveCommentRequestDto.getCommentBody();
+        Integer postId = saveRootCommentRequestDto.getPostId();
+        String commentBody = saveRootCommentRequestDto.getCommentBody();
         Integer userId = principal.getUserId();
 
         // comment 저장.
-        commentService.saveComment(userId, postId, parentCommentId, commentBody);
+        commentService.saveComment(userId, postId, null, commentBody);
 
         // 저장 후 보여줄 댓글 페이지의 번호를 계산함.
         Integer totalCommentCount = postService.getTotalCommentCount(postId);
-        Integer pageNumber =
-                parentCommentId == null ?
-                        ((totalCommentCount - 1) / CommunityConstants.COMMENT_PAGE_SIZE) + 1 :
-                        currentPageNumber;
+        Integer pageNumber = ((totalCommentCount - 1) / CommunityConstants.COMMENT_PAGE_SIZE) + 1;
 
         return ResponseEntity.ok(
                 SaveCommentResponseDto.builder()
@@ -142,6 +137,35 @@ public class CommunityRestController {
                         .build()
         );
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/save-child-comment")
+    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveChildCommentRequestDto saveChildCommentRequestDto,
+                                                              @AuthenticationPrincipal PrincipalDetails principal,
+                                                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
+        Integer postId = saveChildCommentRequestDto.getPostId();
+        Integer parentCommentId = saveChildCommentRequestDto.getParentCommentId();
+        Integer currentPageNumber = saveChildCommentRequestDto.getCurrentPageNumber();
+        String commentBody = saveChildCommentRequestDto.getCommentBody();
+        Integer userId = principal.getUserId();
+
+        // comment 저장.
+        commentService.saveComment(userId, postId, parentCommentId, commentBody);
+
+        Integer pageNumber = currentPageNumber;
+
+        return ResponseEntity.ok(
+                SaveCommentResponseDto.builder()
+                        .pageNumber(pageNumber)
+                        .build()
+        );
+    }
+
 
     @PreAuthorize("isAuthenticated() and ((#deleteCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-comment")
