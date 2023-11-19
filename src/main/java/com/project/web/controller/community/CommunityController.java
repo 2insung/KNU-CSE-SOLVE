@@ -75,7 +75,13 @@ public class CommunityController {
         Integer boardPostCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
         Integer processedPageNumber = PageUtil.processPageNumber(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
-            return "redirect:/board/" + boardType + "?page=" + processedPageNumber;
+            if(isViewHotPostPreviewList){
+                return "redirect:/board/" + boardType + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
+            }
+            else{
+                return "redirect:/board/" + boardType + "?page=" + processedPageNumber;
+            }
+
         }
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 게시글 페이지, 게시글 페이지 리스트)
@@ -120,7 +126,12 @@ public class CommunityController {
         Integer boardPostCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
         Integer processedPageNumber = PageUtil.processPageNumber(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
-            return "redirect:/board/" + boardType + "/post/" + postId + "?page=" + processedPageNumber;
+            if (isViewHotPostPreviewList) {
+                return "redirect:/board/" + boardType + "/post/" + postId + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
+            }
+            else {
+                return "redirect:/board/" + boardType + "/post/" + postId + "?page=" + processedPageNumber;
+            }
         }
 
         // 게시글에 대한 정보 제공.

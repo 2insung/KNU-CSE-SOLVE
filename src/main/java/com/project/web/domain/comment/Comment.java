@@ -54,13 +54,16 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "group_created_at")
+    private LocalDateTime groupCreatedAt;
+
     @Column(name = "child_count")
     private Integer childCount;
 
     @Builder
     public Comment(Integer id, Member member, Post post, Member parentMember, Integer rootCommentId,
                    Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body,
-                   LocalDateTime createdAt, Integer childCount) {
+                   LocalDateTime createdAt, LocalDateTime groupCreatedAt, Integer childCount) {
         this.id = id;
         this.member = member;
         this.post = post;
@@ -72,13 +75,17 @@ public class Comment {
         this.isDeleted = isDeleted;
         this.body = body;
         this.createdAt = createdAt;
+        this.groupCreatedAt = groupCreatedAt;
         this.childCount = childCount;
     }
 
     @PostPersist
-    public void setRootCommentIdAfterPersist() {
+    public void setRootCommentAfterPersist() {
         if (this.rootCommentId == null) {
             this.rootCommentId = this.id;
+        }
+        if (this.groupCreatedAt == null) {
+            this.groupCreatedAt = this.createdAt;
         }
     }
 }

@@ -9,15 +9,15 @@
 .my-side-bar a {
     font-size: 13px;
     border-right: 1px solid #e2e2e2;
-    background-color: white; /* 메뉴의 배경색 */
-    color: black; /* 메뉴의 텍스트 색상 */
-    display: block; /* 블록 요소로 설정하여 수직 배열 */
-    padding: 12px; /* 내부 여백 */
-    text-decoration: none; /* 밑줄 제거 */
+    background-color: white;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
 }
 
 .my-side-bar a:hover {
-    background-color: #b3b2f1; /* 호버 시 배경색 */
+    background-color: #b3b2f1;
     color: white;
 }
 

@@ -93,10 +93,6 @@ public class CommentService {
     */
     @Transactional
     public void saveComment(Integer userId, Integer postId, Integer parentCommentId, String commentBody) {
-        if(commentBody == null){
-            throw new Error400Exception("댓글의 본문을 입력해주세요.");
-        }
-
         Comment parentComment = null;
         if (parentCommentId != null) {
             parentComment = commentRepository.findById(parentCommentId)
@@ -117,6 +113,7 @@ public class CommentService {
                 .isRootChild(parentComment != null ? parentComment.getIsRoot() : false)
                 .isDeleted(false)
                 .body(commentBody)
+                .groupCreatedAt(parentComment != null ? parentComment.getGroupCreatedAt() : null)
                 .childCount(0)
                 .build();
         commentRepository.save(comment);

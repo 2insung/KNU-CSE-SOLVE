@@ -221,22 +221,6 @@ public class MyService {
     @Transactional
     public void updateMy(Integer memberId, String nickname, String profileImage, String grade, String description,
                          String admissionYear, String department) {
-        if (nickname == null) {
-            throw new Error400Exception("닉네임을 입력해주세요.");
-        }
-        if (grade == null) {
-            throw new Error400Exception("학년을 입력해주세요.");
-        }
-        if (description == null) {
-            throw new Error400Exception("자기소개를 입력해주세요.");
-        }
-        if (admissionYear == null) {
-            throw new Error400Exception("입학년도를 입력해주세요.");
-        }
-        if (department == null) {
-            throw new Error400Exception("학과를 입력해주세요.");
-        }
-
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
@@ -261,13 +245,6 @@ public class MyService {
    */
     @Transactional
     public void updateMyPassword(Integer memberId, String currentPassword, String changePassword) {
-        if (currentPassword == null) {
-            throw new Error400Exception("현재 비밀번호를 입력해주세요.");
-        }
-        if (changePassword == null) {
-            throw new Error400Exception("변경할 비밀번호를 입력해주세요.");
-        }
-
         MemberPassword memberPassword = memberPasswordRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 

@@ -191,16 +191,6 @@ public class PostService {
     */
     @Transactional
     public void savePost(Integer userId, Integer boardId, String title, String body, Boolean isNotice) {
-        if (title == null) {
-            throw new Error400Exception("제목을 입력하세요.");
-        }
-        if (body == null) {
-            throw new Error400Exception("본문을 입력하세요.");
-        }
-        if (isNotice == null) {
-            throw new Error400Exception("공지사항인가요?");
-        }
-
         Board board = boardRepository.getReferenceById(boardId);
         Member postAuthor = memberRepository.getReferenceById(userId);
 
@@ -261,16 +251,6 @@ public class PostService {
     */
     @Transactional
     public void updatePost(Integer postId, String title, String body, Boolean isNotice) {
-        if (title == null) {
-            throw new Error400Exception("제목을 입력하세요.");
-        }
-        if (body == null) {
-            throw new Error400Exception("본문을 입력하세요.");
-        }
-        if (isNotice == null) {
-            throw new Error400Exception("공지사항인가요?");
-        }
-
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
         Post post = postContent.getPost();

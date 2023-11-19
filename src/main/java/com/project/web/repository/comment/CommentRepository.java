@@ -20,12 +20,12 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     */
     @Query(nativeQuery = true,
             value = "select c.id, c.post_id, c.member_id, md.nickname as authorNickname, md.profile_image, c.parent_member_id, md2.nickname as parentAuthorNickname, c.is_post_author, c.is_root, c.is_root_child, c.is_deleted, c.body, c.created_at, crc.recommend_count " +
-                    "from (select tc.id from comment tc where tc.post_id = :postId order by tc.root_comment_id, tc.created_at limit :limit offset :offset) as temp " +
+                    "from (select tc.id from comment tc where tc.post_id = :postId order by tc.group_created_at, tc.root_comment_id, tc.created_at limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
                     "inner join member_detail md on c.member_id = md.member_id " +
                     "inner join member_detail md2 on c.parent_member_id = md2.member_id " +
                     "inner join comment_recommend_count crc on c.id = crc.comment_id " +
-                    "order by c.root_comment_id, c.created_at")
+                    "order by c.group_created_at, c.root_comment_id, c.created_at")
     List<Object[]> findPageByPostId(Integer postId, Integer limit, Integer offset);
 
     /*
