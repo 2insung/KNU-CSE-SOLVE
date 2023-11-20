@@ -26,12 +26,12 @@ function pwEdit(memberId) {
             return
         }
 
-        if (currentPassword < 6 || currentPassword > 20) {
+        if (currentPassword.length < 6 || currentPassword.length > 20) {
             alert("패스워드는 6~20자 내로 입력해주세요.")
             return
         }
 
-        if (changePassword < 6 || changePassword > 20) {
+        if (changePassword.length < 6 || changePassword.length > 20) {
             alert("변경할 패스워드는 6~20자 내로 입력해주세요.")
             return
         }

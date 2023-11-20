@@ -83,7 +83,7 @@ function saveRootComment(postId) {
             return;
         }
 
-        if (body > 500) {
+        if (body.length > 500) {
             alert("댓글은 500자 내로 입력해주세요.")
             return;
         }
@@ -129,7 +129,7 @@ function saveChildComment(commentId, postId, currentPageNumber) {
             return;
         }
 
-        if (body > 500) {
+        if (body.length > 500) {
             alert("댓글은 500자 내로 입력해주세요.")
             return;
         }

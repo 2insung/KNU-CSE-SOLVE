@@ -12,7 +12,6 @@ import com.project.web.service.auth.UserService;
 import com.project.web.service.board.BoardService;
 import com.project.web.service.board.CommentService;
 import com.project.web.service.board.PostService;
-import com.project.web.service.file.FileService;
 import com.project.web.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,10 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.util.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +49,7 @@ public class CommunityController {
         List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPostList();
         model.addAttribute("topHotPostList", topHotPostDtoList);
 
-        return "RootPage";
+        return "community/RootPage";
     }
 
     @GetMapping("/board/{boardType}")
@@ -75,10 +70,10 @@ public class CommunityController {
         Integer boardPostCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
         Integer processedPageNumber = PageUtil.processPageNumber(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
-            if(isViewHotPostPreviewList){
+            if (isViewHotPostPreviewList) {
                 return "redirect:/board/" + boardType + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
             }
-            else{
+            else {
                 return "redirect:/board/" + boardType + "?page=" + processedPageNumber;
             }
 
@@ -104,7 +99,7 @@ public class CommunityController {
                         postService.getPostPreviewListByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("postPreviewList", postPreviewDtoList);
 
-        return "BoardPage";
+        return "community/BoardPage";
     }
 
     @GetMapping("/board/{boardType}/post/{postId}")
@@ -186,7 +181,7 @@ public class CommunityController {
 
         model.addAttribute("postId", postId);
 
-        return "PostPage";
+        return "community/PostPage";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -209,7 +204,7 @@ public class CommunityController {
         // 현재 게시글을 수정하려는 상태인지에 대한 정보 제공. /write는 수정이 아닌 새로운 게시글 등록임.
         model.addAttribute("isRewrite", false);
 
-        return "WritePage";
+        return "community/WritePage";
     }
 
     @PreAuthorize("isAuthenticated() and #postAuthorId == authentication.principal.userId")
@@ -238,7 +233,7 @@ public class CommunityController {
         // 현재 게시글을 수정하려는 상태인지에 대한 정보 제공. /rewrite는 수정임.
         model.addAttribute("isRewrite", true);
 
-        return "WritePage";
+        return "community/WritePage";
     }
 
     @GetMapping("/read-comment/{postId}")
@@ -274,7 +269,7 @@ public class CommunityController {
 
         model.addAttribute("postId", postId);
 
-        return "PostPage :: #commentFragment";
+        return "community/PostPage :: #commentFragment";
     }
 
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
@@ -286,7 +281,7 @@ public class CommunityController {
         model.addAttribute("user", userDto);
         // 게시판 생성 및 관리는 어드민에게만 권한이 있음.
 
-        return "ManageBoardPage";
+        return "community/ManageBoardPage";
     }
 
     @GetMapping("/all-board")
@@ -307,7 +302,7 @@ public class CommunityController {
         model.addAttribute("generalBoardList", generalBoardList);
         model.addAttribute("subjectBoardList", subjectBoardList);
 
-        return "AllBoardPage";
+        return "community/AllBoardPage";
     }
 
     @GetMapping("/board-menu")
@@ -329,6 +324,6 @@ public class CommunityController {
         //Heeader의 Board Menu List에 사용됨.
         model.addAttribute("boardMenuList", boardMenuDtoList);
 
-        return "Header :: #boardMenuList";
+        return "common/Header :: #boardMenuList";
     }
 }

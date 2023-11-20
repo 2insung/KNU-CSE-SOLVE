@@ -3,7 +3,7 @@
 <header th:fragment="headerFragment">
     <div class="head">
         <h1 class="logo">
-            <a href="/">KNU CSE Solve</a>
+            <a th:href="@{/}">KNU CSE Solve</a>
         </h1>
         <div class="head-right">
             <span class="login-status" th:if="${user.isLogin}" th:text="${user.nickname} + '님, 환영합니다.'"></span>

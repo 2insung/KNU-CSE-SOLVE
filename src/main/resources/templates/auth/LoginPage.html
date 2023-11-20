@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{AuthLayout}">
+      layout:decorate="~{auth/AuthLayout}">
 <head>
-    <link rel="stylesheet" th:href="@{/css/LoginPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/auth/LoginPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="login">
@@ -40,6 +40,6 @@
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">
-    <script th:src="@{/js/LoginPage.js}"></script>
+    <script th:src="@{/js/auth/LoginPage.js}"></script>
 </th:block>
 </html>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{community/GeneralLayout}">
 <head>
-    <link rel="stylesheet" th:href="@{/css/BoardPage.css}"/>
-    <link rel="stylesheet" th:href="@{/css/PostPreviewList.css}"/>
+    <link rel="stylesheet" th:href="@{/css/community/BoardPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/community/PostPreviewList.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="board">
@@ -31,10 +31,10 @@
                 <div class="write-post-button">게시글 작성하기</div>
             </a>
         </div>
-        <th:block th:replace="PostPreviewList :: postPreviewListFragment"></th:block>
+        <th:block th:replace="community/PostPreviewList :: postPreviewListFragment"></th:block>
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">
-    <script th:src="@{/js/BoardPage.js}"></script>
+    <script th:src="@{/js/community/BoardPage.js}"></script>
 </th:block>
 </html>

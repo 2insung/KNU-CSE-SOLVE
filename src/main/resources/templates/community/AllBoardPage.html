@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{GeneralLayout}">
+      layout:decorate="~{community/GeneralLayout}">
 <head>
-    <link rel="stylesheet" th:href="@{/css/AllBoardPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/community/AllBoardPage.css}"/>
 </head>
 <th:block layout:fragment="contentFragment">
     <div class="all-board">
@@ -44,6 +44,6 @@
     </div>
 </th:block>
 <th:block layout:fragment="scriptFragment">
-    <script th:src="@{/js/AllBoardPage.js}"></script>
+    <script th:src="@{/js/community/AllBoardPage.js}"></script>
 </th:block>
 </html>

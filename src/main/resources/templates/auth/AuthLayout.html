@@ -12,22 +12,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    <link th:href="@{/css/Common.css}" rel="stylesheet"/>
-    <link th:href="@{/css/Header.css}" rel="stylesheet"/>
-    <link th:href="@{/css/Footer.css}" rel="stylesheet"/>
-    <link th:href="@{/css/MyPageSideBar.css}" rel="stylesheet"/>
-    <link th:href="@{/css/MyLayout.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/Common.css}" rel="stylesheet"/>
+    <link th:href="@{/css/auth/AuthLayout.css}" rel="stylesheet"/>
 </head>
 <body>
-<th:block th:replace="Header :: headerFragment"></th:block>
 <main>
-    <th:block th:replace="MyPageSideBar :: MyPageSideBarFragment"></th:block>
     <th:block layout:fragment="contentFragment"></th:block>
 </main>
-<th:block th:replace="Footer :: footerFragment"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script th:src="@{/js/Header.js}"></script>
-<script th:src="@{/js/Footer.js}"></script>
 <th:block layout:fragment="scriptFragment"></th:block>
 </body>
 </html>

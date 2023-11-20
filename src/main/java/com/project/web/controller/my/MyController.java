@@ -40,7 +40,7 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyPage";
+        return "my/MyPage";
     }
 
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
@@ -59,7 +59,7 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyEditPage";
+        return "my/MyEditPage";
     }
 
     @GetMapping("/my/post/{memberId}")
@@ -95,7 +95,7 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyPostPage";
+        return "my/MyPostPage";
     }
 
     @GetMapping("/my/comment/{memberId}")
@@ -130,7 +130,7 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyCommentPage";
+        return "my/MyCommentPage";
     }
 
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
@@ -149,7 +149,7 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyPwEditPage";
+        return "my/MyPwEditPage";
     }
 
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
@@ -168,6 +168,6 @@ public class MyController {
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
 
-        return "MyWithdrawPage";
+        return "my/MyWithdrawPage";
     }
 }

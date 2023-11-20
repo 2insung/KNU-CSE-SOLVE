@@ -16,11 +16,11 @@ public class AuthController {
                         Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
-        return "LoginPage";
+        return "auth/LoginPage";
     }
 
     @GetMapping("/signup")
     public String SignUpPage() {
-        return "SignUpPage";
+        return "auth/SignUpPage";
     }
 }
