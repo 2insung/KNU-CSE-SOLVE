@@ -90,10 +90,12 @@ function saveRootComment(postId) {
 
         $.ajax(
             {
-                url: "/api/save-root-comment",
+                url: "/api/save-comment",
                 type: "POST",
                 data: JSON.stringify({
                     postId: postId,
+                    parentCommentId: null,
+                    currentPageNumber: null,
                     commentBody: body
                 }),
                 contentType: 'application/json',
@@ -136,7 +138,7 @@ function saveChildComment(commentId, postId, currentPageNumber) {
 
         $.ajax(
             {
-                url: "/api/save-child-comment",
+                url: "/api/save-comment",
                 type: "POST",
                 data: JSON.stringify({
                     postId: postId,

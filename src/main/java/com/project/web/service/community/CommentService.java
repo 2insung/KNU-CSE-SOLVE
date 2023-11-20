@@ -1,4 +1,4 @@
-package com.project.web.service.board;
+package com.project.web.service.community;
 
 import com.project.web.controller.community.dto.comment.CommentDto;
 import com.project.web.controller.community.dto.comment.rest.IncCommentRecommendResponseDto;
@@ -7,7 +7,6 @@ import com.project.web.domain.comment.CommentRecommendCount;
 import com.project.web.domain.comment.CommentRecommendMember;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
-import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
@@ -42,8 +41,8 @@ public class CommentService {
      * 댓글 생성일의 오름차순으로 출력함. 가장 먼저 저장된 댓글은 1페이지의 첫 댓글이며, 가장 마지막에 저장된 댓글은 마지막 페이지의 마지막 댓글임.
     */
     @Transactional(readOnly = true)
-    public List<CommentDto> getCommentList(Integer userId, Integer postId, Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = commentRepository.findPageByPostId(postId, pageSize, pageSize * (pageNumber - 1));
+    public List<CommentDto> getCommentDtos(Integer userId, Integer postId, Integer pageSize, Integer pageNumber) {
+        List<Object[]> results = commentRepository.findCommentDtosByPostId(postId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -129,7 +128,7 @@ public class CommentService {
         }
 
         if (parentComment != null) {
-            if (commentRepository.updateChildCountByCommentId(parentComment.getRootCommentId(), 1) == 0) {
+            if (commentRepository.updateChildCountById(parentComment.getRootCommentId(), 1) == 0) {
                 throw new Error404Exception("존재하지 않는 댓글입니다.");
             }
         }
@@ -148,7 +147,7 @@ public class CommentService {
     */
     @Transactional
     public void deleteComment(Integer postId, Integer commentId) {
-        if (commentRepository.updateIsDeleted(commentId, true) == 0) {
+        if (commentRepository.updateIsDeletedById(commentId, true) == 0) {
             throw new Error404Exception("존재하지 않는 댓글입니다.");
         }
 
@@ -163,7 +162,7 @@ public class CommentService {
             deleteCommentIds.add(comment.getId());
 
             if (!comment.getIsRoot()) {
-                if (commentRepository.updateChildCountByCommentId(comment.getRootCommentId(), -1) == 0) {
+                if (commentRepository.updateChildCountById(comment.getRootCommentId(), -1) == 0) {
                     throw new Error404Exception("존재하지 않는 댓글입니다.");
                 }
 
@@ -186,7 +185,7 @@ public class CommentService {
 
             commentRecommendMemberRepository.deleteByCommentIds(deleteCommentIds);
             commentRecommendCountRepository.deleteByCommentIds(deleteCommentIds);
-            commentRepository.deleteByCommentIds(deleteCommentIds);
+            commentRepository.deleteByIds(deleteCommentIds);
         }
         else {
             dropCommentCount = -1;

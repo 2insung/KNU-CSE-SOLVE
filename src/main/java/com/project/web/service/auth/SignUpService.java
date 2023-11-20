@@ -28,7 +28,7 @@ public class SignUpService {
     @Transactional
     public void signup(String username, String password, String nickname) {
         if (memberAuthRepository.existsByUsername(username)) {
-            Object result = memberRepository.findUserByUsername(username)
+            Object result = memberRepository.findExistingMemberByUsername(username)
                     .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
             Object[] arr = (Object[]) result;
             Integer resultMemberId = (Integer) arr[0];
@@ -38,7 +38,7 @@ public class SignUpService {
             String resultPassword = (String) arr[4];
 
             if (resultIsDeleted && resultUsername.equals(username) && resultNickname.equals(nickname) && passwordEncoder.matches(password, resultPassword)) {
-                if (memberRepository.updateIsDeleted(false, resultMemberId) == 0) {
+                if (memberRepository.updateIsDeletedById(false, resultMemberId) == 0) {
                     throw new Error404Exception("존재하지 않는 사용자입니다.");
                 }
                 return;

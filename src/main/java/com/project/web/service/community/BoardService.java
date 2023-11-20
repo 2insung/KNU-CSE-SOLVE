@@ -1,4 +1,4 @@
-package com.project.web.service.board;
+package com.project.web.service.community;
 
 import com.project.web.controller.community.dto.board.BoardDto;
 import com.project.web.controller.community.dto.board.BoardPreviewDto;
@@ -24,7 +24,7 @@ public class BoardService {
       boardType으로 존재하는 게시판인지 true/false로 반환하는 함수.
     */
     @Transactional(readOnly = true)
-    public void existsByBoardType(String boardType) {
+    public void existsByType(String boardType) {
         if (!boardRepository.existsByType(boardType)) {
             throw new Error404Exception("존재하지 않는 게시판입니다.");
         }
@@ -35,7 +35,7 @@ public class BoardService {
      * 현재 게시판의 정보를 출력하는 함수.
     */
     @Transactional(readOnly = true)
-    public BoardDto getBoard(String boardType) {
+    public BoardDto getBoardDto(String boardType) {
         Board board = boardRepository.findByType(boardType)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시판입니다."));
 
@@ -74,7 +74,7 @@ public class BoardService {
      * 모든 게시판의 정보를 출력하는 함수.
     */
     @Transactional(readOnly = true)
-    public List<BoardPreviewDto> getBoardPreviewList() {
+    public List<BoardPreviewDto> getBoardPreviewDtos() {
         List<Board> boardList = boardRepository.findAll();
 
         return boardList.stream()
@@ -93,7 +93,7 @@ public class BoardService {
      * 상위 30개의 게시판의 정보를 출력하는 함수.
     */
     @Transactional(readOnly = true)
-    public List<BoardPreviewDto> getTopThirtyBoardPreviewList() {
+    public List<BoardPreviewDto> getTopThirtyBoardPreviewDtos() {
         List<Board> boardList = boardRepository.findTopThirtyBoard();
 
         return boardList.stream()

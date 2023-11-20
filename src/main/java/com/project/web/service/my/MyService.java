@@ -34,8 +34,8 @@ public class MyService {
      * memberId에 해당하는 사용자 정보를 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public MyDto getMy(Integer memberId) {
-        Object result = memberRepository.findMyById(memberId)
+    public MyDto getMyDto(Integer memberId) {
+        Object result = memberRepository.findMyDtoById(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
         Object[] arr = (Object[]) result;
         Boolean resultIsDeleted = (Boolean) arr[0];
@@ -68,7 +68,7 @@ public class MyService {
      * memberId에 해당하는 사용자 이전 정보를 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public MyEditDto getMyEdit(Integer memberId) {
+    public MyEditDto getMyEditDto(Integer memberId) {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
@@ -96,12 +96,12 @@ public class MyService {
      * memberId에 해당하는 사용자 작성 게시글을 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public List<MyPostDto> getMyPostList(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
+    public List<MyPostDto> getMyPostDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
 
-        List<Object[]> results = postRepository.findMyPostByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
+        List<Object[]> results = postRepository.findMyPostDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -134,12 +134,14 @@ public class MyService {
      * 만약 사용자가 작성한 게시글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
     */
     @Transactional(readOnly = true)
-    public Integer getMyPostCount(Integer memberId) {
+    public Integer getMyPostsCount(Integer memberId) {
+        Integer postCountLimit = 20000;
+
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
 
-        return postRepository.countMyPost(memberId, 20000);
+        return postRepository.countMyPosts(memberId, postCountLimit);
     }
 
     /*
@@ -147,12 +149,12 @@ public class MyService {
      * memberId에 해당하는 사용자 작성 댓글을 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public List<MyCommentDto> getMyCommentList(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
+    public List<MyCommentDto> getMyCommentDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
 
-        List<Object[]> results = commentRepository.findMyCommentByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
+        List<Object[]> results = commentRepository.findMyCommentDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -191,12 +193,14 @@ public class MyService {
       * 만약 사용자가 작성한 댓글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
      */
     @Transactional(readOnly = true)
-    public Integer getMyCommentCount(Integer memberId) {
+    public Integer getMyCommentsCount(Integer memberId) {
+        Integer commentCountLimit = 20000;
+
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
 
-        return commentRepository.countMyComment(memberId, 20000);
+        return commentRepository.countMyComments(memberId, commentCountLimit);
     }
 
     /*
@@ -204,7 +208,7 @@ public class MyService {
      * memberId에 해당하는 사용자 id를 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public Integer getMyId(Integer memberId) {
+    public Integer getMemberId(Integer memberId) {
         if (memberRepository.existsById(memberId)) {
             return memberId;
         }
@@ -219,7 +223,7 @@ public class MyService {
      * 입력받은 profileImage가 null인 경우는 프로필 이미지를 변경하지 않겠다는 의미임.
     */
     @Transactional
-    public void updateMy(Integer memberId, String nickname, String profileImage, String grade, String description,
+    public void updateMemberDetail(Integer memberId, String nickname, String profileImage, String grade, String description,
                          String admissionYear, String department) {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
@@ -244,7 +248,7 @@ public class MyService {
     * memberId에 해당하는 사용자 비밀번호를 수정하는 함수임.
    */
     @Transactional
-    public void updateMyPassword(Integer memberId, String currentPassword, String changePassword) {
+    public void updatePassword(Integer memberId, String currentPassword, String changePassword) {
         MemberPassword memberPassword = memberPasswordRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
@@ -263,7 +267,7 @@ public class MyService {
     public Boolean withdraw(Integer memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
-        if (memberRepository.updateIsDeleted(true, member.getId()) == 1) {
+        if (memberRepository.updateIsDeletedById(true, member.getId()) == 1) {
             return true;
         }
         else {

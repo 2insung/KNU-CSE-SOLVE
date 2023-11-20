@@ -9,9 +9,9 @@ import com.project.web.controller.community.dto.comment.CommentDto;
 import com.project.web.controller.community.dto.comment.CommentPageNumberDto;
 import com.project.web.controller.community.dto.post.*;
 import com.project.web.service.auth.UserService;
-import com.project.web.service.board.BoardService;
-import com.project.web.service.board.CommentService;
-import com.project.web.service.board.PostService;
+import com.project.web.service.community.BoardService;
+import com.project.web.service.community.CommentService;
+import com.project.web.service.community.PostService;
 import com.project.web.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,11 +42,11 @@ public class CommunityController {
 
         // board id가 1에서 6인 게시판의 상위 10개(등록 시간 기준)의 게시글
         // 총 60개의 게시글이 존재함, board id로 분류함.
-        List<TopBoardDto> topBoardDtoList = postService.getTopBoardList();
+        List<TopBoardDto> topBoardDtoList = postService.getTopBoardDtos();
         model.addAttribute("topBoardList", topBoardDtoList);
 
         // 모든 게시판에서 상위 20개(인기글 등록 시간 기준)의 인기글
-        List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPostList();
+        List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPostDtos();
         model.addAttribute("topHotPostList", topHotPostDtoList);
 
         return "community/RootPage";
@@ -95,8 +95,8 @@ public class CommunityController {
         Integer boardId = boardDto.getId();
         List<PostPreviewDto> postPreviewDtoList =
                 isViewHotPostPreviewList ?
-                        postService.getHotPostPreviewListByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
-                        postService.getPostPreviewListByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+                        postService.getHotPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
+                        postService.getPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("postPreviewList", postPreviewDtoList);
 
         return "community/BoardPage";
@@ -131,7 +131,7 @@ public class CommunityController {
 
         // 게시글에 대한 정보 제공.
         Integer userId = principal != null ? principal.getUserId() : null;
-        PostDto postDto = postService.getPost(userId, postId);
+        PostDto postDto = postService.getPostDto(userId, postId);
         model.addAttribute("post", postDto);
 
         // 게시글의 현재 댓글 수에 대한 정보를 제공. (타임리프 변수로 활용할 commentCount 댓글에 대한 CRUD 동작에 동적으로 변하기 때문에 따로 변수로 설정했음.)
@@ -141,7 +141,7 @@ public class CommunityController {
         model.addAttribute("commentCount", commentCount);
 
         // 게시글의 댓글 페이지에 해당하는 댓글 리스트에 대한 정보를 제공.
-        List<CommentDto> commentDtoList = commentService.getCommentList(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, 1);
+        List<CommentDto> commentDtoList = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, 1);
         model.addAttribute("commentList", commentDtoList);
 
         // 게시글의 댓글 페이지 리스트에 대한 정보를 제공. (현재 댓글 페이지, 댓글 페이지 리스트)
@@ -160,8 +160,8 @@ public class CommunityController {
         Integer boardId = boardDto.getId();
         List<PostPreviewDto> postPreviewDtoList =
                 isViewHotPostPreviewList ?
-                        postService.getHotPostPreviewListByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
-                        postService.getPostPreviewListByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+                        postService.getHotPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
+                        postService.getPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("postPreviewList", postPreviewDtoList);
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 게시글 페이지, 게시글 페이지 리스트)
@@ -194,7 +194,7 @@ public class CommunityController {
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보
-        BoardDto boardDto = boardService.getBoard(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
 
         // 현재 게시글을 작성하는 사용자가 '공지사항'을 올릴 권한이 있는지에 대한 정보 제공.
@@ -219,11 +219,11 @@ public class CommunityController {
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보
-        BoardDto boardDto = boardService.getBoard(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
 
         // 게시글 수정을 위해 수정하려는 게시글의 이전 정보를 제공.
-        RewriteDto rewriteDto = postService.getRewrite(postId);
+        RewriteDto rewriteDto = postService.getRewriteDto(postId);
         model.addAttribute("rewrite", rewriteDto);
 
         // 현재 게시글을 작성하는 사용자가 '공지사항'을 올릴 권한이 있는지에 대한 정보 제공.
@@ -247,11 +247,11 @@ public class CommunityController {
 
         // 현재 페이지의 댓글 리스트의 정보 제공.
         Integer userId = principal != null ? principal.getUserId() : null;
-        List<CommentDto> commentDtoList = commentService.getCommentList(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, pageNumber);
+        List<CommentDto> commentDtoList = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, pageNumber);
         model.addAttribute("commentList", commentDtoList);
 
         // 실제 댓글 수에 대한 정보를 제공.
-        PostCommentCountDto postCommentCountDto = postService.getPostCommentCount(postId);
+        PostCommentCountDto postCommentCountDto = postService.getPostCommentCountDto(postId);
         Integer commentCount = postCommentCountDto.getCommentCount();
         Integer totalCommentCount = postCommentCountDto.getTotalCommentCount();
         model.addAttribute("commentCount", commentCount);
@@ -292,7 +292,7 @@ public class CommunityController {
         model.addAttribute("user", userDto);
 
         // 게시판에 대한 정보를 제공함. 일반, 과목으로 분류됨.
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getBoardPreviewList();
+        List<BoardPreviewDto> boardPreviewDtoList = boardService.getBoardPreviewDtos();
         List<BoardPreviewDto> generalBoardList = boardPreviewDtoList.stream()
                 .filter(board -> "일반".equals(board.getCategory()))
                 .collect(Collectors.toList());
@@ -307,7 +307,7 @@ public class CommunityController {
 
     @GetMapping("/board-menu")
     public String boardList(Model model) {
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopThirtyBoardPreviewList();
+        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopThirtyBoardPreviewDtos();
         int totalBoardCount = boardPreviewDtoList.size();
         int chunkCount = totalBoardCount / 6;
 

@@ -19,7 +19,7 @@ public class UserService {
     */
     public UserDto getUser(PrincipalDetails principal) {
         if (principal != null) {
-            Object result = memberRepository.findUserByMemberId(principal.getUserId())
+            Object result = memberRepository.findUserDtoByMemberId(principal.getUserId())
                     .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
             Object[] arr = (Object[]) result;

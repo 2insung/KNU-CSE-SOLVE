@@ -1,4 +1,4 @@
-package com.project.web.service.board;
+package com.project.web.service.community;
 
 import com.project.web.controller.community.dto.post.*;
 import com.project.web.controller.community.dto.post.rest.IncPostRecommendResponseDto;
@@ -6,7 +6,6 @@ import com.project.web.domain.board.Board;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.member.Role;
 import com.project.web.domain.post.*;
-import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.board.BoardPostCountRepository;
 import com.project.web.repository.board.BoardRepository;
@@ -51,8 +50,8 @@ public class PostService {
      * [일반 + 공지 + 인기], 모든 카테고리에 대한 게시글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<PostPreviewDto> getPostPreviewListByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = postRepository.findPostPreviewByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
+    public List<PostPreviewDto> getPostPreviewDtosByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
+        List<Object[]> results = postRepository.findPostPreviewDtosByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -96,8 +95,8 @@ public class PostService {
      * [인기], 인기 카테고리에 대한 게시글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<PostPreviewDto> getHotPostPreviewListByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
-        List<Object[]> results = postRepository.findHotPostPreviewByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
+    public List<PostPreviewDto> getHotPostPreviewDtosByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
+        List<Object[]> results = postRepository.findHotPostPreviewDtosByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
@@ -139,8 +138,8 @@ public class PostService {
      * postId에 해당하는 게시글을 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public PostDto getPost(Integer userId, Integer postId) {
-        Object result = postRepository.findPostById(postId)
+    public PostDto getPostDto(Integer userId, Integer postId) {
+        Object result = postRepository.findPostDtoById(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
 
         Object[] arr = (Object[]) result;
@@ -281,7 +280,7 @@ public class PostService {
     */
     @Transactional
     public void deletePost(Integer boardId, Integer postId) {
-        if (postRepository.updateIsDeleted(postId, true) == 0) {
+        if (postRepository.updateIsDeletedById(postId, true) == 0) {
             throw new Error404Exception("존재하지 않는 게시글입니다.");
         }
 
@@ -291,7 +290,7 @@ public class PostService {
         List<Integer> commentIds = commentRepository.findIdsByPostId(postId);
         commentRecommendMemberRepository.deleteByCommentIds(commentIds);
         commentRecommendCountRepository.deleteByCommentIds(commentIds);
-        commentRepository.deleteByCommentIds(commentIds);
+        commentRepository.deleteByIds(commentIds);
 
         postRecommendMemberRepository.deleteByPostId(postId);
         postCommentCountRepository.deleteByPostId(postId);
@@ -321,7 +320,7 @@ public class PostService {
      * 게시글의 실제 댓글 수(commentCount)와 총 댓글 수(totalCommentCount)를 반환함.
     */
     @Transactional(readOnly = true)
-    public PostCommentCountDto getPostCommentCount(Integer postId) {
+    public PostCommentCountDto getPostCommentCountDto(Integer postId) {
         PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
 
@@ -348,7 +347,7 @@ public class PostService {
      * 게시글의 이전 내용을 출력함.
     */
     @Transactional(readOnly = true)
-    public RewriteDto getRewrite(Integer postId) {
+    public RewriteDto getRewriteDto(Integer postId) {
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 게시판입니다."));
         Post post = postContent.getPost();
@@ -432,8 +431,8 @@ public class PostService {
      * 따라서 10개의 게시글이 존재하는 6개의 List가 반환됨.
     */
     @Transactional(readOnly = true)
-    public List<TopBoardDto> getTopBoardList() {
-        List<Object[]> results = postRepository.findTopPostList();
+    public List<TopBoardDto> getTopBoardDtos() {
+        List<Object[]> results = postRepository.findTopPostDtos();
         List<Board> boardResult = boardRepository.findTopSixBoard();
 
         List<TopPostDto> topPostDtoList = results.stream()
@@ -476,8 +475,8 @@ public class PostService {
      * 게시판 구분없이 총 20개의 인기글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<TopHotPostDto> getTopHotPostList() {
-        List<Object[]> results = postRepository.findTopHotPostList();
+    public List<TopHotPostDto> getTopHotPostDtos() {
+        List<Object[]> results = postRepository.findTopHotPostDtos();
 
         return results.stream()
                 .map((result) -> {

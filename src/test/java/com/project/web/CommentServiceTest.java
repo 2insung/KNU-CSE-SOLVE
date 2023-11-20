@@ -14,7 +14,7 @@ import com.project.web.repository.comment.CommentRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostCommentCountRepository;
 import com.project.web.repository.post.PostRepository;
-import com.project.web.service.board.CommentService;
+import com.project.web.service.community.CommentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

@@ -20,7 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberPassword mpw ON mpw.member = m " +
             "WHERE ma.username = :username and m.isDeleted = false")
-    Optional<Object> findByUsernameForLogin(String username);
+    Optional<Object> findPrincipalDetailsByUsername(String username);
 
     /*
      사용자 정보 출력 함수.
@@ -31,7 +31,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberDetail md ON md.member = m " +
             "WHERE m.id = :memberId")
-    Optional<Object> findMyById(Integer memberId);
+    Optional<Object> findMyDtoById(Integer memberId);
 
     /*
      사용자 정보 출력 함수.
@@ -42,7 +42,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "inner join MemberAuth ma on ma.member = m " +
             "inner join MemberDetail md on md.member = m " +
             "where m.id = :memberId")
-    Optional<Object> findUserByMemberId(Integer memberId);
+    Optional<Object> findUserDtoByMemberId(Integer memberId);
 
     /*
      사용자 정보 출력 함수.
@@ -54,7 +54,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
             "inner join MemberPassword mp on mp.member = m " +
             "inner join MemberDetail md on md.member = m " +
             "where ma.username = :username")
-    Optional<Object> findUserByUsername(String username);
+    Optional<Object> findExistingMemberByUsername(String username);
 
     /*
      사용자 계정 상태 변경 함수.
@@ -62,5 +62,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     */
     @Modifying
     @Query("update Member m set m.isDeleted = :value where m.id = :memberId")
-    int updateIsDeleted(Boolean value, Integer memberId);
+    int updateIsDeletedById(Boolean value, Integer memberId);
 }

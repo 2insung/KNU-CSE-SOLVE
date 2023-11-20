@@ -28,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "inner join post_recommend_count prc on p.id = prc.post_id " +
                     "inner join post_comment_count pcc on p.id = pcc.post_id " +
                     "order by p.priority desc, p.created_at desc")
-    List<Object[]> findPostPreviewByBoardId(Integer boardId, Integer limit, Integer offset);
+    List<Object[]> findPostPreviewDtosByBoardId(Integer boardId, Integer limit, Integer offset);
 
     /*
      인기 게시글 페이지(Hot Post Preview) 출력 함수.
@@ -47,7 +47,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "inner join post_recommend_count prc on p.id = prc.post_id " +
                     "inner join post_comment_count pcc on p.id = pcc.post_id " +
                     "order by p.hot_registered_time desc")
-    List<Object[]> findHotPostPreviewByBoardId(Integer boardId, Integer limit, Integer offset);
+    List<Object[]> findHotPostPreviewDtosByBoardId(Integer boardId, Integer limit, Integer offset);
 
     /*
      사용자 작성 게시글 페이지(My Post Preview) 출력 함수.
@@ -63,7 +63,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "inner join board b on p.board_id = b.id " +
                     "inner join post_content pc on p.id = pc.post_id " +
                     "order by p.created_at desc")
-    List<Object[]> findMyPostByMemberId(Integer memberId, Integer limit, Integer offset);
+    List<Object[]> findMyPostDtosByMemberId(Integer memberId, Integer limit, Integer offset);
 
     /*
      사용자 작성 게시글 개수 출력 함수.
@@ -72,7 +72,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     */
     @Query(nativeQuery = true,
             value = "select count(*) from (select id from post where member_id = :memberId limit :limit) as temp")
-    int countMyPost(Integer memberId, Integer limit);
+    int countMyPosts(Integer memberId, Integer limit);
 
     /*
      게시글(Post) 출력 함수.
@@ -87,7 +87,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "inner join PostRecommendCount prc on prc.post = p " +
             "inner join PostCommentCount pcc on pcc.post = p " +
             "where p.id = :postId")
-    Optional<Object> findPostById(Integer postId);
+    Optional<Object> findPostDtoById(Integer postId);
 
     /*
      게시글의 isDeleted 속성 업데이트 함수.
@@ -95,7 +95,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     */
     @Modifying
     @Query("update Post p set p.isDeleted = :isDeleted where p.id = :postId and p.isDeleted = false")
-    int updateIsDeleted(Integer postId, Boolean isDeleted);
+    int updateIsDeletedById(Integer postId, Boolean isDeleted);
 
     /*
      게시글 삭제 함수.
@@ -151,7 +151,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "where p.board_id = 6 " +
                     "order by p.created_at DESC " +
                     "limit 10) ")
-    List<Object[]> findTopPostList();
+    List<Object[]> findTopPostDtos();
 
     /*
      상위 인기 게시글 출력 함수.
@@ -164,6 +164,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "where p.is_hot = true " +
                     "order by p.hot_registered_time DESC " +
                     "limit 20")
-    List<Object[]> findTopHotPostList();
+    List<Object[]> findTopHotPostDtos();
 
 }

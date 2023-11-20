@@ -3,8 +3,8 @@ package com.project.web.controller.my;
 import com.project.web.controller.auth.dto.PrincipalDetails;
 import com.project.web.controller.my.dto.rest.*;
 import com.project.web.exception.Error400Exception;
-import com.project.web.service.board.CommentService;
-import com.project.web.service.board.PostService;
+import com.project.web.service.community.CommentService;
+import com.project.web.service.community.PostService;
 import com.project.web.service.my.MyService;
 import com.project.web.service.file.FileService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class MyRestController {
         String department = updateMyRequestDto.getDepartment();
 
         // 사용자 정보 수정.
-        myService.updateMy(memberId, nickname, imageURL, grade, description, admissionYear, department);
+        myService.updateMemberDetail(memberId, nickname, imageURL, grade, description, admissionYear, department);
 
         // my/{memberId}로 redirect하기 위함.
         return ResponseEntity.ok(
@@ -73,7 +73,7 @@ public class MyRestController {
         postService.deletePost(boardId, postId);
 
         // 삭제 후 보여줄 사용자 작성글 페이지의 번호를 계산함.
-        Integer totalMyPostCount = myService.getMyPostCount(postAuthorId);
+        Integer totalMyPostCount = myService.getMyPostsCount(postAuthorId);
         Integer totalPageNumber = ((totalMyPostCount - 1) / MyConstants.POST_PAGE_SIZE) + 1;
         Integer pageNumber = totalPageNumber < currentPageNumber ? totalPageNumber : currentPageNumber;
 
@@ -105,7 +105,7 @@ public class MyRestController {
         commentService.deleteComment(postId, commentId);
 
         // 삭제 후 보여줄 사용자 댓글 페이지의 번호를 계산함.
-        Integer totalMyCommentCount = myService.getMyCommentCount(commentAuthorId);
+        Integer totalMyCommentCount = myService.getMyCommentsCount(commentAuthorId);
         Integer totalPageNumber = ((totalMyCommentCount - 1) / MyConstants.COMMENT_PAGE_SIZE) + 1;
         Integer pageNumber = totalPageNumber < currentPageNumber ? totalPageNumber : currentPageNumber;
 
@@ -132,7 +132,7 @@ public class MyRestController {
         String changePassword = updatePasswordRequestDto.getChangePassword();
 
         // 사용자 비밀번호 변경 함수.
-        myService.updateMyPassword(memberId, currentPassword, changePassword);
+        myService.updatePassword(memberId, currentPassword, changePassword);
 
         return ResponseEntity.ok(
                 UpdatePasswordResponseDto.builder()

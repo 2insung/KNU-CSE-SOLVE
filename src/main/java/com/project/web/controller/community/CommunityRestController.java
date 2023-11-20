@@ -7,10 +7,9 @@ import com.project.web.controller.community.dto.board.rest.SaveBoardResponseDto;
 import com.project.web.controller.community.dto.comment.rest.*;
 import com.project.web.controller.community.dto.post.rest.*;
 import com.project.web.exception.Error400Exception;
-import com.project.web.service.board.BoardService;
-import com.project.web.service.board.CommentService;
-import com.project.web.service.board.PostService;
-import lombok.Builder;
+import com.project.web.service.community.BoardService;
+import com.project.web.service.community.CommentService;
+import com.project.web.service.community.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +43,7 @@ public class CommunityRestController {
         Boolean isNotice = savePostRequestDto.getPostIsNotice();
 
         // post 저장, 저장 후 request를 통해 제공받은 boardType을 반환. (redirect를 위함)
-        BoardDto boardDto = boardService.getBoard(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         Integer boardId = boardDto.getId();
         Integer userId = principal.getUserId();
         postService.savePost(userId, boardId, title, body, isNotice);
@@ -74,7 +73,7 @@ public class CommunityRestController {
 
         // 입력받은 boardType이 존재하는지 확인 후, post를 update함.
         // save-post와 달리 boardId가 필요하지 않음. 게시글의 수정은 postId만 필요함. (게시글의 수정은 게시판의 게시글 개수에 영향을 끼치지 않기 때문.)
-        boardService.existsByBoardType(boardType);
+        boardService.existsByType(boardType);
         postService.updatePost(postId, title, body, isNotice);
 
         return ResponseEntity.ok(
@@ -99,7 +98,7 @@ public class CommunityRestController {
         Integer postId = deletePostRequestDto.getPostId();
 
         // post 삭제, 삭제 후 request를 통해 제공받은 boardType을 반환. (redirect를 위함)
-        BoardDto boardDto = boardService.getBoard(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         Integer boardId = boardDto.getId();
         postService.deletePost(boardId, postId);
 
@@ -111,8 +110,8 @@ public class CommunityRestController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/api/save-root-comment")
-    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveRootCommentRequestDto saveRootCommentRequestDto,
+    @PostMapping("/api/save-comment")
+    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveCommentRequestDto saveCommentRequestDto,
                                                               @AuthenticationPrincipal PrincipalDetails principal,
                                                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -120,44 +119,21 @@ public class CommunityRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        Integer postId = saveRootCommentRequestDto.getPostId();
-        String commentBody = saveRootCommentRequestDto.getCommentBody();
-        Integer userId = principal.getUserId();
-
-        // comment 저장.
-        commentService.saveComment(userId, postId, null, commentBody);
-
-        // 저장 후 보여줄 댓글 페이지의 번호를 계산함.
-        Integer totalCommentCount = postService.getTotalCommentCount(postId);
-        Integer pageNumber = ((totalCommentCount - 1) / CommunityConstants.COMMENT_PAGE_SIZE) + 1;
-
-        return ResponseEntity.ok(
-                SaveCommentResponseDto.builder()
-                        .pageNumber(pageNumber)
-                        .build()
-        );
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/api/save-child-comment")
-    public ResponseEntity<SaveCommentResponseDto> saveComment(@Valid @RequestBody SaveChildCommentRequestDto saveChildCommentRequestDto,
-                                                              @AuthenticationPrincipal PrincipalDetails principal,
-                                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-            throw new Error400Exception(errorMessage);
-        }
-
-        Integer postId = saveChildCommentRequestDto.getPostId();
-        Integer parentCommentId = saveChildCommentRequestDto.getParentCommentId();
-        Integer currentPageNumber = saveChildCommentRequestDto.getCurrentPageNumber();
-        String commentBody = saveChildCommentRequestDto.getCommentBody();
+        Integer postId = saveCommentRequestDto.getPostId();
+        Integer parentCommentId = saveCommentRequestDto.getParentCommentId();
+        Integer currentPageNumber = saveCommentRequestDto.getCurrentPageNumber();
+        String commentBody = saveCommentRequestDto.getCommentBody();
         Integer userId = principal.getUserId();
 
         // comment 저장.
         commentService.saveComment(userId, postId, parentCommentId, commentBody);
 
-        Integer pageNumber = currentPageNumber;
+        // 저장 후 보여줄 댓글 페이지의 번호를 계산함.
+        Integer totalCommentCount = postService.getTotalCommentCount(postId);
+        Integer pageNumber =
+                parentCommentId != null && currentPageNumber != null ?
+                        currentPageNumber :
+                        ((totalCommentCount - 1) / CommunityConstants.COMMENT_PAGE_SIZE) + 1;
 
         return ResponseEntity.ok(
                 SaveCommentResponseDto.builder()
@@ -165,7 +141,6 @@ public class CommunityRestController {
                         .build()
         );
     }
-
 
     @PreAuthorize("isAuthenticated() and ((#deleteCommentRequestDto.commentAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @DeleteMapping("/api/delete-comment")

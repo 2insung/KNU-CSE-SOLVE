@@ -26,7 +26,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
                     "inner join member_detail md2 on c.parent_member_id = md2.member_id " +
                     "inner join comment_recommend_count crc on c.id = crc.comment_id " +
                     "order by c.group_created_at, c.root_comment_id, c.created_at")
-    List<Object[]> findPageByPostId(Integer postId, Integer limit, Integer offset);
+    List<Object[]> findCommentDtosByPostId(Integer postId, Integer limit, Integer offset);
 
     /*
      사용자 작성 댓글 페이지 출력 함수.
@@ -43,7 +43,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
                     "inner join post_content pc on p.id = pc.post_id " +
                     "inner join board b on b.id = p.board_id " +
                     "order by c.created_at desc")
-    List<Object[]> findMyCommentByMemberId(Integer memberId, Integer limit, Integer offset);
+    List<Object[]> findMyCommentDtosByMemberId(Integer memberId, Integer limit, Integer offset);
 
     /*
      사용자 작성 댓글 개수 출력 함수.
@@ -52,7 +52,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     */
     @Query(nativeQuery = true,
             value = "select count(*) from (select id from comment where member_id = :memberId limit :limit) as temp")
-    int countMyComment(Integer memberId, Integer limit);
+    int countMyComments(Integer memberId, Integer limit);
 
     /*
      게시글의 댓글 id 출력 함수
@@ -68,7 +68,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     */
     @Modifying
     @Query("update Comment c set c.isDeleted = :isDeleted where c.id = :commentId and c.isDeleted = false")
-    int updateIsDeleted(Integer commentId, Boolean isDeleted);
+    int updateIsDeletedById(Integer commentId, Boolean isDeleted);
 
     /*
      댓글 삭제 함수.
@@ -76,7 +76,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     */
     @Modifying
     @Query("delete from Comment c where c.id in :commentIds")
-    int deleteByCommentIds(List<Integer> commentIds);
+    int deleteByIds(List<Integer> commentIds);
 
     /*
      댓글의 자식 댓글 수 업데이트 함수.
@@ -85,5 +85,5 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     */
     @Modifying
     @Query("update Comment c set c.childCount = c.childCount + :value where c.id = :commentId")
-    int updateChildCountByCommentId(Integer commentId, Integer value);
+    int updateChildCountById(Integer commentId, Integer value);
 }

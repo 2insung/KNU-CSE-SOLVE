@@ -34,7 +34,7 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자 정보를 제공.
-        MyDto myDto = myService.getMy(memberId);
+        MyDto myDto = myService.getMyDto(memberId);
         model.addAttribute("my", myDto);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
@@ -53,7 +53,7 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 이전 사용자 정보를 제공.
-        MyEditDto myEditDto = myService.getMyEdit(memberId);
+        MyEditDto myEditDto = myService.getMyEditDto(memberId);
         model.addAttribute("myEdit", myEditDto);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
@@ -72,14 +72,14 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자의 게시글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
-        Integer myPostCount = myService.getMyPostCount(memberId);
+        Integer myPostCount = myService.getMyPostsCount(memberId);
         Integer processedPageNumber = PageUtil.processPageNumber(myPostCount, MyConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             return "redirect:/my/post/" + memberId + "?page=" + processedPageNumber;
         }
 
         Integer userId = principal != null ? principal.getUserId() : null;
-        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
+        List<MyPostDto> myPostDtoList = myService.getMyPostDtos(userId, memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("myPostList", myPostDtoList);
 
         // 사용자 게시글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
@@ -110,14 +110,14 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자의 댓글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
-        Integer myCommentCount = myService.getMyCommentCount(memberId);
+        Integer myCommentCount = myService.getMyCommentsCount(memberId);
         Integer processedPageNumber = PageUtil.processPageNumber(myCommentCount, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             return "redirect:/my/comment/" + memberId + "?page=" + processedPageNumber;
         }
 
         Integer userId = principal != null ? principal.getUserId() : null;
-        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, memberId, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
+        List<MyCommentDto> myCommentDtoList = myService.getMyCommentDtos(userId, memberId, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
         model.addAttribute("myCommentList", myCommentDtoList);
 
         // 사용자 댓글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
@@ -147,7 +147,7 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자의 id 정보
-        Integer myId = myService.getMyId(memberId);
+        Integer myId = myService.getMemberId(memberId);
         model.addAttribute("myId", myId);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
@@ -166,7 +166,7 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자의 id 정보
-        Integer myId = myService.getMyId(memberId);
+        Integer myId = myService.getMemberId(memberId);
         model.addAttribute("myId", myId);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
