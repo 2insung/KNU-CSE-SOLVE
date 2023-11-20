@@ -1,0 +1,1 @@
+var token = $("meta[name='_csrf']").attr("content")

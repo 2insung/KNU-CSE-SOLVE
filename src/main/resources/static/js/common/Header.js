@@ -1,3 +1,5 @@
+var token = $("meta[name='_csrf']").attr("content")
+
 function toggleDropdown() {
     var dropdownContent = document.getElementById("dropDownMenu");
     if (dropdownContent.style.display === "block") {

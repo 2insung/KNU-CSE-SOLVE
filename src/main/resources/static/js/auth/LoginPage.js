@@ -1,3 +1,5 @@
+var token = $("meta[name='_csrf']").attr("content")
+
 document.addEventListener("DOMContentLoaded", function () {
     var loginForm = document.getElementById("loginForm");
 
