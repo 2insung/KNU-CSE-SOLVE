@@ -72,7 +72,6 @@ public class MyService {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
-        Integer resultMemberId = memberDetail.getMember().getId();
         String resultNickname = memberDetail.getNickname();
         String resultProfileImage = memberDetail.getProfileImage();
         String resultDescription = memberDetail.getDescription();
@@ -81,7 +80,6 @@ public class MyService {
         String resultDepartment = memberDetail.getDepartment();
 
         return MyEditDto.builder()
-                .memberId(resultMemberId)
                 .nickname(resultNickname)
                 .profileImage(resultProfileImage)
                 .description(resultDescription)
@@ -224,7 +222,7 @@ public class MyService {
     */
     @Transactional
     public void updateMemberDetail(Integer memberId, String nickname, String profileImage, String grade, String description,
-                         String admissionYear, String department) {
+                                   String admissionYear, String department) {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 

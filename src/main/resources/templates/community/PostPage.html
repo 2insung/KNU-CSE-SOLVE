@@ -68,8 +68,8 @@
                 </div>
             </div>
         </div>
-        <div id="commentFragment">
-            <div class="comment-list-wrapper">
+        <div class="comment-list-wrapper">
+            <div id="commentFragment">
                 <div class="comment-count">
                     <span th:text="'댓글수 ' + ${commentCount}"></span>
                 </div>
@@ -182,17 +182,17 @@
                         </li>
                     </ul>
                 </div>
-                <form id="rootCommentForm" class="root-comment-form">
-                    <textarea id="rootContent" class="comment-input" name="body"></textarea>
-                    <div class="submit-button-wrapper">
-                        <button type="button"
-                                class="submit-button"
-                                th:data-postId="${postId}"
-                                onclick="saveRootComment(this.getAttribute('data-postId'))">입력
-                        </button>
-                    </div>
-                </form>
             </div>
+            <form id="rootCommentForm" class="root-comment-form">
+                <textarea id="rootContent" class="comment-input" name="body"></textarea>
+                <div class="submit-button-wrapper">
+                    <button type="button"
+                            class="submit-button"
+                            th:data-postId="${post.id}"
+                            onclick="saveRootComment(this.getAttribute('data-postId'))">입력
+                    </button>
+                </div>
+            </form>
         </div>
         <th:block th:replace="community/PostPreviewList :: postPreviewListFragment"></th:block>
     </div>

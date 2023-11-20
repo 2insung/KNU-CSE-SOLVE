@@ -1,14 +1,11 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-function withdraw(memberId) {
+function withdraw() {
     if (confirm("계정 비활성화 하시겠습니까?")) {
         $.ajax(
             {
                 url: "/api/withdraw",
                 type: "PATCH",
-                data: JSON.stringify({
-                    memberId: memberId,
-                }),
                 contentType: 'application/json',
                 dataType: 'json',
                 beforeSend: function (xhr) {

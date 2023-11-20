@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function submitHandler(memberId) {
+function updateMy() {
     if (confirm("수정하시겠습니까?")) {
         var fileInput = document.getElementById('imageInput');
         var file = fileInput.files[0];
@@ -36,7 +36,6 @@ function submitHandler(memberId) {
             return
         }
 
-        formData.append("memberId", memberId);
         formData.append("nickname", nickname);
         formData.append("description", description);
         formData.append("grade", grade);

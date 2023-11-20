@@ -432,43 +432,35 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public List<TopBoardDto> getTopBoardDtos() {
-        List<Object[]> results = postRepository.findTopPostDtos();
-        List<Board> boardResult = boardRepository.findTopSixBoard();
+        List<Board> boardResult = boardRepository.findTopBoard(6);
 
-        List<TopPostDto> topPostDtoList = results.stream()
-                .map((result) -> {
-                    Integer postId = (Integer) result[0];
-                    String title = (String) result[1];
-                    Integer boardId = (Integer) result[2];
-                    String boardType = (String) result[3];
-                    return TopPostDto.builder()
-                            .id(postId)
-                            .title(title)
-                            .boardId(boardId)
-                            .boardType(boardType)
-                            .build();
-                })
-                .collect(Collectors.toList());
+        List<TopBoardDto> topBoardDtos = new ArrayList<>();
+        for (int i = 0; i < boardResult.size(); i++) {
+            Board board = boardResult.get(i);
 
-        List<TopBoardDto> topBoard = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            Integer boardId = i;
-            Board board = boardResult.get(boardId);
-
-            List<TopPostDto> filteredList = topPostDtoList.stream()
-                    .filter(topPostDto -> topPostDto.getBoardId().equals(boardId + 1))
-                    .collect(Collectors.toList());
-
-            topBoard.add(TopBoardDto.builder()
-                    .boardAlias(board.getAlias())
+            TopBoardDto topBoardDto = TopBoardDto.builder()
                     .boardType(board.getType())
-                    .topPostDtoList(filteredList)
-                    .build());
+                    .boardAlias(board.getAlias())
+                    .topPostDtoList(
+                            postRepository.findTopPostDtos(board.getId(), 10).stream()
+                                    .map((result) -> {
+                                        Integer postId = (Integer) result[0];
+                                        String title = (String) result[1];
+                                        String boardType = (String) result[2];
+                                        return TopPostDto.builder()
+                                                .id(postId)
+                                                .title(title)
+                                                .boardType(boardType)
+                                                .build();
+                                    })
+                                    .collect(Collectors.toList())
+                    )
+                    .build();
+            topBoardDtos.add(topBoardDto);
         }
 
-        return topBoard;
+        return topBoardDtos;
     }
-
 
     /*
       모든 게시판에 대한 상위 20개 게시글 출력 함수.(인기글 등록 시간 기준)
@@ -476,7 +468,7 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public List<TopHotPostDto> getTopHotPostDtos() {
-        List<Object[]> results = postRepository.findTopHotPostDtos();
+        List<Object[]> results = postRepository.findTopHotPostDtos(20);
 
         return results.stream()
                 .map((result) -> {

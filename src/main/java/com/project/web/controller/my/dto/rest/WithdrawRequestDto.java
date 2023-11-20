@@ -10,6 +10,5 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 public class WithdrawRequestDto {
-    @NotNull(message = "멤버 아이디를 입력해주세요.")
-    private Integer memberId;
+
 }

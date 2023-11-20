@@ -155,7 +155,8 @@
 }
 
 .comment-list-wrapper {
-    padding-top: 10px;
+    padding-bottom: 40px;
+    border-bottom: 3px solid #837ed7;
 }
 
 .comment-count {
@@ -181,8 +182,7 @@
 }
 
 #commentFragment {
-    padding-bottom: 40px;
-    border-bottom: 3px solid #837ed7;
+    padding-top: 10px;
 }
 
 .comment-header {

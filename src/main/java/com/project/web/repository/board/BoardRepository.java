@@ -17,14 +17,8 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
     Optional<Board> findByType(String type);
 
     /*
-     상위 6개 게시판 출력
+     상위 count개 게시판 출력
     */
-    @Query("select b from Board b where b.id <= 6")
-    List<Board> findTopSixBoard();
-
-    /*
-     상위 30개 게시판 출력
-    */
-    @Query("select b from Board b where b.id <= 30")
-    List<Board> findTopThirtyBoard();
+    @Query("select b from Board b where b.id <= :count")
+    List<Board> findTopBoard(Integer count);
 }

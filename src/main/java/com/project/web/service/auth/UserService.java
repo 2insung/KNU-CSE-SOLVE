@@ -17,7 +17,7 @@ public class UserService {
       유저 정보 출력 함수.
      * 현재 로그인한 유저의 정보를 출력하는 함수.
     */
-    public UserDto getUser(PrincipalDetails principal) {
+    public UserDto getUserDto(PrincipalDetails principal) {
         if (principal != null) {
             Object result = memberRepository.findUserDtoByMemberId(principal.getUserId())
                     .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));

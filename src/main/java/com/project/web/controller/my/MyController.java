@@ -30,7 +30,7 @@ public class MyController {
                      @AuthenticationPrincipal PrincipalDetails principal,
                      Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 사용자 정보를 제공.
@@ -49,7 +49,7 @@ public class MyController {
                          @AuthenticationPrincipal PrincipalDetails principal,
                          Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 이전 사용자 정보를 제공.
@@ -68,7 +68,7 @@ public class MyController {
                          @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
                          Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 사용자의 게시글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
@@ -106,7 +106,7 @@ public class MyController {
                             @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
                             Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 사용자의 댓글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
@@ -143,12 +143,8 @@ public class MyController {
                            @AuthenticationPrincipal PrincipalDetails principal,
                            Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
-
-        // 사용자의 id 정보
-        Integer myId = myService.getMemberId(memberId);
-        model.addAttribute("myId", myId);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
@@ -162,12 +158,8 @@ public class MyController {
                              @AuthenticationPrincipal PrincipalDetails principal,
                              Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
-
-        // 사용자의 id 정보
-        Integer myId = myService.getMemberId(memberId);
-        model.addAttribute("myId", myId);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
         model.addAttribute("isMy", memberId.equals(userDto.getUserId()));

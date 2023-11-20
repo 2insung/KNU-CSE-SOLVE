@@ -25,7 +25,7 @@ public class MyRestController {
     private final CommentService commentService;
     private final FileService fileService;
 
-    @PreAuthorize("isAuthenticated() and ((#updateMyRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PostMapping("/api/update-my")
     public ResponseEntity<UpdateMyResponseDto> updateMy(@Valid @ModelAttribute UpdateMyRequestDto updateMyRequestDto,
                                                         @AuthenticationPrincipal PrincipalDetails principal,
@@ -35,7 +35,7 @@ public class MyRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        Integer memberId = updateMyRequestDto.getMemberId();
+        Integer memberId = principal.getUserId();
         String nickname = updateMyRequestDto.getNickname();
         String imageURL = fileService.uploadImage(updateMyRequestDto.getFile());
         String description = updateMyRequestDto.getDescription();
@@ -100,7 +100,6 @@ public class MyRestController {
         Integer commentAuthorId = deleteMyCommentRequestDto.getCommentAuthorId();
         Integer currentPageNumber = deleteMyCommentRequestDto.getCurrentPageNumber();
 
-
         // 사용자 작성 댓글 삭제.
         commentService.deleteComment(postId, commentId);
 
@@ -117,31 +116,31 @@ public class MyRestController {
         );
     }
 
-    @PreAuthorize("isAuthenticated() and ((#updatePasswordRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PatchMapping("/api/update-my-password")
-    public ResponseEntity<UpdatePasswordResponseDto> deleteMyComment(@Valid @RequestBody UpdatePasswordRequestDto updatePasswordRequestDto,
-                                                                     @AuthenticationPrincipal PrincipalDetails principal,
-                                                                     BindingResult bindingResult) {
+    public ResponseEntity<UpdateMyPasswordResponseDto> deleteMyComment(@Valid @RequestBody UpdateMyPasswordRequestDto updateMyPasswordRequestDto,
+                                                                       @AuthenticationPrincipal PrincipalDetails principal,
+                                                                       BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             throw new Error400Exception(errorMessage);
         }
 
-        Integer memberId = updatePasswordRequestDto.getMemberId();
-        String currentPassword = updatePasswordRequestDto.getCurrentPassword();
-        String changePassword = updatePasswordRequestDto.getChangePassword();
+        Integer memberId = principal.getUserId();
+        String currentPassword = updateMyPasswordRequestDto.getCurrentPassword();
+        String changePassword = updateMyPasswordRequestDto.getChangePassword();
 
         // 사용자 비밀번호 변경 함수.
         myService.updatePassword(memberId, currentPassword, changePassword);
 
         return ResponseEntity.ok(
-                UpdatePasswordResponseDto.builder()
+                UpdateMyPasswordResponseDto.builder()
                         .memberId(memberId)
                         .build()
         );
     }
 
-    @PreAuthorize("isAuthenticated() and ((#withdrawRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PatchMapping("/api/withdraw")
     public ResponseEntity<WithdrawResponseDto> withdraw(@Valid @RequestBody WithdrawRequestDto withdrawRequestDto,
                                                         @AuthenticationPrincipal PrincipalDetails principal,
@@ -151,7 +150,7 @@ public class MyRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        Integer memberId = withdrawRequestDto.getMemberId();
+        Integer memberId = principal.getUserId();
         Boolean isSuccess = myService.withdraw(memberId);
         return ResponseEntity.ok(
                 WithdrawResponseDto.builder()

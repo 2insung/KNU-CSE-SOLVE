@@ -106,56 +106,21 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     int deleteByPostId(Integer postId);
 
     /*
-     상위 6개의 게시판의 상위 10개 게시글 출력 함수.
-     * 상위 10개의 게시글(생성시간 기준)을 상위 6개 게시판별로 출력하는 함수.
+     게시판의 상위 limit개 게시글 출력 함수.
+     * 상위 limit개의 게시글(생성시간 기준)을 출력하는 함수.
     */
     @Query(nativeQuery = true,
-            value = "(select p.id, pc.title, b.id as boardId, b.type from post p " +
+            value = "select p.id, pc.title, b.type from post p " +
                     "inner join board b on p.board_id = b.id  " +
                     "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 1 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) " +
-                    "union all " +
-                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
-                    "inner join board b on p.board_id = b.id  " +
-                    "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 2 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) " +
-                    "union all " +
-                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
-                    "inner join board b on p.board_id = b.id  " +
-                    "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 3 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) " +
-                    "union all " +
-                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
-                    "inner join board b on p.board_id = b.id  " +
-                    "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 4 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) " +
-                    "union all " +
-                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
-                    "inner join board b on p.board_id = b.id  " +
-                    "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 5 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) " +
-                    "union all " +
-                    "(select p.id, pc.title, b.id as boardId, b.type from post p " +
-                    "inner join board b on p.board_id = b.id  " +
-                    "inner join post_content pc on p.id = pc.post_id " +
-                    "where p.board_id = 6 " +
-                    "order by p.created_at DESC " +
-                    "limit 10) ")
-    List<Object[]> findTopPostDtos();
+                    "where p.board_id = :boardId " +
+                    "order by p.created_at desc " +
+                    "limit :limit")
+    List<Object[]> findTopPostDtos(Integer boardId, Integer limit);
 
     /*
      상위 인기 게시글 출력 함수.
-     * 모든 게시판 중에 상위 인기글(인기글 등록 시간 기준) 20개를 출력하는 함수.
+     * 모든 게시판 중에 상위 인기글(인기글 등록 시간 기준) limit개를 출력하는 함수.
     */
     @Query(nativeQuery = true,
             value = "select p.id, pc.title, b.type from post p " +
@@ -163,7 +128,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "inner join post_content pc on p.id = pc.post_id " +
                     "where p.is_hot = true " +
                     "order by p.hot_registered_time DESC " +
-                    "limit 20")
-    List<Object[]> findTopHotPostDtos();
+                    "limit :limit")
+    List<Object[]> findTopHotPostDtos(Integer limit);
 
 }

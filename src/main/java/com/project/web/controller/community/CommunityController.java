@@ -37,7 +37,7 @@ public class CommunityController {
     public String root(@AuthenticationPrincipal PrincipalDetails principal,
                        Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // board id가 1에서 6인 게시판의 상위 10개(등록 시간 기준)의 게시글
@@ -59,7 +59,7 @@ public class CommunityController {
                         @AuthenticationPrincipal PrincipalDetails principal,
                         Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
@@ -110,7 +110,7 @@ public class CommunityController {
                        @AuthenticationPrincipal PrincipalDetails principal,
                        Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
@@ -179,7 +179,6 @@ public class CommunityController {
         // 게시글 조회수 1 증가
         postService.incPostHit(postId);
 
-        model.addAttribute("postId", postId);
 
         return "community/PostPage";
     }
@@ -190,7 +189,7 @@ public class CommunityController {
                         @AuthenticationPrincipal PrincipalDetails principal,
                         Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보
@@ -215,7 +214,7 @@ public class CommunityController {
                           @AuthenticationPrincipal PrincipalDetails principal,
                           Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 현재 게시판의 정보
@@ -242,7 +241,7 @@ public class CommunityController {
                               @AuthenticationPrincipal PrincipalDetails principal,
                               Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 현재 페이지의 댓글 리스트의 정보 제공.
@@ -267,8 +266,6 @@ public class CommunityController {
         model.addAttribute("commentPageNumberList", commentPageNumberDtoList);
         model.addAttribute("commentPageNumber", pageNumber);
 
-        model.addAttribute("postId", postId);
-
         return "community/PostPage :: #commentFragment";
     }
 
@@ -277,7 +274,7 @@ public class CommunityController {
     public String manageBoard(@AuthenticationPrincipal PrincipalDetails principal,
                               Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
         // 게시판 생성 및 관리는 어드민에게만 권한이 있음.
 
@@ -288,7 +285,7 @@ public class CommunityController {
     public String allBoard(@AuthenticationPrincipal PrincipalDetails principal,
                            Model model) {
         // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUser(principal);
+        UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
         // 게시판에 대한 정보를 제공함. 일반, 과목으로 분류됨.
@@ -307,7 +304,7 @@ public class CommunityController {
 
     @GetMapping("/board-menu")
     public String boardList(Model model) {
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopThirtyBoardPreviewDtos();
+        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopBoardPreviewDtos();
         int totalBoardCount = boardPreviewDtoList.size();
         int chunkCount = totalBoardCount / 6;
 

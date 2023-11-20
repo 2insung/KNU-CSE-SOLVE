@@ -4,11 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class UpdatePasswordResponseDto {
+public class UpdateMyPasswordResponseDto {
     private final Integer memberId;
 
     @Builder
-    public UpdatePasswordResponseDto(Integer memberId){
+    public UpdateMyPasswordResponseDto(Integer memberId){
         this.memberId = memberId;
     }
 }

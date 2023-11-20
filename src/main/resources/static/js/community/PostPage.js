@@ -105,6 +105,7 @@ function saveRootComment(postId) {
                 },
                 success: function (response) {
                     readComment(postId, response.pageNumber)
+                    $("#rootContent").val('')
                 },
                 error: function (error) {
                     if (error.status === 401 || error.status === 403) {

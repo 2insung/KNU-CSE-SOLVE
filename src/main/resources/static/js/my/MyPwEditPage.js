@@ -1,6 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-function pwEdit(memberId) {
+function pwEdit() {
     if (confirm("비밀번호를 변경하시겠습니까?")) {
         var currentPassword = $("#currentPassword").val()
         var changePassword = $("#changePassword").val()
@@ -41,7 +41,6 @@ function pwEdit(memberId) {
                 url: "/api/update-my-password",
                 type: "PATCH",
                 data: JSON.stringify({
-                    memberId: memberId,
                     currentPassword: currentPassword,
                     changePassword: changePassword
                 }),

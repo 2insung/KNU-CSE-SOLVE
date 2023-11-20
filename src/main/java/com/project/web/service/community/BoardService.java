@@ -93,8 +93,8 @@ public class BoardService {
      * 상위 30개의 게시판의 정보를 출력하는 함수.
     */
     @Transactional(readOnly = true)
-    public List<BoardPreviewDto> getTopThirtyBoardPreviewDtos() {
-        List<Board> boardList = boardRepository.findTopThirtyBoard();
+    public List<BoardPreviewDto> getTopBoardPreviewDtos() {
+        List<Board> boardList = boardRepository.findTopBoard(30);
 
         return boardList.stream()
                 .map((board) ->
