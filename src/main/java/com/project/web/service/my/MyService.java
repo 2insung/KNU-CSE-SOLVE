@@ -96,7 +96,7 @@ public class MyService {
      * memberId에 해당하는 사용자 작성 게시글을 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public List<MyPostDto> getMyPostList(Integer memberId, Integer pageSize, Integer pageNumber) {
+    public List<MyPostDto> getMyPostList(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
@@ -112,7 +112,7 @@ public class MyService {
                     String resultBoardType = (String) result[4];
                     String resultBoardAlias = (String) result[5];
                     String resultTitle = (String) result[6];
-                    Boolean isMine = memberId != null && memberId.equals(resultPostAuthorId);
+                    Boolean isMine = userId != null && userId.equals(resultPostAuthorId);
 
                     return MyPostDto.builder()
                             .id(resultPostId)
@@ -147,7 +147,7 @@ public class MyService {
      * memberId에 해당하는 사용자 작성 댓글을 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public List<MyCommentDto> getMyCommentList(Integer memberId, Integer pageSize, Integer pageNumber) {
+    public List<MyCommentDto> getMyCommentList(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
             throw new Error404Exception("존재하지 않는 사용자입니다.");
         }
@@ -166,7 +166,7 @@ public class MyService {
                     String resultBoardType = (String) result[7];
                     String resultBoardAlias = (String) result[8];
                     String resultTitle = (String) result[9];
-                    Boolean isMine = memberId != null && memberId.equals(resultCommentAuthorId);
+                    Boolean isMine = userId != null && userId.equals(resultCommentAuthorId);
 
                     return MyCommentDto.builder()
                             .id(resultCommentId)

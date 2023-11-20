@@ -77,7 +77,9 @@ public class MyController {
         if (!pageNumber.equals(processedPageNumber)) {
             return "redirect:/my/post/" + memberId + "?page=" + processedPageNumber;
         }
-        List<MyPostDto> myPostDtoList = myService.getMyPostList(memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
+
+        Integer userId = principal != null ? principal.getUserId() : null;
+        List<MyPostDto> myPostDtoList = myService.getMyPostList(userId, memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("myPostList", myPostDtoList);
 
         // 사용자 게시글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
@@ -113,7 +115,9 @@ public class MyController {
         if (!pageNumber.equals(processedPageNumber)) {
             return "redirect:/my/comment/" + memberId + "?page=" + processedPageNumber;
         }
-        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(memberId, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
+
+        Integer userId = principal != null ? principal.getUserId() : null;
+        List<MyCommentDto> myCommentDtoList = myService.getMyCommentList(userId, memberId, MyConstants.COMMENT_PAGE_SIZE, pageNumber);
         model.addAttribute("myCommentList", myCommentDtoList);
 
         // 사용자 댓글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)

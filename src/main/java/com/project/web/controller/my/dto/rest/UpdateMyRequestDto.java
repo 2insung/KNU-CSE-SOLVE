@@ -20,6 +20,7 @@ public class UpdateMyRequestDto {
 
     private MultipartFile file;
 
+    @Size(max = 100, message = "자기소개는 100자 내로 입력해주세요.")
     private String description;
 
     private String grade;

@@ -30,6 +30,12 @@ function submitHandler(memberId) {
         if (file !== undefined) {
             formData.append("file", file);
         }
+
+        if (description.length > 100) {
+            alert("자기소개는 100자 내로 입력해주세요.")
+            return
+        }
+
         formData.append("memberId", memberId);
         formData.append("nickname", nickname);
         formData.append("description", description);
