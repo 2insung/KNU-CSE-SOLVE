@@ -2,6 +2,7 @@ package com.project.web.service.community;
 
 import com.project.web.controller.community.dto.post.*;
 import com.project.web.controller.community.dto.post.rest.IncPostRecommendResponseDto;
+import com.project.web.controller.community.dto.post.rest.IncPostScrapResponseDto;
 import com.project.web.domain.board.Board;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.member.Role;
@@ -38,6 +39,7 @@ public class PostService {
     private final PostRecommendCountRepository postRecommendCountRepository;
     private final PostCommentCountRepository postCommentCountRepository;
     private final PostRecommendMemberRepository postRecommendMemberRepository;
+    private final PostScrapMemberRepository postScrapMemberRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final CommentRecommendCountRepository commentRecommendCountRepository;
@@ -292,6 +294,7 @@ public class PostService {
         commentRecommendCountRepository.deleteByCommentIds(commentIds);
         commentRepository.deleteByIds(commentIds);
 
+        postScrapMemberRepository.deleteByPostId(postId);
         postRecommendMemberRepository.deleteByPostId(postId);
         postCommentCountRepository.deleteByPostId(postId);
         postRecommendCountRepository.deleteByPostId(postId);
@@ -390,7 +393,7 @@ public class PostService {
             if (postRecommendCount.getRecommendCount() >= 1) {
                 LocalDateTime now = LocalDateTime.now();
                 post.updateIsHot(true);
-                post.updateHotRegisteredTime(now);
+                post.updateHotRegisteredAt(now);
                 if (post.getCategory().equals("일반")) {
                     post.updateCategory("인기");
                 }
@@ -425,6 +428,42 @@ public class PostService {
     }
 
     /*
+      게시글 스크랩 수 증가 함수.
+     * 게시글의 스크랩 수를 1 증가시킴.
+    */
+    @Transactional
+    public IncPostScrapResponseDto incPostScrap(Integer userId, Integer postId) {
+        if (!postScrapMemberRepository.existsByPostAndMemberId(postId, userId)) {
+            Post post = postRepository.getReferenceById(postId);
+            Member member = memberRepository.getReferenceById(userId);
+
+            PostScrapMember postScrapMember = PostScrapMember.builder()
+                    .post(post)
+                    .member(member)
+                    .build();
+
+            postScrapMemberRepository.save(postScrapMember);
+
+            return IncPostScrapResponseDto.builder()
+                    .isSuccess(true)
+                    .build();
+        }
+        else {
+            return IncPostScrapResponseDto.builder()
+                    .isSuccess(false)
+                    .build();
+        }
+    }
+
+    @Transactional
+    public void deletePostScrap(Integer memberId, Integer postId) {
+
+        if (postScrapMemberRepository.deleteByPostAndMemberId(postId, memberId) == 0) {
+            throw new Error404Exception("존재하지 않는 게시글입니다.");
+        }
+    }
+
+    /*
       상위 6개 게시판의 상위 10개 게시글 출력 함수.(생성일 기준)
      * boardId가 1~6인 게시판의 상위 10개 게시글을 출력함.
      * 60개의 게시글을 얻은 다음, boardId가 같은 것끼리 분류하여 List로 만듦.
@@ -446,10 +485,12 @@ public class PostService {
                                     .map((result) -> {
                                         Integer postId = (Integer) result[0];
                                         String title = (String) result[1];
-                                        String boardType = (String) result[2];
+                                        LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                                        String boardType = (String) result[3];
                                         return TopPostDto.builder()
                                                 .id(postId)
                                                 .title(title)
+                                                .createdAt(resultCreatedAt)
                                                 .boardType(boardType)
                                                 .build();
                                     })
@@ -468,20 +509,28 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public List<TopHotPostDto> getTopHotPostDtos() {
-        List<Object[]> results = postRepository.findTopHotPostDtos(20);
+        List<Object[]> results = postRepository.findTopHotPostDtos(10);
 
         return results.stream()
                 .map((result) -> {
                     Integer postId = (Integer) result[0];
                     String title = (String) result[1];
-                    String boardType = (String) result[2];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                    String boardType = (String) result[3];
+                    Integer recommendCount = (Integer) result[4];
+                    Integer commentCount = (Integer) result[5];
 
                     return TopHotPostDto.builder()
                             .id(postId)
                             .title(title)
+                            .createdAt(resultCreatedAt)
                             .boardType(boardType)
+                            .recommendCount(recommendCount)
+                            .commentCount(commentCount)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
+
+
 }

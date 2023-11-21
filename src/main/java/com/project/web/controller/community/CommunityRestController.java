@@ -227,4 +227,22 @@ public class CommunityRestController {
                         .build()
         );
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/scrap")
+    public ResponseEntity<IncPostScrapResponseDto> scrap(@RequestBody IncPostScrapRequestDto incPostScrapRequestDto,
+                                                         @AuthenticationPrincipal PrincipalDetails principal,
+                                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
+        Integer postId = incPostScrapRequestDto.getPostId();
+        Integer userId = principal.getUserId();
+
+        IncPostScrapResponseDto incPostScrapResponseDto = postService.incPostScrap(userId, postId);
+        return ResponseEntity.ok(incPostScrapResponseDto);
+    }
+
 }

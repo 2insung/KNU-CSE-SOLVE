@@ -44,15 +44,15 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "hot_registered_time")
-    private LocalDateTime hotRegisteredTime;
+    @Column(name = "hot_registered_at")
+    private LocalDateTime hotRegisteredAt;
 
     @Column(name = "category", nullable = false)
     private String category;
 
     @Builder
     public Post(Integer id, Member member, Board board, Integer priority, Boolean isNotice,
-                Boolean isHot, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime hotRegisteredTime, String category) {
+                Boolean isHot, Boolean isDeleted, LocalDateTime createdAt, LocalDateTime hotRegisteredAt, String category) {
         this.id = id;
         this.member = member;
         this.board = board;
@@ -61,7 +61,7 @@ public class Post {
         this.isHot = isHot;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
-        this.hotRegisteredTime = hotRegisteredTime;
+        this.hotRegisteredAt = hotRegisteredAt;
         this.category = category;
     }
 
@@ -77,8 +77,8 @@ public class Post {
         this.isHot = isHot;
     }
 
-    public void updateHotRegisteredTime(LocalDateTime hotRegisteredTime) {
-        this.hotRegisteredTime = hotRegisteredTime;
+    public void updateHotRegisteredAt(LocalDateTime hotRegisteredAt) {
+        this.hotRegisteredAt = hotRegisteredAt;
     }
 
     public void updateCategory(String category) {

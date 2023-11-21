@@ -49,18 +49,13 @@
     object-fit: cover;
 }
 
-.edit-wrapper button{
-    font-size: 14px;
-    padding: 5px;
-    margin-top: 5px;
-    background-color: white;
-    color: #837ed7;
-    border: 1px solid #837ed7;
-    border-radius: 3px;
+.edit-button-wrapper{
+    display: flex;
+    justify-content: flex-end;
 }
 
-.edit-wrapper .submit-button{
-    font-size: 16px;
+.edit-button-wrapper .submit-button{
+    font-size: 14px;
     padding: 5px;
     margin-top: 5px;
     background-color: #837ed7;

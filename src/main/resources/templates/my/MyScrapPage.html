@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{my/MyLayout}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/my/MyScrapPage.css}"/>
+</head>
+<th:block layout:fragment="contentFragment">
+    <div class="my-scrap">
+        <div class="my-scrap-header">
+            <span>작성한 글</span>
+        </div>
+        <div class="my-scrap-list-wrapper">
+            <ul>
+                <li th:each="myScrap : ${myScrapList}">
+                    <div class="my-scrap-wrapper">
+                        <div class="scrap-header">
+                            <div class="alias" th:text="${myScrap.boardAlias}"></div>
+                            <button th:if="${myScrap.isMine}"
+                                    th:data-postId="${myScrap.id}"
+                                    th:data-memberId="${myScrap.memberId}"
+                                    th:data-currentPageNumber="${myScrapPageNumber}"
+                                    onclick="deleteMyScrap(
+                                    this.getAttribute('data-postId'),
+                                    this.getAttribute('data-memberId'),
+                                    this.getAttribute('data-currentPageNumber'))">삭제
+                            </button>
+                        </div>
+                        <div class="title">
+                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myScrap.boardType}, postId=${myScrap.id})}"
+                               th:text="${myScrap.title}"></a>
+                        </div>
+                        <div class="createdAt" th:text="${myScrap.createdAt}"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="my-scrap-page-number-list-wrapper">
+            <ul>
+                <li th:each="myScrapPage, stat : ${myScrapPageNumberList}" th:if="${myScrapPage.pageNumber != null}">
+                    <a th:href="@{/my/scrap/{memberId}(memberId=${myScrapPage.memberId}, page=${myScrapPage.pageNumber})}">
+                        <div th:if="${stat.first}" class="my-scrap-arrow-left">◀</div>
+                        <div th:if="${!stat.first && !stat.last}"
+                             th:text="${myScrapPage.pageNumber}"
+                             th:class="${myScrapPage.pageNumber == myScrapPageNumber} ? 'my-scrap-active-page-number' : 'my-scrap-page-number'"></div>
+                        <div th:if="${stat.last}" class="my-scrap-arrow-right">▶</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="scriptFragment">
+    <script th:src="@{/js/my/MyScrapPage.js}"></script>
+</th:block>
+</html>
+

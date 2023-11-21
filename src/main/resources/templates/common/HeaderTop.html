@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="headerTopFragment">
+    <div class="head">
+        <h1 class="logo">
+            <a th:href="@{/}">KNU CSE Solve</a>
+        </h1>
+        <div th:if="${#authentication.isAuthenticated() and #authentication.principal != 'anonymousUser'}"
+             class="user-image">
+            <img onclick="toggleDropdown()" src='/img/avatar.png'>
+            <div class="drop-down-menu" style="display: none;">
+                <a th:href="@{/my/{userId}(userId=${#authentication.principal.userId})}">마이페이지</a>
+                <form th:action="@{/logout}" th:method="post">
+                    <button type="submit">로그아웃</button>
+                </form>
+            </div>
+        </div>
+        <div th:unless="${#authentication.isAuthenticated() and #authentication.principal != 'anonymousUser'}"
+             class="user-image">
+            <img onclick="toggleDropdown()" src='/img/avatar.png'>
+            <div class="drop-down-menu" style="display: none;">
+                <a th:href="@{/login}">로그인 하기</a>
+            </div>
+        </div>
+    </div>
+</header>
+</html>

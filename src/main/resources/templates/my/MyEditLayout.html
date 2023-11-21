@@ -24,10 +24,9 @@
 <th:block th:replace="common/HeaderTop :: headerFragment"></th:block>
 <main>
     <div class="my-side-bar">
-        <a th:href="@{/my/{memberId}(memberId=${memberId})}">사용자 정보</a>
-        <a th:href="@{/my/post/{memberId}(memberId=${memberId})}">작성한 글</a>
-        <a th:href="@{/my/comment/{memberId}(memberId=${memberId})}">작성한 댓글</a>
-        <a th:href="@{/my/scrap/{memberId}(memberId=${memberId})}">스크랩한 글</a>
+        <a  th:href="@{/my-edit/{memberId}(memberId=${memberId})}">내 정보 수정</a>
+        <a th:href="@{/my-edit/pw/{memberId}(memberId=${memberId})}">비밀번호 수정</a>
+        <a th:href="@{/my-edit/withdraw/{memberId}(memberId=${memberId})}">계정 비활성화</a>
     </div>
     <th:block layout:fragment="contentFragment"></th:block>
 </main>

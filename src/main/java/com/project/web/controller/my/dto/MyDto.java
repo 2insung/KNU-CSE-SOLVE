@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyDto {
+    private final Integer id;
     private final Boolean isDeleted;
     private final String username;
     private final String role;
@@ -22,10 +23,13 @@ public class MyDto {
     private final String admissionYear;
     private final String department;
     private final String createdAt;
+    private final Boolean isMine;
 
     @Builder
-    private MyDto(Boolean isDeleted, String username, Role role, String nickname, String profileImage,
-                  String description, String grade, String admissionYear, String department, LocalDateTime createdAt) {
+    private MyDto(Integer id, Boolean isDeleted, String username, Role role, String nickname, String profileImage,
+                  String description, String grade, String admissionYear, String department, LocalDateTime createdAt,
+                  Boolean isMine) {
+        this.id = id;
         this.isDeleted = isDeleted;
         this.username = username;
         this.role = role.getName();
@@ -36,5 +40,6 @@ public class MyDto {
         this.admissionYear = admissionYear;
         this.department = department;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
+        this.isMine = isMine;
     }
 }

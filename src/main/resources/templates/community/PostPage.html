@@ -41,6 +41,11 @@
             </div>
         </div>
         <div class="post-option-wrapper">
+            <button class="post-scrap-button"
+                    th:data-postId="${post.id}"
+                    onclick="scrap(this.getAttribute('data-postId'))">
+                스크랩
+            </button>
             <div class="post-rewrite-button" th:if="${post.isMine || (user.isLogin && user.isAdmin)}">
                 <a th:href="@{/rewrite/{postAuthorId}/{boardType}/{postId}(postAuthorId=${post.authorId},boardType=${board.type},postId=${post.id})}">
                     수정

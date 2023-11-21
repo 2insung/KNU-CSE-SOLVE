@@ -1,44 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{community/GeneralLayout}">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <title>KNU CSE Solve</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link th:href="@{/css/common/Common.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/RootHeaderNav.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/HeaderTop.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/Footer.css}" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/community/RootPage.css}"/>
 </head>
-<th:block layout:fragment="contentFragment">
+<body>
+<th:block th:replace="common/RootHeader :: rootHeaderFragment"></th:block>
+<main>
     <div class="root">
-        <section class="left-section">
-            <div class="hot-post-list-wrapper">
-                <div class="hot-post-list-header">
-                    <div class="hot-post-list-header-text">
-                        실시간 인기글
+        <section class="top-section">
+            <section class="left-section">
+                <div class="hot-post-list-wrapper">
+                    <div class="hot-post-list-header">
+                        <div class="hot-post-list-header-text">
+                            실시간 인기글
+                        </div>
+                    </div>
+                    <ul>
+                        <li th:each="post : ${topHotPostList}">
+                            <div class="top-div">
+                                <a th:text="${post.title}"
+                                   th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
+                                <span th:text="${post.createdAt}"></span>
+                            </div>
+                            <div class="bottom-div">
+                                <div class="post-count">
+                                    <div class="post-count-image">
+                                        <img src='/img/thumb.png'>
+                                    </div>
+                                    <span th:text="${post.recommendCount}"></span>
+                                </div>
+                                <div class="post-count">
+                                    <div class="post-count-image">
+                                        <img src='/img/comment.png'>
+                                    </div>
+                                    <span th:text="${post.commentCount}"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section class="right-section">
+                <div class="user-wrapper">
+                    <div class="not-login" th:unless="${user.isLogin}">
+                        로그인 하세요.
+                    </div>
+                    <div class="login" th:if="${user.isLogin}">
+                        <div class="user-profile-image">
+                            <img th:src="${user.profileImage != null ? user.profileImage : '/img/tempProfile.jpg'}">
+                        </div>
+                        <div class="user-detail">
+                            <div class="user-nickname">
+                                <span th:text="${user.nickname}"></span>
+                            </div>
+                            <div class="user-username">
+                                <span th:text="${user.username}"></span>
+                            </div>
+                            <div class="user-option">
+                                <span><a th:href="@{/my/{userId}(userId=${user.userId})}">나의 프로필</a></span>
+                                <span>|</span>
+                                <span><a th:href="@{/my-edit/{userId}(userId=${user.userId})}">내 정보 수정</a></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-button">
+                        <a th:href="@{/login}" th:unless="${user.isLogin}">
+                            <div class="login-button">로그인</div>
+                        </a>
+                        <form th:if="${user.isLogin}" th:action="@{/logout}" th:method="post">
+                            <button type="submit">로그아웃</button>
+                        </form>
                     </div>
                 </div>
-                <ul>
-                    <li th:each="post : ${topHotPostList}">
-                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
-                    </li>
-                </ul>
-            </div>
+                <div class="comment-list-wrapper">
+                    <div class="comment-list-header">
+                        <div class="comment-list-header-text">
+                            실시간 댓글
+                        </div>
+                    </div>
+                    <ul>
+                        <li th:each="comment : ${topCommetList}">
+                            <div class="comment-wrapper">
+                                <div class="comment-header">
+                                    <div class="alias" th:text="${comment.alias}"></div>
+                                </div>
+                                <div class="title">
+                                    <a th:href="@{/board/{boardType}/post/{postId}(boardType=${comment.boardType}, postId=${comment.postId})}"
+                                       th:text="${comment.title}"></a>
+                                </div>
+                                <div th:unless="${comment.isDeleted}" class="body" th:text="${comment.body}"></div>
+                                <div th:if="${comment.isDeleted}" class="deleted-body">삭제된 댓글입니다.</div>
+                                <div class="createdAt" th:text="${comment.createdAt}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
         </section>
-        <section class="right-section">
+        <section class="bottom-section">
             <div th:each="topBoard : ${topBoardList}" class="post-list-wrapper">
                 <div class="post-list-header">
                     <div class="post-list-header-text">
-                        <a th:text="${topBoard.boardAlias}" th:href="@{/board/{boardType}(boardType=${topBoard.boardType})}"></a>
+                        <a th:text="${topBoard.boardAlias}"
+                           th:href="@{/board/{boardType}(boardType=${topBoard.boardType})}"></a>
                     </div>
                 </div>
                 <ul>
                     <li th:each="post : ${topBoard.topPostDtoList}">
-                        <a th:text="${post.title}" th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
+                        <a th:text="${post.title}"
+                           th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
                     </li>
                 </ul>
             </div>
         </section>
     </div>
-</th:block>
-<th:block layout:fragment="scriptFragment">
-    <script th:src="@{/js/community/RootPage.js}"></script>
-</th:block>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/common/Footer.js}"></script>
+<script th:src="@{/js/common/HeaderTop.js}"></script>
+<script th:src="@{/js/community/RootPage.js}"></script>
+</body>
 </html>
-

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="rootHeaderNavFragment">
+    <div class="root-header-nav-wrapper">
+        <nav id="rootNav">
+            <div id="rootBoardMenuList" class="root-board-list">
+                <dl th:each="boardMenu : ${boardMenuList}">
+                    <dt th:each="boardPreview : ${boardMenu.boardPreviewList}">
+                        <a th:href="@{/board/{boardType}(boardType=${boardPreview.type})}"
+                           th:text="${boardPreview.alias}"></a>
+                    </dt>
+                </dl>
+            </div>
+            <div class="more">
+                <a th:href="@{/all-board}">게시판 더보기</a>
+            </div>
+        </nav>
+    </div>
+</th:block>
+</html>

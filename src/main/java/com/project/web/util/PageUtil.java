@@ -32,7 +32,7 @@ public class PageUtil {
 
 
         int nextPageNumber = (((currentPageNumber - 1) / PAGE_NUMBER_LIST_SIZE) + 1) * PAGE_NUMBER_LIST_SIZE + 1;
-        if (nextPageNumber <= totalPage) {
+        if (nextPageNumber <= totalPage && nextPageNumber <= PAGE_NUMBER_LIMIT) {
             pageNumberList.add(nextPageNumber);
         }
         else {

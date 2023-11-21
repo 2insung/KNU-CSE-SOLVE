@@ -39,14 +39,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     */
     @Query(nativeQuery = true,
             value = "select p.id, p.member_id, p.is_notice, p.is_hot, p.created_at, md.nickname, md.profile_image, pc.title, pc.summary, pc.thumbnail, phc.hit_count, prc.recommend_count, pcc.comment_count  " +
-                    "from (select tp.id from post tp where tp.board_id = :boardId and tp.is_hot = true order by tp.hot_registered_time desc limit :limit offset :offset) as temp " +
+                    "from (select tp.id from post tp where tp.board_id = :boardId and tp.is_hot = true order by tp.hot_registered_at desc limit :limit offset :offset) as temp " +
                     "inner join post p on p.id = temp.id " +
                     "inner join member_detail md on p.member_id = md.member_id " +
                     "inner join post_content pc on p.id = pc.post_id " +
                     "inner join post_hit_count phc on p.id = phc.post_id " +
                     "inner join post_recommend_count prc on p.id = prc.post_id " +
                     "inner join post_comment_count pcc on p.id = pcc.post_id " +
-                    "order by p.hot_registered_time desc")
+                    "order by p.hot_registered_at desc")
     List<Object[]> findHotPostPreviewDtosByBoardId(Integer boardId, Integer limit, Integer offset);
 
     /*
@@ -110,7 +110,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * 상위 limit개의 게시글(생성시간 기준)을 출력하는 함수.
     */
     @Query(nativeQuery = true,
-            value = "select p.id, pc.title, b.type from post p " +
+            value = "select p.id, pc.title, p.created_at, b.type from post p " +
                     "inner join board b on p.board_id = b.id  " +
                     "inner join post_content pc on p.id = pc.post_id " +
                     "where p.board_id = :boardId " +
@@ -123,11 +123,13 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * 모든 게시판 중에 상위 인기글(인기글 등록 시간 기준) limit개를 출력하는 함수.
     */
     @Query(nativeQuery = true,
-            value = "select p.id, pc.title, b.type from post p " +
+            value = "select p.id, pc.title, p.created_at, b.type, prc.recommend_count, pcc.comment_count from post p " +
                     "inner join board b on p.board_id = b.id  " +
                     "inner join post_content pc on p.id = pc.post_id " +
+                    "inner join post_recommend_count prc on p.id = prc.post_id " +
+                    "inner join post_comment_count pcc on p.id = pcc.post_id " +
                     "where p.is_hot = true " +
-                    "order by p.hot_registered_time DESC " +
+                    "order by p.hot_registered_at desc " +
                     "limit :limit")
     List<Object[]> findTopHotPostDtos(Integer limit);
 

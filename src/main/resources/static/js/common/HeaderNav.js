@@ -1,15 +1,5 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-function toggleDropdown() {
-    var dropdownContent = document.getElementById("dropDownMenu");
-    if (dropdownContent.style.display === "block") {
-        dropdownContent.style.display = "none";
-    }
-    else {
-        dropdownContent.style.display = "block";
-    }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
     const menu = document.getElementById('boardMenu');
     const hamburger = document.getElementById('hamburger');

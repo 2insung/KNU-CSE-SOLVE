@@ -26,7 +26,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
      사용자 정보 출력 함수.
      * '/my/{memberId}' 에서 출력할 사용자 정보.
     */
-    @Query("SELECT m.isDeleted, ma.username, ma.role, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
+    @Query("SELECT m.id, m.isDeleted, ma.username, ma.role, md.nickname, md.profileImage, md.description, md.grade, md.admissionYear, md.department, md.createdAt " +
             "FROM Member m " +
             "INNER JOIN MemberAuth ma ON ma.member = m " +
             "INNER JOIN MemberDetail md ON md.member = m " +
@@ -37,7 +37,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
      사용자 정보 출력 함수.
      * 현재 로그인한 사용자의 정보를 출력함.
     */
-    @Query("select ma.role, md.nickname, md.profileImage " +
+    @Query("select ma.username, ma.role, md.nickname, md.profileImage " +
             "from Member m " +
             "inner join MemberAuth ma on ma.member = m " +
             "inner join MemberDetail md on md.member = m " +

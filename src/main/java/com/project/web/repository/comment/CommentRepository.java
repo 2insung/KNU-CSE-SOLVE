@@ -46,6 +46,20 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Object[]> findMyCommentDtosByMemberId(Integer memberId, Integer limit, Integer offset);
 
     /*
+      상위 limit개 댓글 출력 함수.
+      * 댓글의 생성일의 내림차순 기준 상위 limit개의 댓글을 출력함.
+    */
+    @Query(nativeQuery = true,
+            value = "select c.post_id, c.body, c.created_at, c.is_deleted, b.type, b.alias, pc.title " +
+                    "from comment c " +
+                    "inner join post p on c.post_id = p.id " +
+                    "inner join post_content pc on p.id = pc.post_id " +
+                    "inner join board b on b.id = p.board_id " +
+                    "order by c.created_at desc " +
+                    "limit :limit")
+    List<Object[]> findTopCommentDtos(Integer limit);
+
+    /*
      사용자 작성 댓글 개수 출력 함수.
      * 사용자가 작성한 전체 댓글 개수를 구하는 것이 아님.
      * 만약 사용자가 작성한 댓글 수가 limit 개를 넘어간다면, count는 limit까지만 함.

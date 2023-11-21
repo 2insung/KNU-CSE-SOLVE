@@ -7,8 +7,8 @@ import java.util.List;
 
 @Getter
 public class BoardMenuDto {
-    private Integer number;
-    private List<BoardPreviewDto> boardPreviewList;
+    private final Integer number;
+    private final List<BoardPreviewDto> boardPreviewList;
 
     @Builder
     public BoardMenuDto(Integer number, List<BoardPreviewDto> boardPreviewList) {

@@ -116,6 +116,36 @@ public class MyRestController {
         );
     }
 
+    @PreAuthorize("isAuthenticated() and ((#deleteMyScrapRequestDto.memberId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
+    @DeleteMapping("/api/delete-my-scrap")
+    public ResponseEntity<DeleteMyScrapResponseDto> deleteMyScrap(@Valid @RequestBody DeleteMyScrapRequestDto deleteMyScrapRequestDto,
+                                                                  @AuthenticationPrincipal PrincipalDetails principal,
+                                                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
+        Integer postId = deleteMyScrapRequestDto.getPostId();
+        Integer memberId = deleteMyScrapRequestDto.getMemberId();
+        Integer currentPageNumber = deleteMyScrapRequestDto.getCurrentPageNumber();
+
+        // 사용자 작성 댓글 삭제.
+        postService.deletePostScrap(memberId, postId);
+
+        // 삭제 후 보여줄 사용자 댓글 페이지의 번호를 계산함.
+        Integer totalMyScrapCount = myService.getMyScrapsCount(memberId);
+        Integer totalPageNumber = ((totalMyScrapCount - 1) / MyConstants.POST_PAGE_SIZE) + 1;
+        Integer pageNumber = totalPageNumber < currentPageNumber ? totalPageNumber : currentPageNumber;
+
+        return ResponseEntity.ok(
+                DeleteMyScrapResponseDto.builder()
+                        .memberId(memberId)
+                        .pageNumber(pageNumber)
+                        .build()
+        );
+    }
+
     @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PatchMapping("/api/update-my-password")
     public ResponseEntity<UpdateMyPasswordResponseDto> deleteMyComment(@Valid @RequestBody UpdateMyPasswordRequestDto updateMyPasswordRequestDto,

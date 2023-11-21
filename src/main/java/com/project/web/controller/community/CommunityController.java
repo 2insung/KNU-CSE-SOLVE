@@ -1,12 +1,12 @@
 package com.project.web.controller.community;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.auth.dto.UserDto;
 import com.project.web.controller.community.dto.board.BoardDto;
 import com.project.web.controller.community.dto.board.BoardMenuDto;
 import com.project.web.controller.community.dto.board.BoardPreviewDto;
 import com.project.web.controller.community.dto.comment.CommentDto;
 import com.project.web.controller.community.dto.comment.CommentPageNumberDto;
+import com.project.web.controller.community.dto.comment.TopCommentDto;
 import com.project.web.controller.community.dto.post.*;
 import com.project.web.service.auth.UserService;
 import com.project.web.service.community.BoardService;
@@ -36,9 +36,27 @@ public class CommunityController {
     @GetMapping("/")
     public String root(@AuthenticationPrincipal PrincipalDetails principal,
                        Model model) {
-        // 현재 로그인한 유저의 정보
+        model.addAttribute("root", true);
+
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
+
+        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopBoardPreviewDtos();
+        int totalBoardCount = boardPreviewDtoList.size();
+        int chunkCount = totalBoardCount / 6;
+
+        List<BoardMenuDto> boardMenuDtoList = new ArrayList<>();
+        for (int i = 0; i < chunkCount; i++) {
+            boardMenuDtoList.add(
+                    BoardMenuDto.builder()
+                            .number(i)
+                            .boardPreviewList(boardPreviewDtoList.subList(6 * i, 6 * (i + 1)))
+                            .build()
+            );
+        }
+
+        model.addAttribute("boardMenuList", boardMenuDtoList);
+
 
         // board id가 1에서 6인 게시판의 상위 10개(등록 시간 기준)의 게시글
         // 총 60개의 게시글이 존재함, board id로 분류함.
@@ -48,6 +66,9 @@ public class CommunityController {
         // 모든 게시판에서 상위 20개(인기글 등록 시간 기준)의 인기글
         List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPostDtos();
         model.addAttribute("topHotPostList", topHotPostDtoList);
+
+        List<TopCommentDto> topCommentDtoList = commentService.getTopCommentDtos();
+        model.addAttribute("topCommetList", topCommentDtoList);
 
         return "community/RootPage";
     }
@@ -178,7 +199,6 @@ public class CommunityController {
 
         // 게시글 조회수 1 증가
         postService.incPostHit(postId);
-
 
         return "community/PostPage";
     }
@@ -321,6 +341,6 @@ public class CommunityController {
         //Heeader의 Board Menu List에 사용됨.
         model.addAttribute("boardMenuList", boardMenuDtoList);
 
-        return "common/Header :: #boardMenuList";
+        return "common/HeaderNav :: #boardMenuList";
     }
 }

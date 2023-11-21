@@ -9,6 +9,7 @@ import com.project.web.repository.member.MemberDetailRepository;
 import com.project.web.repository.member.MemberPasswordRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostRepository;
+import com.project.web.repository.post.PostScrapMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class MyService {
     private final MemberPasswordRepository memberPasswordRepository;
     private final MemberDetailRepository memberDetailRepository;
     private final PostRepository postRepository;
+    private final PostScrapMemberRepository postScrapMemberRepository;
     private final CommentRepository commentRepository;
 
     /*
@@ -34,22 +36,25 @@ public class MyService {
      * memberId에 해당하는 사용자 정보를 출력하는 함수임.
     */
     @Transactional(readOnly = true)
-    public MyDto getMyDto(Integer memberId) {
+    public MyDto getMyDto(Integer userId, Integer memberId) {
         Object result = memberRepository.findMyDtoById(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
         Object[] arr = (Object[]) result;
-        Boolean resultIsDeleted = (Boolean) arr[0];
-        String resultUsername = (String) arr[1];
-        Role resultRole = (Role) arr[2];
-        String resultUserNickname = (String) arr[3];
-        String resultProfileImage = (String) arr[4];
-        String resultDescription = (String) arr[5];
-        String resultGrade = (String) arr[6];
-        String resultAdmissionYear = (String) arr[7];
-        String resultDepartment = (String) arr[8];
-        LocalDateTime resultCreatedAt = (LocalDateTime) arr[9];
+        Integer resultMemberId = (Integer) arr[0];
+        Boolean resultIsDeleted = (Boolean) arr[1];
+        String resultUsername = (String) arr[2];
+        Role resultRole = (Role) arr[3];
+        String resultUserNickname = (String) arr[4];
+        String resultProfileImage = (String) arr[5];
+        String resultDescription = (String) arr[6];
+        String resultGrade = (String) arr[7];
+        String resultAdmissionYear = (String) arr[8];
+        String resultDepartment = (String) arr[9];
+        LocalDateTime resultCreatedAt = (LocalDateTime) arr[10];
+        Boolean isMine = userId != null && userId.equals(memberId);
 
         return MyDto.builder()
+                .id(resultMemberId)
                 .isDeleted(resultIsDeleted)
                 .username(resultUsername)
                 .role(resultRole)
@@ -60,6 +65,7 @@ public class MyService {
                 .admissionYear(resultAdmissionYear)
                 .department(resultDepartment)
                 .createdAt(resultCreatedAt)
+                .isMine(isMine)
                 .build();
     }
 
@@ -199,6 +205,53 @@ public class MyService {
         }
 
         return commentRepository.countMyComments(memberId, commentCountLimit);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MyScrapDto> getMyScrapDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
+
+        List<Object[]> results = postScrapMemberRepository.findMyScrapDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
+
+        return results.stream()
+                .map((result) -> {
+                    Integer resultPostId = (Integer) result[0];
+                    Integer resultMemberId = (Integer) result[1];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                    String resultBoardType = (String) result[3];
+                    String resultAlias = (String) result[4];
+                    String resultTitle = (String) result[5];
+                    Boolean isMine = userId != null && userId.equals(resultMemberId);
+
+                    return MyScrapDto.builder()
+                            .id(resultPostId)
+                            .memberId(resultMemberId)
+                            .createdAt(resultCreatedAt)
+                            .boardType(resultBoardType)
+                            .boardAlias(resultAlias)
+                            .title(resultTitle)
+                            .isMine(isMine)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    /*
+       사용자 작성 댓글 개수 출력 함수.
+      * memberId 해당하는 사용자 작성 댓글의 개수를 출력하는 함수임.
+      * 만약 사용자가 작성한 댓글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
+     */
+    @Transactional(readOnly = true)
+    public Integer getMyScrapsCount(Integer memberId) {
+        Integer scrapCountLimit = 20000;
+
+        if (!memberRepository.existsById(memberId)) {
+            throw new Error404Exception("존재하지 않는 사용자입니다.");
+        }
+
+        return postScrapMemberRepository.countMyScraps(memberId, scrapCountLimit);
     }
 
     /*

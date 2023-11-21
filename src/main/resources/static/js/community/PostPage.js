@@ -126,13 +126,13 @@ function saveRootComment(postId) {
 
 function saveChildComment(commentId, postId, currentPageNumber) {
     if (confirm("등록하시겠습니까?")) {
-        var body = document.getElementById('childComment-' + commentId).value;
-        if (body === "") {
+        var commentBody = document.getElementById('childComment-' + commentId).value;
+        if (commentBody === "") {
             alert("내용을 입력해주세요.")
             return;
         }
 
-        if (body.length > 500) {
+        if (commentBody.length > 500) {
             alert("댓글은 500자 내로 입력해주세요.")
             return;
         }
@@ -145,7 +145,7 @@ function saveChildComment(commentId, postId, currentPageNumber) {
                     postId: postId,
                     parentCommentId: commentId,
                     currentPageNumber: currentPageNumber,
-                    commentBody: body
+                    commentBody: commentBody
                 }),
                 contentType: 'application/json',
                 dataType: 'json',
@@ -270,6 +270,44 @@ function incCommentRecommend(commentId) {
                     }
                     else {
                         alert("이미 추천한 게시글입니다.")
+                    }
+                },
+                error: function (error) {
+                    if (error.status === 401 || error.status === 403) {
+                        var redirectUrl = error.getResponseHeader("Redirect-URL");
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        }
+                    }
+                    else {
+                        alert(error.responseText)
+                    }
+                }
+            }
+        )
+    }
+}
+
+function scrap(postId) {
+    if (confirm("스크랩하시겠습니까?")) {
+        $.ajax(
+            {
+                url: "/api/scrap",
+                type: "POST",
+                data: JSON.stringify({
+                    postId: postId
+                }),
+                contentType: 'application/json',
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRF-TOKEN", token);
+                },
+                success: function (response) {
+                    if (response.isSuccess) {
+                        alert("스크랩되었습니다.")
+                    }
+                    else {
+                        alert("이미 스크랩한 게시글입니다.")
                     }
                 },
                 error: function (error) {

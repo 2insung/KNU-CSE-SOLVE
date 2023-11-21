@@ -1,6 +1,7 @@
 package com.project.web.service.community;
 
 import com.project.web.controller.community.dto.comment.CommentDto;
+import com.project.web.controller.community.dto.comment.TopCommentDto;
 import com.project.web.controller.community.dto.comment.rest.IncCommentRecommendResponseDto;
 import com.project.web.domain.comment.Comment;
 import com.project.web.domain.comment.CommentRecommendCount;
@@ -81,6 +82,32 @@ public class CommentService {
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TopCommentDto> getTopCommentDtos() {
+        List<Object[]> results = commentRepository.findTopCommentDtos(5);
+
+        return results.stream().
+                map((result) -> {
+                    Integer resultPostId = (Integer) result[0];
+                    String resultBody = (String) result[1];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                    Boolean resultIsDeleted = (Boolean) result[3];
+                    String resultBoardType = (String) result[4];
+                    String resultAlias = (String) result[5];
+                    String title = (String) result[6];
+
+                    return TopCommentDto.builder()
+                            .postId(resultPostId)
+                            .body(resultBody)
+                            .createdAt(resultCreatedAt)
+                            .isDeleted(resultIsDeleted)
+                            .boardType(resultBoardType)
+                            .alias(resultAlias)
+                            .title(title)
+                            .build();
+                }).collect(Collectors.toList());
     }
 
     /*

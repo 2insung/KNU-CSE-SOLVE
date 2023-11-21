@@ -6,8 +6,20 @@
 }
 
 .user-status{
+    display: flex;
+    justify-content: space-between;
     height: 2rem;
 }
+
+.user-status a{
+    display: inline-block;
+    width: 100px;
+    padding: 5px 5px;
+    text-align: center;
+    background-color: #8e88da;
+    color: white;
+}
+
 
 .my-base{
     margin-bottom: 20px;

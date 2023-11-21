@@ -1,7 +1,6 @@
 package com.project.web.service.auth;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.auth.dto.UserDto;
 import com.project.web.domain.member.Role;
 import com.project.web.exception.Error404Exception;
 import com.project.web.repository.member.MemberRepository;
@@ -23,13 +22,15 @@ public class UserService {
                     .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
             Object[] arr = (Object[]) result;
-            Role role = (Role) arr[0];
-            String nickname = (String) arr[1];
-            String profileImage = (String) arr[2];
+            String username = (String) arr[0];
+            Role role = (Role) arr[1];
+            String nickname = (String) arr[2];
+            String profileImage = (String) arr[3];
 
             return UserDto.builder()
                     .isLogin(true)
                     .userId(principal.getUserId())
+                    .username(username)
                     .nickname(nickname)
                     .profileImage(profileImage)
                     .isAdmin(role.name().equals("ROLE_ADMIN"))

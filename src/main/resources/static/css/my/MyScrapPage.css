@@ -1,0 +1,91 @@
+.my-scrap{
+    width: 1100px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.my-scrap-header{
+    border-bottom: 3px solid #837ed7;
+    padding-bottom: 3px;
+}
+
+.my-scrap-header span{
+    color: #6f6abe;
+    font-weight: bolder;
+    font-size: 2rem;
+}
+
+.my-post-list-wrapper{
+}
+
+.my-scrap-wrapper{
+    padding: 10px 20px;
+    border-bottom: 1px solid #837ed7;
+}
+
+.scrap-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.scrap-header .alias{
+    font-size: 13px;
+}
+
+.scrap-header button{
+    font-size: 10px;
+    padding: 2px;
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+}
+
+.my-scrap-wrapper .title{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.my-scrap-wrapper .title a:hover{
+    text-decoration: underline;
+}
+
+.my-scrap-wrapper .createdAt{
+    font-size: 12px;
+}
+
+.my-scrap-page-number-list-wrapper ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.my-scrap-page-number-list-wrapper li {
+    margin: 0 5px;
+}
+
+.my-scrap-active-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: #837ed7;
+    color: white;
+}
+
+.my-scrap-page-number {
+    font-size: 14px;
+    padding: 5px 10px;
+    border: 1px solid #837ed7;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.my-scrap-arrow-left {
+    color: #837ed7;
+}
+
+.my-scrap-arrow-right {
+    color: #837ed7;
+}
+

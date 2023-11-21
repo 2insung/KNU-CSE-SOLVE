@@ -1,7 +1,6 @@
 package com.project.web.controller.my;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.auth.dto.UserDto;
 import com.project.web.controller.my.dto.*;
 import com.project.web.service.auth.UserService;
 import com.project.web.service.my.MyService;
@@ -34,7 +33,8 @@ public class MyController {
         model.addAttribute("user", userDto);
 
         // 사용자 정보를 제공.
-        MyDto myDto = myService.getMyDto(memberId);
+        Integer userId = principal != null ? principal.getUserId() : null;
+        MyDto myDto = myService.getMyDto(userId, memberId);
         model.addAttribute("my", myDto);
 
         // 현재 보고있는 사용자가 나와 일치하는지.
@@ -44,7 +44,7 @@ public class MyController {
     }
 
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
-    @GetMapping("/my/edit/{memberId}")
+    @GetMapping("/my-edit/{memberId}")
     public String myEdit(@PathVariable(name = "memberId") Integer memberId,
                          @AuthenticationPrincipal PrincipalDetails principal,
                          Model model) {
@@ -137,8 +137,45 @@ public class MyController {
         return "my/MyCommentPage";
     }
 
+    @GetMapping("/my/scrap/{memberId}")
+    public String myScrap(@PathVariable(name = "memberId") Integer memberId,
+                          @AuthenticationPrincipal PrincipalDetails principal,
+                          @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
+                          Model model) {
+        // 현재 로그인한 유저의 정보
+        UserDto userDto = userService.getUserDto(principal);
+        model.addAttribute("user", userDto);
+
+        // 사용자의 댓글 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+        Integer myScrapCount = myService.getMyScrapsCount(memberId);
+        Integer processedPageNumber = PageUtil.processPageNumber(myScrapCount, MyConstants.POST_PAGE_SIZE, pageNumber);
+        if (!pageNumber.equals(processedPageNumber)) {
+            return "redirect:/my/scrap/" + memberId + "?page=" + processedPageNumber;
+        }
+
+        Integer userId = principal != null ? principal.getUserId() : null;
+        List<MyScrapDto> myScrapDtos = myService.getMyScrapDtos(userId, memberId, MyConstants.POST_PAGE_SIZE, pageNumber);
+        model.addAttribute("myScrapList", myScrapDtos);
+
+        // 사용자 댓글 페이지 리스트에 대한 정보를 제공. (현재 페이지, 페이지 리스트)
+        List<Integer> myScrapPageNumberList = PageUtil.makePageNumberList(myScrapCount, MyConstants.POST_PAGE_SIZE, pageNumber);
+        List<MyScrapPageNumberDto> myScrapPageNumberDtoList = myScrapPageNumberList.stream().map(
+                (number) -> MyScrapPageNumberDto.builder()
+                        .memberId(memberId)
+                        .pageNumber(number)
+                        .build()
+        ).collect(Collectors.toList());
+        model.addAttribute("myScrapPageNumber", pageNumber);
+        model.addAttribute("myScrapPageNumberList", myScrapPageNumberDtoList);
+
+        // 현재 보고있는 사용자가 나와 일치하는지.
+        model.addAttribute("isMy", memberId.equals(userDto.getUserId()));
+
+        return "my/MyScrapPage";
+    }
+
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
-    @GetMapping("/my/pwEdit/{memberId}")
+    @GetMapping("/my-edit/pw/{memberId}")
     public String myPwEdit(@PathVariable(name = "memberId") Integer memberId,
                            @AuthenticationPrincipal PrincipalDetails principal,
                            Model model) {
@@ -153,7 +190,7 @@ public class MyController {
     }
 
     @PreAuthorize("isAuthenticated() and #memberId == authentication.principal.userId")
-    @GetMapping("/my/withdraw/{memberId}")
+    @GetMapping("/my-edit/withdraw/{memberId}")
     public String myWithdraw(@PathVariable(name = "memberId") Integer memberId,
                              @AuthenticationPrincipal PrincipalDetails principal,
                              Model model) {

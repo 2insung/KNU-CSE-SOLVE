@@ -9,6 +9,7 @@
     <div class="my">
         <div class="user-status">
             <h2 th:text="${my.isDeleted ? '탈퇴한 회원입니다.' : ''}"></h2>
+            <a th:if="${my.isMine}" th:href="@{/my-edit/{memberId}(memberId=${my.id})}">수정하기</a>
         </div>
         <div class="my-base">
             <div class="my-picture">

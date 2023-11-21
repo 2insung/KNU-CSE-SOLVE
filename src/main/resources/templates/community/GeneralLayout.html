@@ -13,7 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <link th:href="@{/css/common/Common.css}" rel="stylesheet"/>
-    <link th:href="@{/css/common/Header.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/HeaderTop.css}" rel="stylesheet"/>
+    <link th:href="@{/css/common/HeaderNav.css}" rel="stylesheet"/>
     <link th:href="@{/css/common/Footer.css}" rel="stylesheet"/>
     <link th:href="@{/css/community/GeneralLayout.css}" rel="stylesheet"/>
 </head>
@@ -24,7 +25,8 @@
 </main>
 <th:block th:replace="common/Footer :: footerFragment"></th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script th:src="@{/js/common/Header.js}"></script>
+<script th:src="@{/js/common/HeaderNav.js}"></script>
+<script th:src="@{/js/common/HeaderTop.js}"></script>
 <script th:src="@{/js/common/Footer.js}"></script>
 <th:block layout:fragment="scriptFragment"></th:block>
 </body>

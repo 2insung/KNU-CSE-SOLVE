@@ -1,6 +1,6 @@
 var token = $("meta[name='_csrf']").attr("content")
 
-function makeBoard() {
+function saveBoard() {
     var alias = $("#alias").val()
     var type = $("#type").val()
     var category = $("#category").val()
@@ -10,14 +10,17 @@ function makeBoard() {
         alert("이름을 입력해주세요.")
         return
     }
+
     if (type === "") {
         alert("타입을 입력해주세요.")
         return
     }
+
     if (category === "") {
         alert("카테고리를 입력해주세요.")
         return
     }
+
     if (description === "") {
         alert("설명을 입력해주세요.")
         return
