@@ -1,12 +1,12 @@
 package com.project.web.service.my;
 
-import com.project.web.controller.my.dto.*;
+import com.project.web.controller.my.dto.view.*;
 import com.project.web.domain.member.*;
-import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
+import com.project.web.exception.Error500Exception;
 import com.project.web.repository.comment.CommentRepository;
+import com.project.web.repository.member.MemberAuthRepository;
 import com.project.web.repository.member.MemberDetailRepository;
-import com.project.web.repository.member.MemberPasswordRepository;
 import com.project.web.repository.member.MemberRepository;
 import com.project.web.repository.post.PostRepository;
 import com.project.web.repository.post.PostScrapMemberRepository;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class MyService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
-    private final MemberPasswordRepository memberPasswordRepository;
+    private final MemberAuthRepository memberAuthRepository;
     private final MemberDetailRepository memberDetailRepository;
     private final PostRepository postRepository;
     private final PostScrapMemberRepository postScrapMemberRepository;
@@ -38,27 +38,28 @@ public class MyService {
     @Transactional(readOnly = true)
     public MyDto getMyDto(Integer userId, Integer memberId) {
         Object result = memberRepository.findMyDtoById(memberId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 사용자입니다."));
+
         Object[] arr = (Object[]) result;
-        Integer resultMemberId = (Integer) arr[0];
+        Integer resultId = (Integer) arr[0];
         Boolean resultIsDeleted = (Boolean) arr[1];
-        String resultUsername = (String) arr[2];
-        Role resultRole = (Role) arr[3];
-        String resultUserNickname = (String) arr[4];
-        String resultProfileImage = (String) arr[5];
-        String resultDescription = (String) arr[6];
-        String resultGrade = (String) arr[7];
-        String resultAdmissionYear = (String) arr[8];
-        String resultDepartment = (String) arr[9];
-        LocalDateTime resultCreatedAt = (LocalDateTime) arr[10];
+        LocalDateTime resultCreatedAt = (LocalDateTime) arr[2];
+        String resultUsername = (String) arr[3];
+        Role resultRole = (Role) arr[4];
+        String resultNickname = (String) arr[5];
+        String resultProfileImage = (String) arr[6];
+        String resultDescription = (String) arr[7];
+        String resultGrade = (String) arr[8];
+        String resultAdmissionYear = (String) arr[9];
+        String resultDepartment = (String) arr[10];
         Boolean isMine = userId != null && userId.equals(memberId);
 
         return MyDto.builder()
-                .id(resultMemberId)
+                .id(resultId)
                 .isDeleted(resultIsDeleted)
                 .username(resultUsername)
                 .role(resultRole)
-                .nickname(resultUserNickname)
+                .nickname(resultNickname)
                 .profileImage(resultProfileImage)
                 .description(resultDescription)
                 .grade(resultGrade)
@@ -76,7 +77,7 @@ public class MyService {
     @Transactional(readOnly = true)
     public MyEditDto getMyEditDto(Integer memberId) {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 사용자입니다."));
 
         String resultNickname = memberDetail.getNickname();
         String resultProfileImage = memberDetail.getProfileImage();
@@ -102,30 +103,30 @@ public class MyService {
     @Transactional(readOnly = true)
     public List<MyPostDto> getMyPostDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+            throw new Error500Exception("존재하지 않는 사용자입니다.");
         }
 
         List<Object[]> results = postRepository.findMyPostDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
-                    Integer resultPostId = (Integer) result[0];
-                    Integer resultPostAuthorId = (Integer) result[1];
+                    Integer resultId = (Integer) result[0];
+                    Integer resultAuthorId = (Integer) result[1];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
-                    Integer resultBoardId = (Integer) result[3];
-                    String resultBoardType = (String) result[4];
-                    String resultBoardAlias = (String) result[5];
-                    String resultTitle = (String) result[6];
-                    Boolean isMine = userId != null && userId.equals(resultPostAuthorId);
+                    String resultTitle = (String) result[3];
+                    Integer resultBoardId = (Integer) result[4];
+                    String resultBoardType = (String) result[5];
+                    String resultBoardAlias = (String) result[6];
+                    Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return MyPostDto.builder()
-                            .id(resultPostId)
-                            .authorId(resultPostAuthorId)
+                            .id(resultId)
+                            .authorId(resultAuthorId)
                             .createdAt(resultCreatedAt)
+                            .title(resultTitle)
                             .boardId(resultBoardId)
                             .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
-                            .title(resultTitle)
                             .isMine(isMine)
                             .build();
                 })
@@ -142,7 +143,7 @@ public class MyService {
         Integer postCountLimit = 20000;
 
         if (!memberRepository.existsById(memberId)) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+            throw new Error500Exception("존재하지 않는 사용자입니다.");
         }
 
         return postRepository.countMyPosts(memberId, postCountLimit);
@@ -155,36 +156,34 @@ public class MyService {
     @Transactional(readOnly = true)
     public List<MyCommentDto> getMyCommentDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+            throw new Error500Exception("존재하지 않는 사용자입니다.");
         }
 
         List<Object[]> results = commentRepository.findMyCommentDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
-                    Integer resultCommentId = (Integer) result[0];
-                    Integer resultCommentAuthorId = (Integer) result[1];
+                    Integer resultId = (Integer) result[0];
+                    Integer resultAuthorId = (Integer) result[1];
                     Integer resultPostId = (Integer) result[2];
                     Boolean resultIsDeleted = (Boolean) result[3];
                     String resultBody = (String) result[4];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[5]).toLocalDateTime();
-                    Integer resultBoardId = (Integer) result[6];
-                    String resultBoardType = (String) result[7];
-                    String resultBoardAlias = (String) result[8];
-                    String resultTitle = (String) result[9];
-                    Boolean isMine = userId != null && userId.equals(resultCommentAuthorId);
+                    String resultBoardType = (String) result[6];
+                    String resultBoardAlias = (String) result[7];
+                    String resultTitle = (String) result[8];
+                    Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return MyCommentDto.builder()
-                            .id(resultCommentId)
-                            .authorId(resultCommentAuthorId)
+                            .id(resultId)
+                            .authorId(resultAuthorId)
                             .postId(resultPostId)
                             .isDeleted(resultIsDeleted)
                             .body(resultBody)
                             .createdAt(resultCreatedAt)
-                            .boardId(resultBoardId)
                             .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
-                            .title(resultTitle)
+                            .postTitle(resultTitle)
                             .isMine(isMine)
                             .build();
                 })
@@ -207,31 +206,36 @@ public class MyService {
         return commentRepository.countMyComments(memberId, commentCountLimit);
     }
 
+    /*
+       사용자 스크랩 게시글 개수 출력 함수.
+      * memberId 해당하는 사용자 스크랩 게시글의 개수를 출력하는 함수임.
+      * 만약 사용자가 작성한 게시글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
+     */
     @Transactional(readOnly = true)
     public List<MyScrapDto> getMyScrapDtos(Integer userId, Integer memberId, Integer pageSize, Integer pageNumber) {
         if (!memberRepository.existsById(memberId)) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+            throw new Error500Exception("존재하지 않는 사용자입니다.");
         }
 
         List<Object[]> results = postScrapMemberRepository.findMyScrapDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
                 .map((result) -> {
-                    Integer resultPostId = (Integer) result[0];
-                    Integer resultMemberId = (Integer) result[1];
+                    Integer resultMemberId = (Integer) result[0];
+                    Integer resultPostId = (Integer) result[1];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
-                    String resultBoardType = (String) result[3];
-                    String resultAlias = (String) result[4];
-                    String resultTitle = (String) result[5];
+                    String resultTitle = (String) result[3];
+                    String resultBoardType = (String) result[4];
+                    String resultBoardAlias = (String) result[5];
                     Boolean isMine = userId != null && userId.equals(resultMemberId);
 
                     return MyScrapDto.builder()
-                            .id(resultPostId)
                             .memberId(resultMemberId)
+                            .postId(resultPostId)
                             .createdAt(resultCreatedAt)
-                            .boardType(resultBoardType)
-                            .boardAlias(resultAlias)
                             .title(resultTitle)
+                            .boardType(resultBoardType)
+                            .boardAlias(resultBoardAlias)
                             .isMine(isMine)
                             .build();
                 })
@@ -239,33 +243,19 @@ public class MyService {
     }
 
     /*
-       사용자 작성 댓글 개수 출력 함수.
-      * memberId 해당하는 사용자 작성 댓글의 개수를 출력하는 함수임.
-      * 만약 사용자가 작성한 댓글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
+       사용자 스크랩 게시글 개수 출력 함수.
+      * memberId 해당하는 사용자 스크랩 게시글의 개수를 출력하는 함수임.
+      * 만약 사용자가 스크랩한 게시글이 20000개가 넘어갈 경우 20000개의 레코드만 계산함.
      */
     @Transactional(readOnly = true)
     public Integer getMyScrapsCount(Integer memberId) {
         Integer scrapCountLimit = 20000;
 
         if (!memberRepository.existsById(memberId)) {
-            throw new Error404Exception("존재하지 않는 사용자입니다.");
+            throw new Error500Exception("존재하지 않는 사용자입니다.");
         }
 
         return postScrapMemberRepository.countMyScraps(memberId, scrapCountLimit);
-    }
-
-    /*
-      사용자 id 출력 함수.
-     * memberId에 해당하는 사용자 id를 출력하는 함수임.
-    */
-    @Transactional(readOnly = true)
-    public Integer getMemberId(Integer memberId) {
-        if (memberRepository.existsById(memberId)) {
-            return memberId;
-        }
-        else {
-            return null;
-        }
     }
 
     /*
@@ -277,11 +267,11 @@ public class MyService {
     public void updateMemberDetail(Integer memberId, String nickname, String profileImage, String grade, String description,
                                    String admissionYear, String department) {
         MemberDetail memberDetail = memberDetailRepository.findByMember_Id(memberId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 사용자입니다."));
 
         if (nickname != null) {
             if (!memberDetail.getNickname().equals(nickname) && memberDetailRepository.existsByNickname(nickname)) {
-                throw new Error404Exception("이미 존재하는 닉네임입니다.");
+                throw new Error500Exception("이미 존재하는 닉네임입니다.");
             }
             memberDetail.updateNickname(nickname);
         }
@@ -300,14 +290,14 @@ public class MyService {
    */
     @Transactional
     public void updatePassword(Integer memberId, String currentPassword, String changePassword) {
-        MemberPassword memberPassword = memberPasswordRepository.findByMemberId(memberId)
+        MemberAuth memberAuth = memberAuthRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new Error404Exception("존재하지 않는 사용자입니다."));
 
-        if (!passwordEncoder.matches(currentPassword, memberPassword.getPassword())) {
+        if (!passwordEncoder.matches(currentPassword, memberAuth.getPassword())) {
             throw new Error404Exception("현재 비밀번호가 일치하지 않습니다.");
         }
 
-        memberPassword.updatePassword(passwordEncoder.encode(changePassword));
+        memberAuth.updatePassword(passwordEncoder.encode(changePassword));
     }
 
     /*

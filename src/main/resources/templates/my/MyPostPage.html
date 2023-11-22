@@ -39,12 +39,12 @@
         </div>
         <div class="my-post-page-number-list-wrapper">
             <ul>
-                <li th:each="myPostPage, stat : ${myPostPageNumberList}" th:if="${myPostPage.pageNumber != null}">
-                    <a th:href="@{/my/post/{memberId}(memberId=${myPostPage.memberId}, page=${myPostPage.pageNumber})}">
+                <li th:each="pageNumber, stat : ${myPostPageNumberList}" th:if="${pageNumber != null}">
+                    <a th:href="@{/my/post/{memberId}(memberId=${memberId}, page=${pageNumber})}">
                         <div th:if="${stat.first}" class="my-post-arrow-left">◀</div>
                         <div th:if="${!stat.first && !stat.last}"
-                             th:text="${myPostPage.pageNumber}"
-                             th:class="${myPostPage.pageNumber == myPostPageNumber} ? 'my-post-active-page-number' : 'my-post-page-number'"></div>
+                             th:text="${pageNumber}"
+                             th:class="${pageNumber == myPostPageNumber} ? 'my-post-active-page-number' : 'my-post-page-number'"></div>
                         <div th:if="${stat.last}" class="my-post-arrow-right">▶</div>
                     </a>
                 </li>

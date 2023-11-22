@@ -25,16 +25,25 @@ public class MemberAuth {
     @Size(max = 50)
     private String username;
 
+    @Column(name = "password", nullable = false)
+    @Size(max = 200)
+    private String password;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Builder
-    public MemberAuth(Integer id, Member member, String username, Role role) {
+    public MemberAuth(Integer id, Member member, String username, String password, Role role) {
         this.id = id;
         this.member = member;
         this.username = username;
+        this.password = password;
         this.role = role;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
 }

@@ -28,8 +28,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         Object[] arr = (Object[]) result;
         Integer resultMemberId = (Integer) arr[0];
         String resultUsername = (String) arr[1];
-        Role resultRole = (Role) arr[2];
-        String resultPassword = (String) arr[3];
+        String resultPassword = (String) arr[2];
+        Role resultRole = (Role) arr[3];
 
         return PrincipalDetails.builder()
                 .userId(resultMemberId)

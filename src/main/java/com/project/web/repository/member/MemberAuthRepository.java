@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface MemberAuthRepository extends JpaRepository<MemberAuth, Integer> {
     Boolean existsByUsername(String username);
+
+    @Query("select ma from MemberAuth ma where ma.member.id = :memberId")
+    Optional<MemberAuth> findByMemberId(Integer memberId);
 }

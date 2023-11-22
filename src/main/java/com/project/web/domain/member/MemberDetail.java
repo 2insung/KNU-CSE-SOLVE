@@ -42,18 +42,9 @@ public class MemberDetail {
     @Column(name = "department")
     private String department;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @Builder
     public MemberDetail(Integer id, Member member, String nickname, String profileImage, String description,
-                        String grade, String admissionYear, String department, LocalDateTime createdAt,
-                        LocalDateTime updatedAt) {
+                        String grade, String admissionYear, String department) {
         this.id = id;
         this.member = member;
         this.nickname = nickname;
@@ -62,8 +53,6 @@ public class MemberDetail {
         this.grade = grade;
         this.admissionYear = admissionYear;
         this.department = department;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public void updateNickname(String nickname) {

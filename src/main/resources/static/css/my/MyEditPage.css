@@ -30,6 +30,16 @@
     margin-bottom: 10px
 }
 
+.edit-wrapper button{
+    display: block;
+    margin: 5px;
+    font-size: 12px;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border: 1px solid #6f6abe;
+    color: #6f6abe;
+}
+
 .edit-profile-image{
     display: flex;
 }

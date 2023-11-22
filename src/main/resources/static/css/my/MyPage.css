@@ -84,7 +84,8 @@
 .my-description .description{
     margin-top: 10px;
     width: 100%;
-    height: 300px;
-    border-radius: 3px;
-    border: 1px solid #b4b2f6;
+    height: 150px;
+    border-radius: 5px;
+    border: 2px solid #b4b2f6;
+    padding: 10px;
 }

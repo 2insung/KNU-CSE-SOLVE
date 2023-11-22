@@ -46,10 +46,11 @@ header {
 .drop-down-menu a,
 .drop-down-menu button {
     color: black;
-    padding: 12px 16px;
+    padding: 6px 8px;
     text-decoration: none;
     display: block;
     border-bottom: 1px solid #8e88da;
+    font-weight: bold;
 }
 
 .drop-down-menu a:hover,

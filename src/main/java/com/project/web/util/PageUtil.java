@@ -24,7 +24,7 @@ public class PageUtil {
         int totalPage = ((entityCount - 1) / pageSize) + 1;
         int firstPageNumber = ((currentPageNumber - 1) / PAGE_NUMBER_LIST_SIZE) * PAGE_NUMBER_LIST_SIZE + 1;
         int lastPageNumber = (((currentPageNumber - 1) / PAGE_NUMBER_LIST_SIZE) + 1) * PAGE_NUMBER_LIST_SIZE;
-        int endPageNumber = totalPage < lastPageNumber ? totalPage : lastPageNumber;
+        int endPageNumber = Math.min(totalPage, lastPageNumber);
 
         for (int i = firstPageNumber; i < endPageNumber + 1; i++) {
             pageNumberList.add(i);
@@ -43,7 +43,7 @@ public class PageUtil {
 
     public static Integer processPageNumber(Integer entityCount, Integer pageSize, Integer currentPageNumber) {
         int totalPage = ((entityCount - 1) / pageSize) + 1;
-        int maxPage = totalPage < PAGE_NUMBER_LIMIT ? totalPage : PAGE_NUMBER_LIMIT;
+        int maxPage = Math.min(totalPage, PAGE_NUMBER_LIMIT);
 
         if (currentPageNumber > maxPage) {
             return maxPage;

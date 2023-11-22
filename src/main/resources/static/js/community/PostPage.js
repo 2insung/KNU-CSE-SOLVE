@@ -288,11 +288,11 @@ function incCommentRecommend(commentId) {
     }
 }
 
-function scrap(postId) {
+function incScrapCount(postId) {
     if (confirm("스크랩하시겠습니까?")) {
         $.ajax(
             {
-                url: "/api/scrap",
+                url: "/api/inc-post-scrap",
                 type: "POST",
                 data: JSON.stringify({
                     postId: postId
@@ -305,6 +305,7 @@ function scrap(postId) {
                 success: function (response) {
                     if (response.isSuccess) {
                         alert("스크랩되었습니다.")
+                        $("#postScrapCount").replaceWith(response.scrapCount)
                     }
                     else {
                         alert("이미 스크랩한 게시글입니다.")

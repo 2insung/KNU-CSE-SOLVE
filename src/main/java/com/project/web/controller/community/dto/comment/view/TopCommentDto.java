@@ -1,4 +1,4 @@
-package com.project.web.controller.community.dto.comment;
+package com.project.web.controller.community.dto.comment.view;
 
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
@@ -8,21 +8,26 @@ import java.time.LocalDateTime;
 
 @Getter
 public class TopCommentDto {
+    // domain : Comment
     private final Integer postId;
     private final String body;
     private final String createdAt;
     private final Boolean isDeleted;
+    // domain : Board
     private final String boardType;
     private final String boardAlias;
-    private final String boardTitle;
+    // domain : PostContent
+    private final String postTitle;
 
     @Builder
     public TopCommentDto(Integer postId, String body, LocalDateTime createdAt, Boolean isDeleted, String boardType,
-                         String boardAlias, String boardTitle) {
+                         String boardAlias, String postTitle) {
         this.postId = postId;
+        this.body = body;
+        this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
         this.isDeleted = isDeleted;
         this.boardType = boardType;
-        this.body = body.length() > 50 ? body.substring(0, 50) + "..." : body;
-        this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
+        this.boardAlias = boardAlias;
+        this.postTitle = postTitle;
     }
 }

@@ -31,7 +31,7 @@
                         </div>
                         <div class="title">
                             <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myComment.boardType}, postId=${myComment.postId})}"
-                               th:text="${myComment.title}"></a>
+                               th:text="${myComment.postTitle}"></a>
                         </div>
                         <div th:unless="${myComment.isDeleted}" class="body" th:text="${myComment.body}"></div>
                         <div th:if="${myComment.isDeleted}" class="deleted-body">삭제된 댓글입니다.</div>
@@ -42,13 +42,13 @@
         </div>
         <div class="my-comment-page-number-list-wrapper">
             <ul>
-                <li th:each="myCommentPage, stat : ${myCommentPageNumberList}"
-                    th:if="${myCommentPage.pageNumber != null}">
-                    <a th:href="@{/my/comment/{memberId}(memberId=${myCommentPage.memberId}, page=${myCommentPage.pageNumber})}">
+                <li th:each="pageNumber, stat : ${myCommentPageNumberList}"
+                    th:if="${pageNumber != null}">
+                    <a th:href="@{/my/comment/{memberId}(memberId=${memberId}, page=${pageNumber})}">
                         <div th:if="${stat.first}" class="my-comment-arrow-left">◀</div>
                         <div th:if="${!stat.first && !stat.last}"
-                             th:text="${myCommentPage.pageNumber}"
-                             th:class="${myCommentPage.pageNumber == myCommentPageNumber} ? 'my-comment-active-page-number' : 'my-comment-page-number'"></div>
+                             th:text="${pageNumber}"
+                             th:class="${pageNumber == myCommentPageNumber} ? 'my-comment-active-page-number' : 'my-comment-page-number'"></div>
                         <div th:if="${stat.last}" class="my-comment-arrow-right">▶</div>
                     </a>
                 </li>

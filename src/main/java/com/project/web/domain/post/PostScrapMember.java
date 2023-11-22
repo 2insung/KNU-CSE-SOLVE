@@ -27,9 +27,9 @@ public class PostScrapMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(name = "scrap_at")
+    @Column(name = "scrapped_at")
     @CreationTimestamp
-    private LocalDateTime scrapAt;
+    private LocalDateTime scrappedAt;
 
     @Builder
     public PostScrapMember(Integer id, Post post, Member member) {

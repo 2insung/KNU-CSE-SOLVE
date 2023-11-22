@@ -27,9 +27,9 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PostMapping("/api/update-my")
-    public ResponseEntity<UpdateMyResponseDto> updateMy(@Valid @ModelAttribute UpdateMyRequestDto updateMyRequestDto,
-                                                        @AuthenticationPrincipal PrincipalDetails principal,
-                                                        BindingResult bindingResult) {
+    public ResponseEntity<UpdateMyResponseDto> updateMemberDetail(@Valid @ModelAttribute UpdateMyRequestDto updateMyRequestDto,
+                                                                  @AuthenticationPrincipal PrincipalDetails principal,
+                                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             throw new Error400Exception(errorMessage);
@@ -130,12 +130,12 @@ public class MyRestController {
         Integer memberId = deleteMyScrapRequestDto.getMemberId();
         Integer currentPageNumber = deleteMyScrapRequestDto.getCurrentPageNumber();
 
-        // 사용자 작성 댓글 삭제.
+        // 사용자 등록 스크랩 삭제.
         postService.deletePostScrap(memberId, postId);
 
-        // 삭제 후 보여줄 사용자 댓글 페이지의 번호를 계산함.
+        // 삭제 후 보여줄 사용자 스크랩 페이지의 번호를 계산함.
         Integer totalMyScrapCount = myService.getMyScrapsCount(memberId);
-        Integer totalPageNumber = ((totalMyScrapCount - 1) / MyConstants.POST_PAGE_SIZE) + 1;
+        Integer totalPageNumber = ((totalMyScrapCount - 1) / MyConstants.SCRAP_PAGE_SIZE) + 1;
         Integer pageNumber = totalPageNumber < currentPageNumber ? totalPageNumber : currentPageNumber;
 
         return ResponseEntity.ok(
@@ -148,9 +148,9 @@ public class MyRestController {
 
     @PreAuthorize("isAuthenticated() or hasRole('ROLE_ADMIN')")
     @PatchMapping("/api/update-my-password")
-    public ResponseEntity<UpdateMyPasswordResponseDto> deleteMyComment(@Valid @RequestBody UpdateMyPasswordRequestDto updateMyPasswordRequestDto,
-                                                                       @AuthenticationPrincipal PrincipalDetails principal,
-                                                                       BindingResult bindingResult) {
+    public ResponseEntity<UpdateMyPasswordResponseDto> updatePassword(@Valid @RequestBody UpdateMyPasswordRequestDto updateMyPasswordRequestDto,
+                                                                      @AuthenticationPrincipal PrincipalDetails principal,
+                                                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             throw new Error400Exception(errorMessage);
@@ -182,6 +182,7 @@ public class MyRestController {
 
         Integer memberId = principal.getUserId();
         Boolean isSuccess = myService.withdraw(memberId);
+
         return ResponseEntity.ok(
                 WithdrawResponseDto.builder()
                         .isSuccess(isSuccess)

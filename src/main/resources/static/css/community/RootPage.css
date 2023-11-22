@@ -237,6 +237,11 @@ main {
 }
 
 .comment-wrapper .body{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
     font-size: 14px;
     font-weight: bold;
 }

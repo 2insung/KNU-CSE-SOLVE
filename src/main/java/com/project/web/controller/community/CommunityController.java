@@ -1,13 +1,13 @@
 package com.project.web.controller.community;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.community.dto.board.BoardDto;
-import com.project.web.controller.community.dto.board.BoardMenuDto;
-import com.project.web.controller.community.dto.board.BoardPreviewDto;
-import com.project.web.controller.community.dto.comment.CommentDto;
-import com.project.web.controller.community.dto.comment.CommentPageNumberDto;
-import com.project.web.controller.community.dto.comment.TopCommentDto;
-import com.project.web.controller.community.dto.post.*;
+import com.project.web.controller.auth.dto.UserDto;
+import com.project.web.controller.community.dto.board.view.BoardDto;
+import com.project.web.controller.community.dto.board.view.BoardMenuDto;
+import com.project.web.controller.community.dto.board.view.BoardPreviewDto;
+import com.project.web.controller.community.dto.comment.view.CommentDto;
+import com.project.web.controller.community.dto.comment.view.TopCommentDto;
+import com.project.web.controller.community.dto.post.view.*;
 import com.project.web.service.auth.UserService;
 import com.project.web.service.community.BoardService;
 import com.project.web.service.community.CommentService;
@@ -28,68 +28,63 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class CommunityController {
+    private final UserService userService;
     private final BoardService boardService;
     private final PostService postService;
     private final CommentService commentService;
-    private final UserService userService;
 
     @GetMapping("/")
-    public String root(@AuthenticationPrincipal PrincipalDetails principal,
-                       Model model) {
-        model.addAttribute("root", true);
-
+    public String viewRootPage(@AuthenticationPrincipal PrincipalDetails principal,
+                               Model model) {
+        // 현재 로그인한 사용자 정보를 출력함.
         UserDto userDto = userService.getUserDto(principal);
         model.addAttribute("user", userDto);
 
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopBoardPreviewDtos();
-        int totalBoardCount = boardPreviewDtoList.size();
-        int chunkCount = totalBoardCount / 6;
-
-        List<BoardMenuDto> boardMenuDtoList = new ArrayList<>();
-        for (int i = 0; i < chunkCount; i++) {
-            boardMenuDtoList.add(
+        // 상위 30개의 게시판의 preview를 출력함.
+        // 총 5개씩 6개의 블록으로 나뉘어서 보여줌.
+        List<BoardPreviewDto> topBoardPreviewDtos = boardService.getTopBoardPreviewDtos(30);
+        List<BoardMenuDto> boardMenuDtos = new ArrayList<>();
+        for (int i = 0; i < topBoardPreviewDtos.size() / 6; i++) {
+            boardMenuDtos.add(
                     BoardMenuDto.builder()
                             .number(i)
-                            .boardPreviewList(boardPreviewDtoList.subList(6 * i, 6 * (i + 1)))
+                            .boardPreviewList(topBoardPreviewDtos.subList(6 * i, 6 * (i + 1)))
                             .build()
             );
         }
+        model.addAttribute("boardMenuList", boardMenuDtos);
 
-        model.addAttribute("boardMenuList", boardMenuDtoList);
+        // 모든 게시판에서 상위 20개(인기글 등록 시간 기준)의 인기글
+        List<TopHotPostDto> topHotPostDtos = postService.getTopHotPostDtos(10);
+        model.addAttribute("topHotPostList", topHotPostDtos);
 
+        // 모든 게시글에서 상위 5개(등록 시간 기준)의 댓글
+        List<TopCommentDto> topCommentDtos = commentService.getTopCommentDtos(5);
+        model.addAttribute("topCommentList", topCommentDtos);
 
         // board id가 1에서 6인 게시판의 상위 10개(등록 시간 기준)의 게시글
         // 총 60개의 게시글이 존재함, board id로 분류함.
-        List<TopBoardDto> topBoardDtoList = postService.getTopBoardDtos();
-        model.addAttribute("topBoardList", topBoardDtoList);
-
-        // 모든 게시판에서 상위 20개(인기글 등록 시간 기준)의 인기글
-        List<TopHotPostDto> topHotPostDtoList = postService.getTopHotPostDtos();
-        model.addAttribute("topHotPostList", topHotPostDtoList);
-
-        List<TopCommentDto> topCommentDtoList = commentService.getTopCommentDtos();
-        model.addAttribute("topCommetList", topCommentDtoList);
+        List<TopBoardDto> topBoardDtos = postService.getTopBoardDtos(6, 10);
+        model.addAttribute("topBoardList", topBoardDtos);
 
         return "community/RootPage";
     }
 
     @GetMapping("/board/{boardType}")
-    public String board(@PathVariable(name = "boardType") String boardType,
-                        @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
-                        @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
-                        @AuthenticationPrincipal PrincipalDetails principal,
-                        Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
-        // 현재 게시판의 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+    public String viewBoardPage(@PathVariable(name = "boardType") String boardType,
+                                @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
+                                @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
+                                @AuthenticationPrincipal PrincipalDetails principal,
+                                Model model) {
+        // 현재 게시판의 정보를 제공함.
         // isViewHotPostPreviewList가 true인 경우는 인기글만 볼 수 있음.
-        BoardDto boardDto = boardService.getBoardWithPostCount(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
         model.addAttribute("boardIsViewHotPostPreviewList", isViewHotPostPreviewList);
-        Integer boardPostCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
-        Integer processedPageNumber = PageUtil.processPageNumber(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+
+        // 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+        Integer postCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
+        Integer processedPageNumber = PageUtil.processPageNumber(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             if (isViewHotPostPreviewList) {
                 return "redirect:/board/" + boardType + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
@@ -97,50 +92,40 @@ public class CommunityController {
             else {
                 return "redirect:/board/" + boardType + "?page=" + processedPageNumber;
             }
-
         }
-
-        // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 게시글 페이지, 게시글 페이지 리스트)
-        List<Integer> postPageNumberList = PageUtil.makePageNumberList(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
-        List<PostPageNumberDto> postPageNumberDtoList =
-                postPageNumberList.stream().map(
-                        (number) -> PostPageNumberDto.builder()
-                                .boardType(boardType)
-                                .pageNumber(number)
-                                .build()
-                ).collect(Collectors.toList());
-        model.addAttribute("postPageNumber", pageNumber);
-        model.addAttribute("postPageNumberList", postPageNumberDtoList);
 
         // 게시판의 게시글 프리뷰 리스트를 제공. 만약 '인기글' 선택 시 isViewHotPostPreviewList가 true임.
         Integer boardId = boardDto.getId();
-        List<PostPreviewDto> postPreviewDtoList =
+        List<PostPreviewDto> postPreviewDtos =
                 isViewHotPostPreviewList ?
-                        postService.getHotPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
-                        postService.getPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
-        model.addAttribute("postPreviewList", postPreviewDtoList);
+                        postService.getHotPostPreviewDtos(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
+                        postService.getPostPreviewDtos(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+        model.addAttribute("postPreviewList", postPreviewDtos);
+
+        // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 게시글 페이지, 게시글 페이지 리스트)
+        List<Integer> postPageNumberList = PageUtil.makePageNumberList(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+        model.addAttribute("postPageNumber", pageNumber);
+        model.addAttribute("postPageNumberList", postPageNumberList);
 
         return "community/BoardPage";
     }
 
     @GetMapping("/board/{boardType}/post/{postId}")
-    public String post(@PathVariable(name = "boardType") String boardType,
-                       @PathVariable(name = "postId") Integer postId,
-                       @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
-                       @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
-                       @AuthenticationPrincipal PrincipalDetails principal,
-                       Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
-        // 현재 게시판의 정보를 제공하고, 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+    public String viewPostPage(@PathVariable(name = "boardType") String boardType,
+                               @PathVariable(name = "postId") Integer postId,
+                               @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
+                               @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
+                               @AuthenticationPrincipal PrincipalDetails principal,
+                               Model model) {
+        // 현재 게시판의 정보를 제공함.
         // isViewHotPostPreviewList가 true인 경우는 인기글만 볼 수 있음.
-        BoardDto boardDto = boardService.getBoardWithPostCount(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
         model.addAttribute("boardIsViewHotPostPreviewList", isViewHotPostPreviewList);
-        Integer boardPostCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
-        Integer processedPageNumber = PageUtil.processPageNumber(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+
+        // 현재 페이지의 값에 따라 현재 페이지의 이동을 결정함.
+        Integer postCount = isViewHotPostPreviewList ? boardDto.getHotPostCount() : boardDto.getPostCount();
+        Integer processedPageNumber = PageUtil.processPageNumber(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             if (isViewHotPostPreviewList) {
                 return "redirect:/board/" + boardType + "/post/" + postId + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
@@ -162,40 +147,26 @@ public class CommunityController {
         model.addAttribute("commentCount", commentCount);
 
         // 게시글의 댓글 페이지에 해당하는 댓글 리스트에 대한 정보를 제공.
-        List<CommentDto> commentDtoList = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, 1);
-        model.addAttribute("commentList", commentDtoList);
+        List<CommentDto> commentDtos = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, 1);
+        model.addAttribute("commentList", commentDtos);
 
         // 게시글의 댓글 페이지 리스트에 대한 정보를 제공. (현재 댓글 페이지, 댓글 페이지 리스트)
         List<Integer> commentPageNumberList = PageUtil.makePageNumberList(totalCommentCount, CommunityConstants.COMMENT_PAGE_SIZE, 1);
-        List<CommentPageNumberDto> commentPageNumberDtoList =
-                commentPageNumberList.stream().map(
-                        (number) -> CommentPageNumberDto.builder()
-                                .postId(postId)
-                                .pageNumber(number)
-                                .build()
-                ).collect(Collectors.toList());
         model.addAttribute("commentPageNumber", 1);
-        model.addAttribute("commentPageNumberList", commentPageNumberDtoList);
+        model.addAttribute("commentPageNumberList", commentPageNumberList);
 
         // 게시판의 게시글 프리뷰 리스트를 제공. 이전 /board 에서 인기글을 선택한 후 게시글을 선택하면 isViewHotPostPreviewList가 true임.
         Integer boardId = boardDto.getId();
-        List<PostPreviewDto> postPreviewDtoList =
+        List<PostPreviewDto> postPreviewDtos =
                 isViewHotPostPreviewList ?
-                        postService.getHotPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
-                        postService.getPostPreviewDtosByBoardId(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
-        model.addAttribute("postPreviewList", postPreviewDtoList);
+                        postService.getHotPostPreviewDtos(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
+                        postService.getPostPreviewDtos(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber);
+        model.addAttribute("postPreviewList", postPreviewDtos);
 
         // 게시판의 페이지 리스트에 대한 정보를 제공. (현재 게시글 페이지, 게시글 페이지 리스트)
-        List<Integer> postPageNumberList = PageUtil.makePageNumberList(boardPostCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
-        List<PostPageNumberDto> postPageNumberDtoList =
-                postPageNumberList.stream().map(
-                        (number) -> PostPageNumberDto.builder()
-                                .boardType(boardType)
-                                .pageNumber(number)
-                                .build()
-                ).collect(Collectors.toList());
+        List<Integer> postPageNumberList = PageUtil.makePageNumberList(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         model.addAttribute("postPageNumber", pageNumber);
-        model.addAttribute("postPageNumberList", postPageNumberDtoList);
+        model.addAttribute("postPageNumberList", postPageNumberList);
 
         // 게시글 조회수 1 증가
         postService.incPostHit(postId);
@@ -205,13 +176,9 @@ public class CommunityController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write/{boardType}")
-    public String write(@PathVariable(name = "boardType") String boardType,
-                        @AuthenticationPrincipal PrincipalDetails principal,
-                        Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
+    public String viewWritePage(@PathVariable(name = "boardType") String boardType,
+                                @AuthenticationPrincipal PrincipalDetails principal,
+                                Model model) {
         // 현재 게시판의 정보
         BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
@@ -226,17 +193,13 @@ public class CommunityController {
         return "community/WritePage";
     }
 
-    @PreAuthorize("isAuthenticated() and #postAuthorId == authentication.principal.userId")
+    @PreAuthorize("isAuthenticated() and ((#postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
     @GetMapping("/rewrite/{postAuthorId}/{boardType}/{postId}")
-    public String rewrite(@PathVariable(name = "postAuthorId") Integer postAuthorId,
-                          @PathVariable(name = "boardType") String boardType,
-                          @PathVariable(name = "postId") Integer postId,
-                          @AuthenticationPrincipal PrincipalDetails principal,
-                          Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
+    public String viewWritePageForReWrite(@PathVariable(name = "postAuthorId") Integer postAuthorId,
+                                          @PathVariable(name = "boardType") String boardType,
+                                          @PathVariable(name = "postId") Integer postId,
+                                          @AuthenticationPrincipal PrincipalDetails principal,
+                                          Model model) {
         // 현재 게시판의 정보
         BoardDto boardDto = boardService.getBoardDto(boardType);
         model.addAttribute("board", boardDto);
@@ -246,8 +209,8 @@ public class CommunityController {
         model.addAttribute("rewrite", rewriteDto);
 
         // 현재 게시글을 작성하는 사용자가 '공지사항'을 올릴 권한이 있는지에 대한 정보 제공.
-        Boolean hasNotificationAccess = postService.hasNoticeAccess(principal.getRole());
-        model.addAttribute("hasNoticeAccess", hasNotificationAccess);
+        Boolean hasNoticeAccess = postService.hasNoticeAccess(principal.getRole());
+        model.addAttribute("hasNoticeAccess", hasNoticeAccess);
 
         // 현재 게시글을 수정하려는 상태인지에 대한 정보 제공. /rewrite는 수정임.
         model.addAttribute("isRewrite", true);
@@ -256,18 +219,14 @@ public class CommunityController {
     }
 
     @GetMapping("/read-comment/{postId}")
-    public String readComment(@PathVariable(name = "postId") Integer postId,
-                              @RequestParam(name = "page") Integer pageNumber,
-                              @AuthenticationPrincipal PrincipalDetails principal,
-                              Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
+    public String viewCommentList(@PathVariable(name = "postId") Integer postId,
+                                  @RequestParam(name = "page") Integer pageNumber,
+                                  @AuthenticationPrincipal PrincipalDetails principal,
+                                  Model model) {
         // 현재 페이지의 댓글 리스트의 정보 제공.
         Integer userId = principal != null ? principal.getUserId() : null;
-        List<CommentDto> commentDtoList = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, pageNumber);
-        model.addAttribute("commentList", commentDtoList);
+        List<CommentDto> commentDtos = commentService.getCommentDtos(userId, postId, CommunityConstants.COMMENT_PAGE_SIZE, pageNumber);
+        model.addAttribute("commentList", commentDtos);
 
         // 실제 댓글 수에 대한 정보를 제공.
         PostCommentCountDto postCommentCountDto = postService.getPostCommentCountDto(postId);
@@ -277,13 +236,7 @@ public class CommunityController {
 
         // 게시글의 댓글 페이지 리스트에 대한 정보를 제공. (현재 댓글 페이지, 댓글 페이지 리스트, 이전 댓글 페이지, 다음 댓글 페이지)
         List<Integer> commentPageNumberList = PageUtil.makePageNumberList(totalCommentCount, CommunityConstants.COMMENT_PAGE_SIZE, pageNumber);
-        List<CommentPageNumberDto> commentPageNumberDtoList = commentPageNumberList.stream().map(
-                (number) -> CommentPageNumberDto.builder()
-                        .postId(postId)
-                        .pageNumber(number)
-                        .build()
-        ).collect(Collectors.toList());
-        model.addAttribute("commentPageNumberList", commentPageNumberDtoList);
+        model.addAttribute("commentPageNumberList", commentPageNumberList);
         model.addAttribute("commentPageNumber", pageNumber);
 
         return "community/PostPage :: #commentFragment";
@@ -291,31 +244,26 @@ public class CommunityController {
 
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     @GetMapping("/manage-board")
-    public String manageBoard(@AuthenticationPrincipal PrincipalDetails principal,
-                              Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-        // 게시판 생성 및 관리는 어드민에게만 권한이 있음.
-
+    public String viewManageBoardPage(@AuthenticationPrincipal PrincipalDetails principal,
+                                      Model model) {
+        // 게시판 생성을 포함한 관리 작업은 어드민에게만 권한이 있음.
         return "community/ManageBoardPage";
     }
 
     @GetMapping("/all-board")
-    public String allBoard(@AuthenticationPrincipal PrincipalDetails principal,
-                           Model model) {
-        // 현재 로그인한 유저의 정보
-        UserDto userDto = userService.getUserDto(principal);
-        model.addAttribute("user", userDto);
-
+    public String viewAllBoard(@AuthenticationPrincipal PrincipalDetails principal,
+                               Model model) {
         // 게시판에 대한 정보를 제공함. 일반, 과목으로 분류됨.
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getBoardPreviewDtos();
-        List<BoardPreviewDto> generalBoardList = boardPreviewDtoList.stream()
+        List<BoardPreviewDto> allBoardPreviewDtoList = boardService.getAllBoardPreviewDtos();
+
+        List<BoardPreviewDto> generalBoardList = allBoardPreviewDtoList.stream()
                 .filter(board -> "일반".equals(board.getCategory()))
                 .collect(Collectors.toList());
-        List<BoardPreviewDto> subjectBoardList = boardPreviewDtoList.stream()
+
+        List<BoardPreviewDto> subjectBoardList = allBoardPreviewDtoList.stream()
                 .filter(board -> "과목".equals(board.getCategory()))
                 .collect(Collectors.toList());
+
         model.addAttribute("generalBoardList", generalBoardList);
         model.addAttribute("subjectBoardList", subjectBoardList);
 
@@ -323,23 +271,20 @@ public class CommunityController {
     }
 
     @GetMapping("/board-menu")
-    public String boardList(Model model) {
-        List<BoardPreviewDto> boardPreviewDtoList = boardService.getTopBoardPreviewDtos();
-        int totalBoardCount = boardPreviewDtoList.size();
-        int chunkCount = totalBoardCount / 6;
-
-        List<BoardMenuDto> boardMenuDtoList = new ArrayList<>();
-        for (int i = 0; i < chunkCount; i++) {
-            boardMenuDtoList.add(
+    public String viewBoardMenuList(Model model) {
+        List<BoardPreviewDto> boardPreviewDtos = boardService.getTopBoardPreviewDtos(30);
+        List<BoardMenuDto> boardMenuDtos = new ArrayList<>();
+        for (int i = 0; i < boardPreviewDtos.size() / 6; i++) {
+            boardMenuDtos.add(
                     BoardMenuDto.builder()
                             .number(i)
-                            .boardPreviewList(boardPreviewDtoList.subList(6 * i, 6 * (i + 1)))
+                            .boardPreviewList(boardPreviewDtos.subList(6 * i, 6 * (i + 1)))
                             .build()
             );
         }
 
         //Heeader의 Board Menu List에 사용됨.
-        model.addAttribute("boardMenuList", boardMenuDtoList);
+        model.addAttribute("boardMenuList", boardMenuDtos);
 
         return "common/HeaderNav :: #boardMenuList";
     }

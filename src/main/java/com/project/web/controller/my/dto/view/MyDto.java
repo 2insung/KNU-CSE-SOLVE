@@ -1,4 +1,4 @@
-package com.project.web.controller.my.dto;
+package com.project.web.controller.my.dto.view;
 
 
 import com.project.web.domain.member.Role;
@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyDto {
+    // domain : Member
     private final Integer id;
     private final Boolean isDeleted;
+    // domain : MemberAuth
     private final String username;
     private final String role;
+    // domain : MemberDetail
     private final String nickname;
     private final String profileImage;
     private final String description;
@@ -23,6 +26,7 @@ public class MyDto {
     private final String admissionYear;
     private final String department;
     private final String createdAt;
+    //현재 사용자와 일치하는 Member인지.
     private final Boolean isMine;
 
     @Builder

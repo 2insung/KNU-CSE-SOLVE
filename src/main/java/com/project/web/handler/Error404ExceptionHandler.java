@@ -16,6 +16,7 @@ public class Error404ExceptionHandler {
             return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(exception.getMessage());
         }
         else {
+            System.out.println(exception.getMessage());
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return "error/404";
         }

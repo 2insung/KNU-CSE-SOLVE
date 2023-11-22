@@ -27,6 +27,7 @@ public class FileService {
 
         String uuidStr = UUID.randomUUID().toString();
         File saveFile = new File(updatePath + "/" + uuidStr);
+
         try {
             file.transferTo(saveFile);
         }
@@ -36,6 +37,7 @@ public class FileService {
         catch (IOException e) {
             throw new Error500Exception("파일 업로드에 실패했습니다.");
         }
-        return "/uploadImg/" + uuidStr;
+
+        return "/upload-img/" + uuidStr;
     }
 }

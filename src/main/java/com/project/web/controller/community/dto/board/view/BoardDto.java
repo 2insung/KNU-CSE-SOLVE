@@ -1,10 +1,11 @@
-package com.project.web.controller.community.dto.board;
+package com.project.web.controller.community.dto.board.view;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class BoardDto {
+    // domain : Board
     private final Integer id;
     private final String type;
     private final String alias;

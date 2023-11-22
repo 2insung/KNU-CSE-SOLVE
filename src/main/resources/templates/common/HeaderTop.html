@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <header th:fragment="headerTopFragment">
     <div class="head">
         <h1 class="logo">
             <a th:href="@{/}">KNU CSE Solve</a>
         </h1>
-        <div th:if="${#authentication.isAuthenticated() and #authentication.principal != 'anonymousUser'}"
+        <div sec:authorize="isAuthenticated()"
              class="user-image">
             <img onclick="toggleDropdown()" src='/img/avatar.png'>
             <div class="drop-down-menu" style="display: none;">
@@ -15,7 +16,7 @@
                 </form>
             </div>
         </div>
-        <div th:unless="${#authentication.isAuthenticated() and #authentication.principal != 'anonymousUser'}"
+        <div sec:authorize="isAnonymous()"
              class="user-image">
             <img onclick="toggleDropdown()" src='/img/avatar.png'>
             <div class="drop-down-menu" style="display: none;">

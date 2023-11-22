@@ -1,10 +1,11 @@
-package com.project.web.controller.my.dto;
+package com.project.web.controller.my.dto.view;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class MyEditDto {
+    // domain : MemberDetail
     private final String nickname;
     private final String profileImage;
     private final String description;

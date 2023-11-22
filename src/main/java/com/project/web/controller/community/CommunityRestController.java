@@ -1,7 +1,7 @@
 package com.project.web.controller.community;
 
 import com.project.web.controller.auth.dto.PrincipalDetails;
-import com.project.web.controller.community.dto.board.BoardDto;
+import com.project.web.controller.community.dto.board.view.BoardDto;
 import com.project.web.controller.community.dto.board.rest.SaveBoardRequestDto;
 import com.project.web.controller.community.dto.board.rest.SaveBoardResponseDto;
 import com.project.web.controller.community.dto.comment.rest.*;
@@ -173,9 +173,9 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/inc-post-recommend")
-    public ResponseEntity<IncPostRecommendResponseDto> incPostRecommend(@Valid @RequestBody IncPostRecommendRequestDto incPostRecommendRequestDto,
-                                                                        @AuthenticationPrincipal PrincipalDetails pricipal,
-                                                                        BindingResult bindingResult) {
+    public ResponseEntity<IncPostRecommendResponseDto> incPostRecommendCount(@Valid @RequestBody IncPostRecommendRequestDto incPostRecommendRequestDto,
+                                                                             @AuthenticationPrincipal PrincipalDetails pricipal,
+                                                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             throw new Error400Exception(errorMessage);
@@ -189,9 +189,9 @@ public class CommunityRestController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/api/inc-comment-recommend")
-    public ResponseEntity<IncCommentRecommendResponseDto> incPostRecommend(@RequestBody IncCommentRecommendRequestDto incCommentRecommendRequestDto,
-                                                                           @AuthenticationPrincipal PrincipalDetails principal,
-                                                                           BindingResult bindingResult) {
+    public ResponseEntity<IncCommentRecommendResponseDto> incPostRecommendCount(@RequestBody IncCommentRecommendRequestDto incCommentRecommendRequestDto,
+                                                                                @AuthenticationPrincipal PrincipalDetails principal,
+                                                                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             throw new Error400Exception(errorMessage);
@@ -202,6 +202,24 @@ public class CommunityRestController {
         IncCommentRecommendResponseDto incCommentRecommendResponseDto = commentService.incCommentRecommend(userId, commentId);
         return ResponseEntity.ok(incCommentRecommendResponseDto);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/inc-post-scrap")
+    public ResponseEntity<IncPostScrapResponseDto> incPostScrapCount(@RequestBody IncPostScrapRequestDto incPostScrapRequestDto,
+                                                                     @AuthenticationPrincipal PrincipalDetails principal,
+                                                                     BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            throw new Error400Exception(errorMessage);
+        }
+
+        Integer postId = incPostScrapRequestDto.getPostId();
+        Integer userId = principal.getUserId();
+
+        IncPostScrapResponseDto incPostScrapResponseDto = postService.incPostScrap(userId, postId);
+        return ResponseEntity.ok(incPostScrapResponseDto);
+    }
+
 
     @PreAuthorize("isAuthenticated() and hasRole('ROLE_ADMIN')")
     @PostMapping("/api/save-board")
@@ -227,22 +245,4 @@ public class CommunityRestController {
                         .build()
         );
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/api/scrap")
-    public ResponseEntity<IncPostScrapResponseDto> scrap(@RequestBody IncPostScrapRequestDto incPostScrapRequestDto,
-                                                         @AuthenticationPrincipal PrincipalDetails principal,
-                                                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-            throw new Error400Exception(errorMessage);
-        }
-
-        Integer postId = incPostScrapRequestDto.getPostId();
-        Integer userId = principal.getUserId();
-
-        IncPostScrapResponseDto incPostScrapResponseDto = postService.incPostScrap(userId, postId);
-        return ResponseEntity.ok(incPostScrapResponseDto);
-    }
-
 }

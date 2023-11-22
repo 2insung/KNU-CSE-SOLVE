@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{community/GeneralLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/community/PostPage.css}"/>
@@ -41,35 +42,58 @@
             </div>
         </div>
         <div class="post-option-wrapper">
-            <button class="post-scrap-button"
-                    th:data-postId="${post.id}"
-                    onclick="scrap(this.getAttribute('data-postId'))">
-                스크랩
-            </button>
-            <div class="post-rewrite-button" th:if="${post.isMine || (user.isLogin && user.isAdmin)}">
+            <div class="post-rewrite-button" th:if="${post.isMine}">
                 <a th:href="@{/rewrite/{postAuthorId}/{boardType}/{postId}(postAuthorId=${post.authorId},boardType=${board.type},postId=${post.id})}">
                     수정
                 </a>
             </div>
+            <div class="post-rewrite-button" th:unless="${post.isMine}" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{/rewrite/{postAuthorId}/{boardType}/{postId}(postAuthorId=${post.authorId},boardType=${board.type},postId=${post.id})}">
+                    관리자 권한으로 수정
+                </a>
+            </div>
             <button class="post-delete-button"
-                    th:if="${post.isMine || (user.isLogin && user.isAdmin)}"
+                    th:if="${post.isMine}"
                     th:data-boardType="${board.type}"
                     th:data-postId="${post.id}"
                     th:data-postAuthorId="${post.authorId}"
                     onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
                 삭제
             </button>
+            <button class="post-delete-button"
+                    th:unless="${post.isMine}"
+                    sec:authorize="hasRole('ROLE_ADMIN')"
+                    th:data-boardType="${board.type}"
+                    th:data-postId="${post.id}"
+                    th:data-postAuthorId="${post.authorId}"
+                    onclick="deletePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
+                관리자 권한으로 삭제
+            </button>
         </div>
         <div class="post-body-wrapper">
             <div class="post-body" th:utext="${post.body}"></div>
-            <div class="post-recommend"
-                 th:data-postId="${post.id}"
-                 onclick="incPostRecommend(this.getAttribute('data-postId'))">
-                <div class="post-recommend-image">
-                    <img src="/img/thumb.png">
+        </div>
+        <div class="post-footer-wrapper">
+            <div class="post-footer">
+                <div class="post-recommend"
+                     th:data-postId="${post.id}"
+                     onclick="incPostRecommend(this.getAttribute('data-postId'))">
+                    <div class="post-recommend-image">
+                        <img src="/img/thumb.png">
+                    </div>
+                    <div class="post-recommend-count">
+                        <span id="postRecommendCount" th:text="${post.recommendCount}"></span>
+                    </div>
                 </div>
-                <div class="post-recommend-count">
-                    <span id="postRecommendCount" th:text="${post.recommendCount}"></span>
+                <div class="post-scrap"
+                     th:data-postId="${post.id}"
+                     onclick="incScrapCount(this.getAttribute('data-postId'))">
+                    <div class="post-scrap-image">
+                        <img src="/img/star.png">
+                    </div>
+                    <div class="post-scrap-count">
+                        <span id="postScrapCount" th:text="${post.scrapCount}"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,7 +134,7 @@
                                     </button>
                                     <button type="button"
                                             class="delete-comment-button"
-                                            th:if="${comment.isMine || (user.isLogin && user.isAdmin)}"
+                                            th:if="${comment.isMine}"
                                             th:data-postId="${comment.postId}"
                                             th:data-commentId="${comment.id}"
                                             th:data-commentAuthorId="${comment.authorId}"
@@ -123,6 +147,23 @@
                                                     this.getAttribute('data-currentPageNumber')
                                                 )"
                                     >삭제
+                                    </button>
+                                    <button type="button"
+                                            class="delete-comment-button"
+                                            th:unless="${comment.isMine}"
+                                            sec:authorize="hasRole('ROLE_ADMIN')"
+                                            th:data-postId="${comment.postId}"
+                                            th:data-commentId="${comment.id}"
+                                            th:data-commentAuthorId="${comment.authorId}"
+                                            th:data-currentPageNumber="${commentPageNumber}"
+                                            onclick="
+                                                deleteComment(
+                                                    this.getAttribute('data-postId'),
+                                                    this.getAttribute('data-commentId'),
+                                                    this.getAttribute('data-commentAuthorId'),
+                                                    this.getAttribute('data-currentPageNumber')
+                                                )"
+                                    >관리자 권한으로 삭제
                                     </button>
                                     <button type="button"
                                             class="show-form-button"
@@ -161,26 +202,26 @@
                 </ul>
                 <div class="comment-page-number-list-wrapper">
                     <ul>
-                        <li th:each="commentPage, stat : ${commentPageNumberList}"
-                            th:if="${commentPage.pageNumber != null}">
+                        <li th:each="pageNumber, stat : ${commentPageNumberList}"
+                            th:if="${pageNumber != null}">
                             <div class="comment-arrow-left"
                                  th:if="${stat.first}"
-                                 th:data-postId="${commentPage.postId}"
-                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 th:data-postId="${postId}"
+                                 th:data-pageNumber="${pageNumber}"
                                  onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
                                 ◀
                             </div>
                             <div th:if="${!stat.first && !stat.last}"
-                                 th:class="${commentPage.pageNumber == commentPageNumber} ? 'comment-active-page-number' : 'comment-page-number'"
-                                 th:text="${commentPage.pageNumber}"
-                                 th:data-postId="${commentPage.postId}"
-                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 th:class="${pageNumber == commentPageNumber} ? 'comment-active-page-number' : 'comment-page-number'"
+                                 th:text="${pageNumber}"
+                                 th:data-postId="${postId}"
+                                 th:data-pageNumber="${pageNumber}"
                                  onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
                             </div>
                             <div class="comment-arrow-right"
                                  th:if="${stat.last}"
-                                 th:data-postId="${commentPage.postId}"
-                                 th:data-pageNumber="${commentPage.pageNumber}"
+                                 th:data-postId="${postId}"
+                                 th:data-pageNumber="${pageNumber}"
                                  onclick="readComment(this.getAttribute('data-postId'), this.getAttribute('data-pageNumber'))">
                                 ▶
                             </div>

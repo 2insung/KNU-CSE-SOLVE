@@ -1,7 +1,7 @@
 package com.project.web.service.community;
 
-import com.project.web.controller.community.dto.comment.CommentDto;
-import com.project.web.controller.community.dto.comment.TopCommentDto;
+import com.project.web.controller.community.dto.comment.view.CommentDto;
+import com.project.web.controller.community.dto.comment.view.TopCommentDto;
 import com.project.web.controller.community.dto.comment.rest.IncCommentRecommendResponseDto;
 import com.project.web.domain.comment.Comment;
 import com.project.web.domain.comment.CommentRecommendCount;
@@ -9,6 +9,7 @@ import com.project.web.domain.comment.CommentRecommendMember;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
 import com.project.web.exception.Error404Exception;
+import com.project.web.exception.Error500Exception;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
@@ -48,29 +49,26 @@ public class CommentService {
         return results.stream()
                 .map((result) -> {
                     Integer resultCommentId = (Integer) result[0];
-                    Integer resultCommentPostId = (Integer) result[1];
-                    Integer resultAuthorId = (Integer) result[2];
-                    String resultAuthorNickname = (String) result[3];
-                    String resultAuthorProfileImage = (String) result[4];
-                    Integer resultParentAuthorId = (Integer) result[5];
-                    String resultParentAuthorNickname = (String) result[6];
-                    Boolean resultIsPostAuthor = (Boolean) result[7];
-                    Boolean resultIsRoot = (Boolean) result[8];
-                    Boolean resultIsRootChild = (Boolean) result[9];
-                    Boolean resultIsDeleted = (Boolean) result[10];
-                    String resultBody = (String) result[11];
-                    LocalDateTime resultCreatedAt = ((Timestamp) result[12]).toLocalDateTime();
-                    Integer resultRecommendCount = (Integer) result[13];
+                    Integer resultAuthorId = (Integer) result[1];
+                    Integer resultPostId = (Integer) result[2];
+                    Integer resultParentAuthorId = (Integer) result[3];
+                    Boolean resultIsPostAuthor = (Boolean) result[4];
+                    Boolean resultIsRoot = (Boolean) result[5];
+                    Boolean resultIsRootChild = (Boolean) result[6];
+                    Boolean resultIsDeleted = (Boolean) result[7];
+                    String resultBody = (String) result[8];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[9]).toLocalDateTime();
+                    Integer resultRecommendCount = (Integer) result[10];
+                    String resultAuthorNickname = (String) result[11];
+                    String resultAuthorProfileImage = (String) result[12];
+                    String resultParentAuthorNickname = (String) result[13];
                     Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return CommentDto.builder()
                             .id(resultCommentId)
-                            .postId(resultCommentPostId)
                             .authorId(resultAuthorId)
-                            .authorNickname(resultAuthorNickname)
-                            .authorProfileImage(resultAuthorProfileImage)
+                            .postId(resultPostId)
                             .parentAuthorId(resultParentAuthorId)
-                            .parentAuthorNickname(resultParentAuthorNickname)
                             .isPostAuthor(resultIsPostAuthor)
                             .isRoot(resultIsRoot)
                             .isRootChild(resultIsRootChild)
@@ -78,6 +76,9 @@ public class CommentService {
                             .body(resultBody)
                             .createdAt(resultCreatedAt)
                             .recommendCount(resultRecommendCount)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
+                            .parentAuthorNickname(resultParentAuthorNickname)
                             .isMine(isMine)
                             .build();
                 })
@@ -85,27 +86,27 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<TopCommentDto> getTopCommentDtos() {
-        List<Object[]> results = commentRepository.findTopCommentDtos(5);
+    public List<TopCommentDto> getTopCommentDtos(Integer count) {
+        List<Object[]> results = commentRepository.findTopCommentDtos(count);
 
         return results.stream().
                 map((result) -> {
                     Integer resultPostId = (Integer) result[0];
-                    String resultBody = (String) result[1];
-                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
-                    Boolean resultIsDeleted = (Boolean) result[3];
+                    Boolean resultIsDeleted = (Boolean) result[1];
+                    String resultBody = (String) result[2];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[3]).toLocalDateTime();
                     String resultBoardType = (String) result[4];
                     String resultAlias = (String) result[5];
                     String title = (String) result[6];
 
                     return TopCommentDto.builder()
                             .postId(resultPostId)
+                            .isDeleted(resultIsDeleted)
                             .body(resultBody)
                             .createdAt(resultCreatedAt)
-                            .isDeleted(resultIsDeleted)
                             .boardType(resultBoardType)
-                            .alias(resultAlias)
-                            .title(title)
+                            .boardAlias(resultAlias)
+                            .postTitle(title)
                             .build();
                 }).collect(Collectors.toList());
     }
@@ -122,11 +123,11 @@ public class CommentService {
         Comment parentComment = null;
         if (parentCommentId != null) {
             parentComment = commentRepository.findById(parentCommentId)
-                    .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
+                    .orElseThrow(() -> new Error500Exception("존재하지 않는 댓글입니다."));
         }
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
         Member commentAuthor = memberRepository.getReferenceById(userId);
 
         Comment comment = Comment.builder()
@@ -151,12 +152,12 @@ public class CommentService {
         commentRecommendCountRepository.save(commentRecommendCount);
 
         if (postCommentCountRepository.updateByPostId(postId, 1, 1) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
 
         if (parentComment != null) {
             if (commentRepository.updateChildCountById(parentComment.getRootCommentId(), 1) == 0) {
-                throw new Error404Exception("존재하지 않는 댓글입니다.");
+                throw new Error500Exception("존재하지 않는 댓글입니다.");
             }
         }
     }
@@ -175,11 +176,11 @@ public class CommentService {
     @Transactional
     public void deleteComment(Integer postId, Integer commentId) {
         if (commentRepository.updateIsDeletedById(commentId, true) == 0) {
-            throw new Error404Exception("존재하지 않는 댓글입니다.");
+            throw new Error500Exception("존재하지 않는 댓글입니다.");
         }
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 댓글입니다."));
 
         Integer dropCommentCount = 0;
         Integer dropTotalCommentCount = 0;
@@ -190,11 +191,11 @@ public class CommentService {
 
             if (!comment.getIsRoot()) {
                 if (commentRepository.updateChildCountById(comment.getRootCommentId(), -1) == 0) {
-                    throw new Error404Exception("존재하지 않는 댓글입니다.");
+                    throw new Error500Exception("존재하지 않는 댓글입니다.");
                 }
 
                 Comment rootComment = commentRepository.findById(comment.getRootCommentId())
-                        .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
+                        .orElseThrow(() -> new Error500Exception("존재하지 않는 댓글입니다."));
 
                 if (rootComment.getChildCount() == 0 && rootComment.getIsDeleted()) {
                     deleteCommentIds.add(rootComment.getId());
@@ -220,7 +221,7 @@ public class CommentService {
         }
 
         if (postCommentCountRepository.updateByPostId(postId, dropCommentCount, dropTotalCommentCount) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
 
     }
@@ -239,11 +240,11 @@ public class CommentService {
 
         if (!commentRecommendMemberRepository.existsByCommentAndMemberId(commentId, userId)) {
             if (commentRecommendCountRepository.updateByCommentId(commentId, 1) == 0) {
-                throw new Error404Exception("존재하지 않는 댓글입니다.");
+                throw new Error500Exception("존재하지 않는 댓글입니다.");
             }
 
             CommentRecommendCount commentRecommendCount = commentRecommendCountRepository.findById(commentId)
-                    .orElseThrow(() -> new Error404Exception("존재하지 않는 댓글입니다."));
+                    .orElseThrow(() -> new Error500Exception("존재하지 않는 댓글입니다."));
 
             CommentRecommendMember commentRecommendMember = CommentRecommendMember.builder()
                     .comment(comment)

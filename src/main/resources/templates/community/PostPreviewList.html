@@ -64,21 +64,21 @@
     </div>
     <div class="board-page-number-list-wrapper">
         <ul>
-            <li th:each="postPage, stat : ${postPageNumberList}" th:if="${postPage.pageNumber != null}">
+            <li th:each="pageNumber, stat : ${postPageNumberList}" th:if="${pageNumber != null}">
                 <a th:if="${!boardIsViewHotPostPreviewList}"
-                   th:href="@{/board/{boardType}(boardType=${postPage.boardType}, page=${postPage.pageNumber})}">
+                   th:href="@{/board/{boardType}(boardType=${boardType}, page=${pageNumber})}">
                     <div th:if="${stat.first}" class="board-arrow-left">◀</div>
                     <div th:if="${!stat.first && !stat.last}"
-                         th:text="${postPage.pageNumber}"
-                         th:class="${postPage.pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+                         th:text="${pageNumber}"
+                         th:class="${pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
                     <div th:if="${stat.last}" class="board-arrow-right">▶</div>
                 </a>
                 <a th:if="${boardIsViewHotPostPreviewList}"
-                   th:href="@{/board/{boardType}(boardType=${postPage.boardType}, hot=true, page=${postPage.pageNumber})}">
+                   th:href="@{/board/{boardType}(boardType=${boardType}, hot=true, page=${pageNumber})}">
                     <div th:if="${stat.first}" class="board-arrow-left">◀</div>
                     <div th:if="${!stat.first && !stat.last}"
-                         th:text="${postPage.pageNumber}"
-                         th:class="${postPage.pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
+                         th:text="${pageNumber}"
+                         th:class="${pageNumber == postPageNumber} ? 'board-active-page-number' : 'board-page-number'"></div>
                     <div th:if="${stat.last}" class="board-arrow-right">▶</div>
                 </a>
             </li>

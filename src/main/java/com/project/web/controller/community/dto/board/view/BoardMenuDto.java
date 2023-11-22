@@ -1,4 +1,4 @@
-package com.project.web.controller.community.dto.board;
+package com.project.web.controller.community.dto.board.view;
 
 import lombok.Builder;
 import lombok.Getter;

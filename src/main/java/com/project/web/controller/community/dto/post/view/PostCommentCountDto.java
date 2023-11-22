@@ -1,4 +1,4 @@
-package com.project.web.controller.community.dto.post;
+package com.project.web.controller.community.dto.post.view;
 
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostCommentCountDto {
+    // domain : PostCommentCount
     private final Integer commentCount;
     private final Integer totalCommentCount;
 

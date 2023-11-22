@@ -19,12 +19,12 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select c.id, c.post_id, c.member_id, md.nickname as authorNickname, md.profile_image, c.parent_member_id, md2.nickname as parentAuthorNickname, c.is_post_author, c.is_root, c.is_root_child, c.is_deleted, c.body, c.created_at, crc.recommend_count " +
+            value = "select c.id, c.member_id, c.post_id, c.parent_member_id, c.is_post_author, c.is_root, c.is_root_child, c.is_deleted, c.body, c.created_at, crc.recommend_count, md.nickname as authorNickname, md.profile_image,  md2.nickname as parentAuthorNickname " +
                     "from (select tc.id from comment tc where tc.post_id = :postId order by tc.group_created_at, tc.root_comment_id, tc.created_at limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
+                    "inner join comment_recommend_count crc on c.id = crc.comment_id " +
                     "inner join member_detail md on c.member_id = md.member_id " +
                     "inner join member_detail md2 on c.parent_member_id = md2.member_id " +
-                    "inner join comment_recommend_count crc on c.id = crc.comment_id " +
                     "order by c.group_created_at, c.root_comment_id, c.created_at")
     List<Object[]> findCommentDtosByPostId(Integer postId, Integer limit, Integer offset);
 
@@ -36,7 +36,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select c.id, c.member_id, c.post_id, c.is_deleted, c.body, c.created_at, b.id as boardId, b.type, b.alias, pc.title " +
+            value = "select c.id, c.member_id, c.post_id, c.is_deleted, c.body, c.created_at, b.type, b.alias, pc.title " +
                     "from (select tc.id from comment tc where tc.member_id = :memberId order by tc.created_at desc limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
                     "inner join post p on c.post_id = p.id " +
@@ -50,7 +50,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
       * 댓글의 생성일의 내림차순 기준 상위 limit개의 댓글을 출력함.
     */
     @Query(nativeQuery = true,
-            value = "select c.post_id, c.body, c.created_at, c.is_deleted, b.type, b.alias, pc.title " +
+            value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.type, b.alias, pc.title " +
                     "from comment c " +
                     "inner join post p on c.post_id = p.id " +
                     "inner join post_content pc on p.id = pc.post_id " +

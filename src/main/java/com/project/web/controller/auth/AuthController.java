@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class AuthController {
     @GetMapping("/login")
-    public String login(@RequestParam(name = "error", required = false) String error,
-                        @RequestParam(name = "exception", required = false) String exception,
-                        Model model) {
+    public String viewLoginPage(@RequestParam(name = "error", required = false) String error,
+                                @RequestParam(name = "exception", required = false) String exception,
+                                Model model) {
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         return "auth/LoginPage";
     }
 
     @GetMapping("/signup")
-    public String SignUpPage() {
+    public String viewSignUpPage() {
         return "auth/SignUpPage";
     }
 }

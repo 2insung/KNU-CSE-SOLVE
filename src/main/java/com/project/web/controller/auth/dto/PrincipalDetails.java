@@ -15,10 +15,10 @@ import java.util.Collection;
 // 로그인하지 않은 경우, null임.
 @Getter
 public class PrincipalDetails implements UserDetails {
-    private Integer userId;
-    private String username;
-    private String password;
-    private Role role;
+    private final Integer userId;
+    private final String username;
+    private final String password;
+    private final Role role;
 
     @Builder
     public PrincipalDetails(Integer userId, String username, String password, Role role) {

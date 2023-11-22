@@ -1,4 +1,4 @@
-package com.project.web.controller.community.dto.post;
+package com.project.web.controller.community.dto.post.view;
 
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
@@ -8,21 +8,26 @@ import java.time.LocalDateTime;
 
 @Getter
 public class TopHotPostDto {
+    // domain : Post
     private final Integer id;
-    private final String title;
     private final String createdAt;
-    private final String boardType;
+    // domain : PostContent
+    private final String title;
+    // domain : PostRecommendCount
     private final Integer recommendCount;
+    // domain : PostCommentCount
     private final Integer commentCount;
+    // domain : Board
+    private final String boardType;
 
     @Builder
-    public TopHotPostDto(Integer id, String title, LocalDateTime createdAt, String boardType, Integer recommendCount,
-                         Integer commentCount) {
+    public TopHotPostDto(Integer id, LocalDateTime createdAt, String title, Integer recommendCount, Integer commentCount,
+                         String boardType) {
         this.id = id;
-        this.boardType = boardType;
         this.createdAt = TimeFormattingUtil.localDateTimeFormatting(createdAt);
         this.title = title;
         this.recommendCount = recommendCount;
         this.commentCount = commentCount;
+        this.boardType = boardType;
     }
 }

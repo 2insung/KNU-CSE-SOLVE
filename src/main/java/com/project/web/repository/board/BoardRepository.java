@@ -20,5 +20,5 @@ public interface BoardRepository extends JpaRepository<Board, Integer> {
      상위 count개 게시판 출력
     */
     @Query("select b from Board b where b.id <= :count")
-    List<Board> findTopBoard(Integer count);
+    List<Board> findBoards(Integer count);
 }

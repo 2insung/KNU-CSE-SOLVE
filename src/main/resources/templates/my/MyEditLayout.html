@@ -17,14 +17,13 @@
     <link th:href="@{/css/common/HeaderTop.css}" rel="stylesheet"/>
     <link th:href="@{/css/common/HeaderNav.css}" rel="stylesheet"/>
     <link th:href="@{/css/common/Footer.css}" rel="stylesheet"/>
-    <link th:href="@{/css/my/MyPageSideBar.css}" rel="stylesheet"/>
-    <link th:href="@{/css/my/MyLayout.css}" rel="stylesheet"/>
+    <link th:href="@{/css/my/MyEditLayout.css}" rel="stylesheet"/>
 </head>
 <body>
-<th:block th:replace="common/HeaderTop :: headerFragment"></th:block>
+<th:block th:replace="common/Header :: headerFragment"></th:block>
 <main>
-    <div class="my-side-bar">
-        <a  th:href="@{/my-edit/{memberId}(memberId=${memberId})}">내 정보 수정</a>
+    <div class="my-top-bar">
+        <a th:href="@{/my-edit/{memberId}(memberId=${memberId})}">내 정보 수정</a>
         <a th:href="@{/my-edit/pw/{memberId}(memberId=${memberId})}">비밀번호 수정</a>
         <a th:href="@{/my-edit/withdraw/{memberId}(memberId=${memberId})}">계정 비활성화</a>
     </div>

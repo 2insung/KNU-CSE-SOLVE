@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{community/GeneralLayout}">
 <head>
     <link rel="stylesheet" th:href="@{/css/community/AllBoardPage.css}"/>
@@ -14,7 +15,7 @@
                 </a>
             </div>
         </div>
-        <div class="option" th:if="${user.isAdmin}">
+        <div class="option" sec:authorize="hasRole('ROLE_ADMIN')">
             <a th:href="@{/manage-board}">
                 <div class="manage-board-button">게시판 입력하기</div>
             </a>

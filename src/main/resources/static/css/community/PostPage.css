@@ -126,11 +126,22 @@
 
 .post-body-wrapper {
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .post-body {
 
+}
+
+.post-footer-wrapper{
+    width: 100%;
+    margin: 10px auto;
+    display: flex; /* Flex 컨테이너로 설정 */
+    justify-content: center; /* 자식 요소를 수평 중앙에 정렬 */
+}
+
+.post-footer{
+    display: flex;
 }
 
 .post-recommend {
@@ -141,9 +152,9 @@
     width: 100px;
     height: 50px;
     border: 2px solid #837ed7;
-    border-radius: 10%;
-    margin: 0 auto;
-    margin-top: 50px;
+    border-right: 1px solid #837ed7;
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
     cursor: pointer;
 }
 
@@ -160,6 +171,38 @@
 }
 
 .post-recommend .post-recommend-count {
+    display: flex;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.post-scrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    border: 2px solid #837ed7;
+    border-left: 1px solid #837ed7;
+    border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%;
+    cursor: pointer;
+}
+
+.post-scrap .post-scrap-image {
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+}
+
+.post-scrap .post-scrap-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-scrap .post-scrap-count {
     display: flex;
     justify-content: center;
     font-size: 1.1rem;

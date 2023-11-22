@@ -1,13 +1,15 @@
 package com.project.web.service.community;
 
-import com.project.web.controller.community.dto.post.*;
 import com.project.web.controller.community.dto.post.rest.IncPostRecommendResponseDto;
 import com.project.web.controller.community.dto.post.rest.IncPostScrapResponseDto;
+import com.project.web.controller.community.dto.post.view.*;
 import com.project.web.domain.board.Board;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.member.Role;
 import com.project.web.domain.post.*;
+import com.project.web.exception.Error400Exception;
 import com.project.web.exception.Error404Exception;
+import com.project.web.exception.Error500Exception;
 import com.project.web.repository.board.BoardPostCountRepository;
 import com.project.web.repository.board.BoardRepository;
 import com.project.web.repository.comment.CommentRecommendCountRepository;
@@ -39,6 +41,7 @@ public class PostService {
     private final PostRecommendCountRepository postRecommendCountRepository;
     private final PostCommentCountRepository postCommentCountRepository;
     private final PostRecommendMemberRepository postRecommendMemberRepository;
+    private final PostScrapCountRepository postScrapCountRepository;
     private final PostScrapMemberRepository postScrapMemberRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
@@ -52,7 +55,7 @@ public class PostService {
      * [일반 + 공지 + 인기], 모든 카테고리에 대한 게시글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<PostPreviewDto> getPostPreviewDtosByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
+    public List<PostPreviewDto> getPostPreviewDtos(Integer boardId, Integer pageSize, Integer pageNumber) {
         List<Object[]> results = postRepository.findPostPreviewDtosByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
@@ -62,14 +65,14 @@ public class PostService {
                     Boolean resultIsNotice = (Boolean) result[2];
                     Boolean resultIsHot = (Boolean) result[3];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[4]).toLocalDateTime();
-                    String resultAuthorNickname = (String) result[5];
-                    String resultAuthorProfileImage = (String) result[6];
-                    String resultTitle = (String) result[7];
-                    String resultSummary = (String) result[8];
-                    String resultThumbnail = (String) result[9];
-                    Integer resultHitCount = (Integer) result[10];
-                    Integer resultRecommendCount = (Integer) result[11];
-                    Integer resultCommentCount = (Integer) result[12];
+                    String resultTitle = (String) result[5];
+                    String resultSummary = (String) result[6];
+                    String resultThumbnail = (String) result[7];
+                    Integer resultHitCount = (Integer) result[8];
+                    Integer resultRecommendCount = (Integer) result[9];
+                    Integer resultCommentCount = (Integer) result[10];
+                    String resultAuthorNickname = (String) result[11];
+                    String resultAuthorProfileImage = (String) result[12];
 
                     return PostPreviewDto.builder()
                             .id(resultPostId)
@@ -77,14 +80,14 @@ public class PostService {
                             .isNotice(resultIsNotice)
                             .isHot(resultIsHot)
                             .createdAt(resultCreatedAt)
-                            .authorNickname(resultAuthorNickname)
-                            .authorProfileImage(resultAuthorProfileImage)
                             .title(resultTitle)
                             .summary(resultSummary)
                             .thumbnail(resultThumbnail)
                             .hitCount(resultHitCount)
                             .recommendCount(resultRecommendCount)
                             .commentCount(resultCommentCount)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -97,7 +100,7 @@ public class PostService {
      * [인기], 인기 카테고리에 대한 게시글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<PostPreviewDto> getHotPostPreviewDtosByBoardId(Integer boardId, Integer pageSize, Integer pageNumber) {
+    public List<PostPreviewDto> getHotPostPreviewDtos(Integer boardId, Integer pageSize, Integer pageNumber) {
         List<Object[]> results = postRepository.findHotPostPreviewDtosByBoardId(boardId, pageSize, pageSize * (pageNumber - 1));
 
         return results.stream()
@@ -107,14 +110,14 @@ public class PostService {
                     Boolean resultIsNotice = (Boolean) result[2];
                     Boolean resultIsHot = (Boolean) result[3];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[4]).toLocalDateTime();
-                    String resultAuthorNickname = (String) result[5];
-                    String resultAuthorProfileImage = (String) result[6];
-                    String resultTitle = (String) result[7];
-                    String resultSummary = (String) result[8];
-                    String resultThumbnail = (String) result[9];
-                    Integer resultHitCount = (Integer) result[10];
-                    Integer resultRecommendCount = (Integer) result[11];
-                    Integer resultCommentCount = (Integer) result[12];
+                    String resultTitle = (String) result[5];
+                    String resultSummary = (String) result[6];
+                    String resultThumbnail = (String) result[7];
+                    Integer resultHitCount = (Integer) result[8];
+                    Integer resultRecommendCount = (Integer) result[9];
+                    Integer resultCommentCount = (Integer) result[10];
+                    String resultAuthorNickname = (String) result[11];
+                    String resultAuthorProfileImage = (String) result[12];
 
                     return PostPreviewDto.builder()
                             .id(resultPostId)
@@ -122,14 +125,14 @@ public class PostService {
                             .isNotice(resultIsNotice)
                             .isHot(resultIsHot)
                             .createdAt(resultCreatedAt)
-                            .authorNickname(resultAuthorNickname)
-                            .authorProfileImage(resultAuthorProfileImage)
                             .title(resultTitle)
                             .summary(resultSummary)
                             .thumbnail(resultThumbnail)
                             .hitCount(resultHitCount)
                             .recommendCount(resultRecommendCount)
                             .commentCount(resultCommentCount)
+                            .authorNickname(resultAuthorNickname)
+                            .authorProfileImage(resultAuthorProfileImage)
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -141,8 +144,8 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public PostDto getPostDto(Integer userId, Integer postId) {
-        Object result = postRepository.findPostDtoById(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+        Object result = postRepository.findPostDtoByPostId(postId)
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
         Object[] arr = (Object[]) result;
         Integer resultPostId = (Integer) arr[0];
@@ -151,16 +154,17 @@ public class PostService {
         Boolean resultIsHot = (Boolean) arr[3];
         LocalDateTime resultCreatedAt = (LocalDateTime) arr[4];
         String resultCategory = (String) arr[5];
-        String resultBoardType = (String) arr[6];
-        String resultAuthorNickname = (String) arr[7];
-        String resultAuthorProfileImage = (String) arr[8];
-        String resultTitle = (String) arr[9];
-        String resultBody = (String) arr[10];
-        LocalDateTime resultUpdatedAt = (LocalDateTime) arr[11];
-        Integer resultHitCount = (Integer) arr[12];
-        Integer resultRecommendCount = (Integer) arr[13];
-        Integer resultCommentCount = (Integer) arr[14];
-        Integer resultTotalCommentCount = (Integer) arr[15];
+        String resultTitle = (String) arr[6];
+        String resultBody = (String) arr[7];
+        LocalDateTime resultUpdatedAt = (LocalDateTime) arr[8];
+        Integer resultHitCount = (Integer) arr[9];
+        Integer resultRecommendCount = (Integer) arr[10];
+        Integer resultCommentCount = (Integer) arr[11];
+        Integer resultTotalCommentCount = (Integer) arr[12];
+        Integer resultScrapCount = (Integer) arr[13];
+        String resultBoardType = (String) arr[14];
+        String resultAuthorNickname = (String) arr[15];
+        String resultAuthorProfileImage = (String) arr[16];
         Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
         return PostDto.builder()
@@ -180,6 +184,7 @@ public class PostService {
                 .recommendCount(resultRecommendCount)
                 .commentCount(resultCommentCount)
                 .totalCommentCount(resultTotalCommentCount)
+                .scrapCount(resultScrapCount)
                 .isMine(isMine)
                 .build();
     }
@@ -240,8 +245,14 @@ public class PostService {
                 .build();
         postCommentCountRepository.save(postCommentCount);
 
+        PostScrapCount postScrapCount = PostScrapCount.builder()
+                .post(post)
+                .scrapCount(0)
+                .build();
+        postScrapCountRepository.save(postScrapCount);
+
         if (boardPostCountRepository.updateByBoardId(boardId, 1, 0) == 0) {
-            throw new Error404Exception("존재하지 않는 게시판입니다.");
+            throw new Error500Exception("존재하지 않는 게시판입니다.");
         }
     }
 
@@ -253,7 +264,7 @@ public class PostService {
     @Transactional
     public void updatePost(Integer postId, String title, String body, Boolean isNotice) {
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
         Post post = postContent.getPost();
 
         Document document = Jsoup.parse(body);
@@ -282,12 +293,12 @@ public class PostService {
     */
     @Transactional
     public void deletePost(Integer boardId, Integer postId) {
-        if (postRepository.updateIsDeletedById(postId, true) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
+        if (postRepository.updateIsDeleted(postId, true) == 0) {
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
         List<Integer> commentIds = commentRepository.findIdsByPostId(postId);
         commentRecommendMemberRepository.deleteByCommentIds(commentIds);
@@ -296,6 +307,7 @@ public class PostService {
 
         postScrapMemberRepository.deleteByPostId(postId);
         postRecommendMemberRepository.deleteByPostId(postId);
+        postScrapCountRepository.deleteByPostId(postId);
         postCommentCountRepository.deleteByPostId(postId);
         postRecommendCountRepository.deleteByPostId(postId);
         postHitCountRepository.deleteByPostId(postId);
@@ -304,7 +316,7 @@ public class PostService {
 
         Integer dropHotPostCount = post.getIsHot() ? -1 : 0;
         if (boardPostCountRepository.updateByBoardId(boardId, -1, dropHotPostCount) == 0) {
-            throw new Error404Exception("존재하지 않는 게시판입니다.");
+            throw new Error500Exception("존재하지 않는 게시판입니다.");
         }
     }
 
@@ -325,7 +337,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostCommentCountDto getPostCommentCountDto(Integer postId) {
         PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
         return PostCommentCountDto.builder()
                 .commentCount(postCommentCount.getCommentCount())
@@ -340,7 +352,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Integer getTotalCommentCount(Integer postId) {
         PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
         return postCommentCount.getTotalCommentCount();
     }
@@ -352,7 +364,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public RewriteDto getRewriteDto(Integer postId) {
         PostContent postContent = postContentRepository.findWithPostByPostId(postId)
-                .orElseThrow(() -> new Error404Exception("존재하지 않는 게시판입니다."));
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시판입니다."));
         Post post = postContent.getPost();
 
         return RewriteDto.builder()
@@ -376,11 +388,11 @@ public class PostService {
     public IncPostRecommendResponseDto incPostRecommend(Integer userId, Integer postId) {
         if (!postRecommendMemberRepository.existsByPostAndMemberId(postId, userId)) {
             if (postRecommendCountRepository.updateByPostId(postId, 1) == 0) {
-                throw new Error404Exception("존재하지 않는 게시글입니다.");
+                throw new Error500Exception("존재하지 않는 게시글입니다.");
             }
 
             PostRecommendCount postRecommendCount = postRecommendCountRepository.findWithPostByPostId(postId)
-                    .orElseThrow(() -> new Error404Exception("존재하지 않는 게시글입니다."));
+                    .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
             Post post = postRecommendCount.getPost();
             Member member = memberRepository.getReferenceById(userId);
 
@@ -394,12 +406,13 @@ public class PostService {
                 LocalDateTime now = LocalDateTime.now();
                 post.updateIsHot(true);
                 post.updateHotRegisteredAt(now);
+
                 if (post.getCategory().equals("일반")) {
                     post.updateCategory("인기");
                 }
 
                 if (boardPostCountRepository.updateByBoardId(post.getBoard().getId(), 0, 1) == 0) {
-                    throw new Error404Exception("존재하지 않는 게시판입니다.");
+                    throw new Error500Exception("존재하지 않는 게시판입니다.");
                 }
             }
 
@@ -423,18 +436,24 @@ public class PostService {
     @Transactional
     public void incPostHit(Integer postId) {
         if (postHitCountRepository.updateByPostId(postId, 1) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
     }
 
     /*
       게시글 스크랩 수 증가 함수.
      * 게시글의 스크랩 수를 1 증가시킴.
+     * 증가된 스크랩 수를 반환함.
     */
     @Transactional
     public IncPostScrapResponseDto incPostScrap(Integer userId, Integer postId) {
         if (!postScrapMemberRepository.existsByPostAndMemberId(postId, userId)) {
-            Post post = postRepository.getReferenceById(postId);
+            if (postScrapCountRepository.updateByPostId(postId, 1) == 0) {
+                throw new Error500Exception("존재하지 않는 게시글입니다.");
+            }
+            PostScrapCount postScrapCount = postScrapCountRepository.findWithPostByPostId(postId)
+                    .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
+            Post post = postScrapCount.getPost();
             Member member = memberRepository.getReferenceById(userId);
 
             PostScrapMember postScrapMember = PostScrapMember.builder()
@@ -446,51 +465,56 @@ public class PostService {
 
             return IncPostScrapResponseDto.builder()
                     .isSuccess(true)
+                    .scrapCount(postScrapCount.getScrapCount())
                     .build();
         }
         else {
             return IncPostScrapResponseDto.builder()
                     .isSuccess(false)
+                    .scrapCount(null)
                     .build();
         }
     }
 
     @Transactional
     public void deletePostScrap(Integer memberId, Integer postId) {
-
         if (postScrapMemberRepository.deleteByPostAndMemberId(postId, memberId) == 0) {
-            throw new Error404Exception("존재하지 않는 게시글입니다.");
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
+        }
+
+        if (postScrapCountRepository.updateByPostId(postId, -1) == 0) {
+            throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
     }
 
     /*
-      상위 6개 게시판의 상위 10개 게시글 출력 함수.(생성일 기준)
-     * boardId가 1~6인 게시판의 상위 10개 게시글을 출력함.
-     * 60개의 게시글을 얻은 다음, boardId가 같은 것끼리 분류하여 List로 만듦.
-     * 따라서 10개의 게시글이 존재하는 6개의 List가 반환됨.
+      상위 baardCount개 게시판의 상위 postCount개 게시글 출력 함수.(생성일 기준)
+     * boardId가 1~boardCount개인 게시판의 상위 postCount개 게시글을 출력함.
+     * boardCount * postCount개의 게시글을 얻은 다음, boardId가 같은 것끼리 분류하여 List로 만듦.
+     * 따라서 postCount개의 게시글이 존재하는 boardCount개의 List가 반환됨.
     */
     @Transactional(readOnly = true)
-    public List<TopBoardDto> getTopBoardDtos() {
-        List<Board> boardResult = boardRepository.findTopBoard(6);
+    public List<TopBoardDto> getTopBoardDtos(Integer boardCount, Integer postCount) {
+        List<Board> boardResult = boardRepository.findBoards(boardCount);
 
         List<TopBoardDto> topBoardDtos = new ArrayList<>();
         for (int i = 0; i < boardResult.size(); i++) {
             Board board = boardResult.get(i);
 
             TopBoardDto topBoardDto = TopBoardDto.builder()
-                    .boardType(board.getType())
-                    .boardAlias(board.getAlias())
-                    .topPostDtoList(
-                            postRepository.findTopPostDtos(board.getId(), 10).stream()
+                    .type(board.getType())
+                    .alias(board.getAlias())
+                    .topPostDtos(
+                            postRepository.findTopPostDtos(board.getId(), postCount).stream()
                                     .map((result) -> {
                                         Integer postId = (Integer) result[0];
-                                        String title = (String) result[1];
-                                        LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
+                                        LocalDateTime resultCreatedAt = ((Timestamp) result[1]).toLocalDateTime();
+                                        String title = (String) result[2];
                                         String boardType = (String) result[3];
                                         return TopPostDto.builder()
                                                 .id(postId)
-                                                .title(title)
                                                 .createdAt(resultCreatedAt)
+                                                .title(title)
                                                 .boardType(boardType)
                                                 .build();
                                     })
@@ -504,33 +528,31 @@ public class PostService {
     }
 
     /*
-      모든 게시판에 대한 상위 20개 게시글 출력 함수.(인기글 등록 시간 기준)
-     * 게시판 구분없이 총 20개의 인기글을 출력함.
+      모든 게시판에 대한 상위 count개 게시글 출력 함수.(인기글 등록 시간 기준)
+     * 게시판 구분없이 총 count개의 인기글을 출력함.
     */
     @Transactional(readOnly = true)
-    public List<TopHotPostDto> getTopHotPostDtos() {
-        List<Object[]> results = postRepository.findTopHotPostDtos(10);
+    public List<TopHotPostDto> getTopHotPostDtos(Integer postCount) {
+        List<Object[]> results = postRepository.findTopHotPostDtos(postCount);
 
         return results.stream()
                 .map((result) -> {
                     Integer postId = (Integer) result[0];
-                    String title = (String) result[1];
-                    LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
-                    String boardType = (String) result[3];
-                    Integer recommendCount = (Integer) result[4];
-                    Integer commentCount = (Integer) result[5];
+                    LocalDateTime resultCreatedAt = ((Timestamp) result[1]).toLocalDateTime();
+                    String title = (String) result[2];
+                    Integer recommendCount = (Integer) result[3];
+                    Integer commentCount = (Integer) result[4];
+                    String boardType = (String) result[5];
 
                     return TopHotPostDto.builder()
                             .id(postId)
-                            .title(title)
                             .createdAt(resultCreatedAt)
-                            .boardType(boardType)
+                            .title(title)
                             .recommendCount(recommendCount)
                             .commentCount(commentCount)
+                            .boardType(boardType)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
-
-
 }

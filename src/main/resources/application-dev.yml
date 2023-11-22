@@ -29,6 +29,10 @@ spring:
     suffix: .html
     enabled: true
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 image:
   resource:
     location: ${IMAGE_RESOURCE_LOCATION}

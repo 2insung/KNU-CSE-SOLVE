@@ -1,4 +1,4 @@
-package com.project.web.controller.my.dto;
+package com.project.web.controller.my.dto.view;
 
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
@@ -8,23 +8,26 @@ import java.time.LocalDateTime;
 
 @Getter
 public class MyScrapDto {
-    private final Integer id;
+    // domain : PostScrapMember
     private final Integer memberId;
+    // domain : Post
+    private final Integer postId;
     private final String createdAt;
+    private final String title;
+    // domain : board
     private final String boardType;
     private final String boardAlias;
-    private final String title;
     private final Boolean isMine;
 
     @Builder
-    public MyScrapDto(Integer id, Integer memberId, LocalDateTime createdAt, String boardType,
-                     String boardAlias, String title, Boolean isMine) {
-        this.id = id;
+    public MyScrapDto(Integer memberId, Integer postId, LocalDateTime createdAt, String title, String boardType,
+                      String boardAlias, Boolean isMine) {
         this.memberId = memberId;
+        this.postId = postId;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
+        this.title = title;
         this.boardType = boardType;
         this.boardAlias = boardAlias;
-        this.title = title;
         this.isMine = isMine;
     }
 }

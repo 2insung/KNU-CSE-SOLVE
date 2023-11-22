@@ -17,13 +17,12 @@
     <link th:href="@{/css/common/HeaderTop.css}" rel="stylesheet"/>
     <link th:href="@{/css/common/HeaderNav.css}" rel="stylesheet"/>
     <link th:href="@{/css/common/Footer.css}" rel="stylesheet"/>
-    <link th:href="@{/css/my/MyPageSideBar.css}" rel="stylesheet"/>
     <link th:href="@{/css/my/MyLayout.css}" rel="stylesheet"/>
 </head>
 <body>
-<th:block th:replace="common/HeaderTop :: headerFragment"></th:block>
+<th:block th:replace="common/Header :: headerFragment"></th:block>
 <main>
-    <div class="my-side-bar">
+    <div class="my-top-bar">
         <a th:href="@{/my/{memberId}(memberId=${memberId})}">사용자 정보</a>
         <a th:href="@{/my/post/{memberId}(memberId=${memberId})}">작성한 글</a>
         <a th:href="@{/my/comment/{memberId}(memberId=${memberId})}">작성한 댓글</a>

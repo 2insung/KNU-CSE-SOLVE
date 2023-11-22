@@ -1,4 +1,4 @@
-package com.project.web.controller.community.dto.comment;
+package com.project.web.controller.community.dto.comment.view;
 
 import com.project.web.util.TimeFormattingUtil;
 import lombok.Builder;
@@ -8,13 +8,11 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CommentDto {
+    // domain : Comment
     private final Integer id;
-    private final Integer postId;
     private final Integer authorId;
-    private final String authorNickname;
-    private final String authorProfileImage;
+    private final Integer postId;
     private final Integer parentAuthorId;
-    private final String parentAuthorNickname;
     private final Boolean isPostAuthor;
     private final Boolean isRoot;
     private final Boolean isRootChild;
@@ -22,19 +20,22 @@ public class CommentDto {
     private final String body;
     private final String createdAt;
     private final Integer recommendCount;
+    // domain : MemberDetail(댓글 작성자)
+    private final String authorNickname;
+    private final String authorProfileImage;
+    // domain : MemberDetail(대댓글의 달 경우 원댓글의 작성자)
+    private final String parentAuthorNickname;
+    // 현재 사용자가 작성한 Comment인지.
     private final Boolean isMine;
 
     @Builder
-    public CommentDto(Integer id, Integer postId, Integer authorId, String authorNickname, String authorProfileImage,
-                      Integer parentAuthorId, String parentAuthorNickname, Boolean isPostAuthor, Boolean isRoot, Boolean isRootChild,
-                      Boolean isDeleted, String body, LocalDateTime createdAt, Integer recommendCount, Boolean isMine) {
+    public CommentDto(Integer id, Integer authorId, Integer postId, Integer parentAuthorId, Boolean isPostAuthor,
+                      Boolean isRoot, Boolean isRootChild, Boolean isDeleted, String body, LocalDateTime createdAt,
+                      Integer recommendCount, String authorNickname, String authorProfileImage, String parentAuthorNickname, Boolean isMine) {
         this.id = id;
-        this.postId = postId;
         this.authorId = authorId;
-        this.authorNickname = authorNickname;
-        this.authorProfileImage = authorProfileImage;
+        this.postId = postId;
         this.parentAuthorId = parentAuthorId;
-        this.parentAuthorNickname = parentAuthorNickname;
         this.isPostAuthor = isPostAuthor;
         this.isRoot = isRoot;
         this.isRootChild = isRootChild;
@@ -42,6 +43,9 @@ public class CommentDto {
         this.body = body;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
         this.recommendCount = recommendCount;
+        this.authorNickname = authorNickname;
+        this.authorProfileImage = authorProfileImage;
+        this.parentAuthorNickname = parentAuthorNickname;
         this.isMine = isMine;
     }
 }

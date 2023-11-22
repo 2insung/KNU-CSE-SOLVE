@@ -1,7 +1,7 @@
 var token = $("meta[name='_csrf']").attr("content")
 
 function deleteMyScrap(postId, memberId, currentPageNumber) {
-    if (confirm("삭제하시겠습니까?")) {
+    if (confirm("스크랩을 취소하시겠습니까?")) {
         $.ajax(
             {
                 url: "/api/delete-my-scrap",
@@ -17,7 +17,7 @@ function deleteMyScrap(postId, memberId, currentPageNumber) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", token);
                 },
                 success: function (response) {
-                    alert("삭제되었습니다.")
+                    alert("취소되었습니다.")
                     window.location.href = "/my/scrap/" + response.memberId + "?page=" + response.pageNumber
                 },
                 error: function (error) {

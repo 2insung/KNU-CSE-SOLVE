@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comment")
 public class Comment {
-    asdas
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,6 +84,7 @@ public class Comment {
         if (this.rootCommentId == null) {
             this.rootCommentId = this.id;
         }
+
         if (this.groupCreatedAt == null) {
             this.groupCreatedAt = this.createdAt;
         }
