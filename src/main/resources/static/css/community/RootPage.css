@@ -27,7 +27,7 @@ main {
 }
 
 .hot-post-list-header{
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: bolder;
     background-color: #9f9df1;
     color: white;
@@ -42,6 +42,7 @@ main {
 
 .hot-post-list-wrapper ul li{
     padding: 7px;
+    height: 39px;
     border-bottom: 1px solid #e2e2e2;
 }
 

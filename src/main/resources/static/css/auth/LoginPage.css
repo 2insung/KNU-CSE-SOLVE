@@ -1,9 +1,9 @@
 .login {
     width: 600px;
     height: 400px;
-    margin: 0 auto;
     border: 3px #837ed7 solid;
     border-radius: 10px;
+    transform: translateY(-10%);
 }
 
 .login-wrapper {
