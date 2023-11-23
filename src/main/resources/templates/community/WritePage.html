@@ -11,7 +11,7 @@
         <form id="writeForm">
             <div class="board-header">
                 <div class="board-alias">
-                    <a th:href="@{/board/{boardType}(boardType=${board.type})}" th:text="${board.alias}"></a>
+                    <a th:href="@{/board/{boardId}(boardId=${board.id})}" th:text="${board.alias}"></a>
                 </div>
                 <div class="option">
                     <div class="description" th:text="${board.alias} + ' 게시판에 글을 작성합니다.'"></div>
@@ -26,17 +26,16 @@
                         </div>
                         <div class="submit-button-wrapper">
                             <button th:if="${isRewrite}"
-                                    th:data-boardType="${board.type}"
                                     th:data-postId="${rewrite.id}"
                                     th:data-postAuthorId="${rewrite.authorId}"
                                     type="button"
-                                    onclick="updatePost(this.getAttribute('data-boardType'), this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
+                                    onclick="updatePost(this.getAttribute('data-postId'), this.getAttribute('data-postAuthorId'))">
                                 수정하기
                             </button>
                             <button th:unless="${isRewrite}"
-                                    th:data-boardType="${board.type}"
+                                    th:data-boardId="${board.id}"
                                     type="button"
-                                    onclick="savePost(this.getAttribute('data-boardType'))">제출하기
+                                    onclick="savePost(this.getAttribute('data-boardId'))">제출하기
                             </button>
                         </div>
                     </div>

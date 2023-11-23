@@ -33,7 +33,7 @@ public interface PostScrapMemberRepository extends JpaRepository<PostScrapMember
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select psm.member_id, p.id, p.created_at, pc.title, b.type, b.alias " +
+            value = "select psm.member_id, p.id, p.created_at, pc.title, b.alias " +
                     "from (select tp.id from post_scrap_member tp where tp.member_id = :memberId order by tp.scrapped_at desc limit :limit offset :offset) as temp " +
                     "inner join post_scrap_member psm on psm.id = temp.id " +
                     "inner join post p on p.id = psm.post_id " +

@@ -16,17 +16,13 @@ public class TopHotPostDto {
     // domain : PostStat
     private final Integer recommendCount;
     private final Integer commentCount;
-    // domain : Board
-    private final String boardType;
 
     @Builder
-    public TopHotPostDto(Integer id, LocalDateTime createdAt, String title, Integer recommendCount, Integer commentCount,
-                         String boardType) {
+    public TopHotPostDto(Integer id, LocalDateTime createdAt, String title, Integer recommendCount, Integer commentCount) {
         this.id = id;
         this.createdAt = TimeFormattingUtil.localDateTimeFormatting(createdAt);
         this.title = title;
         this.recommendCount = recommendCount;
         this.commentCount = commentCount;
-        this.boardType = boardType;
     }
 }

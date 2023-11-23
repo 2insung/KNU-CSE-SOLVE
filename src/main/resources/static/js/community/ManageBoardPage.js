@@ -46,7 +46,6 @@ function saveBoard() {
             url: "/api/save-board",
             type: "POST",
             data: JSON.stringify({
-                boardType: type,
                 boardAlias: alias,
                 boardDescription: description,
                 boardCategory: category
@@ -57,7 +56,7 @@ function saveBoard() {
                 xhr.setRequestHeader("X-CSRF-TOKEN", token);
             },
             success: function (response) {
-                window.location.href = "/board/" + response.boardType
+                window.location.href = "/all-board"
             },
             error: function (error) {
                 if (error.status === 401 || error.status === 403) {

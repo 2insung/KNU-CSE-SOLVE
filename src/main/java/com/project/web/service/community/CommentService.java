@@ -94,18 +94,18 @@ public class CommentService {
                     Boolean resultIsDeleted = (Boolean) result[1];
                     String resultBody = (String) result[2];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[3]).toLocalDateTime();
-                    String resultBoardType = (String) result[4];
-                    String resultAlias = (String) result[5];
-                    String title = (String) result[6];
+                    Integer resultBoardId = (Integer) result[4];
+                    String resultBoardAlias = (String) result[5];
+                    String resultPosttitle = (String) result[6];
 
                     return TopCommentDto.builder()
                             .postId(resultPostId)
                             .isDeleted(resultIsDeleted)
                             .body(resultBody)
                             .createdAt(resultCreatedAt)
-                            .boardType(resultBoardType)
-                            .boardAlias(resultAlias)
-                            .postTitle(title)
+                            .boardId(resultBoardId)
+                            .boardAlias(resultBoardAlias)
+                            .postTitle(resultPosttitle)
                             .build();
                 }).collect(Collectors.toList());
     }

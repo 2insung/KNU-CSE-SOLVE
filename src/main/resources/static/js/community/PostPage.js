@@ -15,14 +15,14 @@ function showForm(button) {
     }
 }
 
-function deletePost(boardType, postId, postAuthorId) {
+function deletePost(boardId, postId, postAuthorId) {
     if (confirm("삭제하시겠습니까?")) {
         $.ajax(
             {
                 url: "/api/delete-post",
                 type: "DELETE",
                 data: JSON.stringify({
-                    boardType: boardType,
+                    boardId: boardId,
                     postId: postId,
                     postAuthorId: postAuthorId
                 }),
@@ -33,7 +33,7 @@ function deletePost(boardType, postId, postAuthorId) {
                 },
                 success: function (response) {
                     alert("삭제되었습니다.")
-                    window.location.href = "/board/" + response.boardType
+                    window.location.href = "/board/" + response.boardId
                 },
                 error: function (error) {
                     if (error.status === 401 || error.status === 403) {

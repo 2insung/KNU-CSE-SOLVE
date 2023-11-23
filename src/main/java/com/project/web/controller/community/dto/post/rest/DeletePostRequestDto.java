@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 public class DeletePostRequestDto {
-    @NotBlank(message = "게시판 타입을 입력해주세요.")
-    private String boardType;
+    @NotNull(message = "게시판 아이디를 입력해주세요.")
+    private Integer boardId;
 
     @NotNull(message = "게시글 아이디를 입력해주세요.")
     private Integer postId;

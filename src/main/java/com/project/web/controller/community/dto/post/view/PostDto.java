@@ -25,8 +25,6 @@ public class PostDto {
     private final Integer commentCount;
     private final Integer totalCommentCount;
     private final Integer scrapCount;
-    // domain : Board
-    private final String boardType;
     // domain : MemberDetail
     private final String authorNickname;
     private final String authorProfileImage;
@@ -37,7 +35,7 @@ public class PostDto {
     public PostDto(Integer id, Integer authorId, Boolean isNotice, Boolean isHot, LocalDateTime createdAt,
                    String category, String title, String body, LocalDateTime updatedAt, Integer hitCount,
                    Integer recommendCount, Integer commentCount, Integer totalCommentCount, Integer scrapCount, Boolean isMine,
-                   String boardType, String authorNickname, String authorProfileImage) {
+                   String authorNickname, String authorProfileImage) {
         this.id = id;
         this.authorId = authorId;
         this.isNotice = isNotice;
@@ -53,7 +51,6 @@ public class PostDto {
         this.totalCommentCount = totalCommentCount;
         this.scrapCount = scrapCount;
         this.isMine = isMine;
-        this.boardType = boardType;
         this.authorNickname = authorNickname;
         this.authorProfileImage = authorProfileImage;
     }

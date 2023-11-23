@@ -9,14 +9,14 @@ import java.util.List;
 @Getter
 public class TopBoardDto {
     // domain : board
+    private final Integer id;
     private final String alias;
-    private final String type;
     private final List<TopPostDto> topPostDtos;
 
     @Builder
-    public TopBoardDto(String alias, String type, List<TopPostDto> topPostDtos) {
+    public TopBoardDto(Integer id, String alias, List<TopPostDto> topPostDtos) {
+        this.id = id;
         this.alias = alias;
-        this.type = type;
         this.topPostDtos = topPostDtos;
     }
 }

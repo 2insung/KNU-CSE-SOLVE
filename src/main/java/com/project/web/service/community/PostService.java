@@ -1,5 +1,6 @@
 package com.project.web.service.community;
 
+import com.project.web.controller.community.dto.board.view.BoardDto;
 import com.project.web.controller.community.dto.post.rest.IncPostRecommendResponseDto;
 import com.project.web.controller.community.dto.post.rest.IncPostScrapResponseDto;
 import com.project.web.controller.community.dto.post.view.*;
@@ -157,9 +158,8 @@ public class PostService {
         Integer resultCommentCount = (Integer) arr[11];
         Integer resultTotalCommentCount = (Integer) arr[12];
         Integer resultScrapCount = (Integer) arr[13];
-        String resultBoardType = (String) arr[14];
-        String resultAuthorNickname = (String) arr[15];
-        String resultAuthorProfileImage = (String) arr[16];
+        String resultAuthorNickname = (String) arr[14];
+        String resultAuthorProfileImage = (String) arr[15];
         Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
         return PostDto.builder()
@@ -169,7 +169,6 @@ public class PostService {
                 .isHot(resultIsHot)
                 .createdAt(resultCreatedAt)
                 .category(resultCategory)
-                .boardType(resultBoardType)
                 .authorNickname(resultAuthorNickname)
                 .authorProfileImage(resultAuthorProfileImage)
                 .title(resultTitle)
@@ -181,6 +180,32 @@ public class PostService {
                 .totalCommentCount(resultTotalCommentCount)
                 .scrapCount(resultScrapCount)
                 .isMine(isMine)
+                .build();
+    }
+
+    /*
+      게시판 정보 출력 함수.
+     * 현재 게시판의 정보를 출력하는 함수.
+     * 게시판의 게시글 수에 대한 정보도 제공함.
+    */
+    @Transactional(readOnly = true)
+    public BoardDto getBoardDto(Integer postId) {
+        Object result = postRepository.findBoardDtoByPostId(postId)
+                .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
+
+        Object[] arr = (Object[]) result;
+        Integer resultId = (Integer) arr[0];
+        String resultAlias = (String) arr[1];
+        String resultDescription = (String) arr[2];
+        Integer resultPostCount = (Integer) arr[3];
+        Integer resultHotPostCount = (Integer) arr[4];
+
+        return BoardDto.builder()
+                .id(resultId)
+                .alias(resultAlias)
+                .description(resultDescription)
+                .postCount(resultPostCount)
+                .hotPostCount(resultHotPostCount)
                 .build();
     }
 
@@ -479,7 +504,7 @@ public class PostService {
             Board board = boardResult.get(i);
 
             TopBoardDto topBoardDto = TopBoardDto.builder()
-                    .type(board.getType())
+                    .id(board.getId())
                     .alias(board.getAlias())
                     .topPostDtos(
                             postRepository.findTopPostDtos(board.getId(), postCount).stream()
@@ -487,12 +512,10 @@ public class PostService {
                                         Integer postId = (Integer) result[0];
                                         LocalDateTime resultCreatedAt = ((Timestamp) result[1]).toLocalDateTime();
                                         String title = (String) result[2];
-                                        String boardType = (String) result[3];
                                         return TopPostDto.builder()
                                                 .id(postId)
                                                 .createdAt(resultCreatedAt)
                                                 .title(title)
-                                                .boardType(boardType)
                                                 .build();
                                     })
                                     .collect(Collectors.toList())
@@ -519,7 +542,6 @@ public class PostService {
                     String title = (String) result[2];
                     Integer recommendCount = (Integer) result[3];
                     Integer commentCount = (Integer) result[4];
-                    String boardType = (String) result[5];
 
                     return TopHotPostDto.builder()
                             .id(postId)
@@ -527,7 +549,6 @@ public class PostService {
                             .title(title)
                             .recommendCount(recommendCount)
                             .commentCount(commentCount)
-                            .boardType(boardType)
                             .build();
                 })
                 .collect(Collectors.toList());

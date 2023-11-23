@@ -70,15 +70,15 @@ public class CommunityViewController {
         return "community/RootPage";
     }
 
-    @GetMapping("/board/{boardType}")
-    public String viewBoardPage(@PathVariable(name = "boardType") String boardType,
+    @GetMapping("/board/{boardId}")
+    public String viewBoardPage(@PathVariable(name = "boardId") Integer boardId,
                                 @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
                                 @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
                                 @AuthenticationPrincipal PrincipalDetails principal,
                                 Model model) {
         // 현재 게시판의 정보를 제공함.
         // isViewHotPostPreviewList가 true인 경우는 인기글만 볼 수 있음.
-        BoardDto boardDto = boardService.getBoardDto(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardId);
         model.addAttribute("board", boardDto);
         model.addAttribute("boardIsViewHotPostPreviewList", isViewHotPostPreviewList);
 
@@ -87,15 +87,14 @@ public class CommunityViewController {
         Integer processedPageNumber = PageUtil.processPageNumber(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             if (isViewHotPostPreviewList) {
-                return "redirect:/board/" + boardType + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
+                return "redirect:/board/" + boardId + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
             }
             else {
-                return "redirect:/board/" + boardType + "?page=" + processedPageNumber;
+                return "redirect:/board/" + boardId + "?page=" + processedPageNumber;
             }
         }
 
         // 게시판의 게시글 프리뷰 리스트를 제공. 만약 '인기글' 선택 시 isViewHotPostPreviewList가 true임.
-        Integer boardId = boardDto.getId();
         List<PostPreviewDto> postPreviewDtos =
                 isViewHotPostPreviewList ?
                         postService.getHotPostPreviewDtos(boardId, CommunityConstants.POST_PAGE_SIZE, pageNumber) :
@@ -110,16 +109,15 @@ public class CommunityViewController {
         return "community/BoardPage";
     }
 
-    @GetMapping("/board/{boardType}/post/{postId}")
-    public String viewPostPage(@PathVariable(name = "boardType") String boardType,
-                               @PathVariable(name = "postId") Integer postId,
+    @GetMapping("/post/{postId}")
+    public String viewPostPage(@PathVariable(name = "postId") Integer postId,
                                @RequestParam(name = "hot", defaultValue = "false") Boolean isViewHotPostPreviewList,
                                @RequestParam(name = "page", defaultValue = "1") Integer pageNumber,
                                @AuthenticationPrincipal PrincipalDetails principal,
                                Model model) {
         // 현재 게시판의 정보를 제공함.
         // isViewHotPostPreviewList가 true인 경우는 인기글만 볼 수 있음.
-        BoardDto boardDto = boardService.getBoardDto(boardType);
+        BoardDto boardDto = postService.getBoardDto(postId);
         model.addAttribute("board", boardDto);
         model.addAttribute("boardIsViewHotPostPreviewList", isViewHotPostPreviewList);
 
@@ -128,10 +126,10 @@ public class CommunityViewController {
         Integer processedPageNumber = PageUtil.processPageNumber(postCount, CommunityConstants.POST_PAGE_SIZE, pageNumber);
         if (!pageNumber.equals(processedPageNumber)) {
             if (isViewHotPostPreviewList) {
-                return "redirect:/board/" + boardType + "/post/" + postId + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
+                return "redirect:/post/" + postId + "?hot=" + isViewHotPostPreviewList + "&page=" + processedPageNumber;
             }
             else {
-                return "redirect:/board/" + boardType + "/post/" + postId + "?page=" + processedPageNumber;
+                return "redirect:/post/" + postId + "?page=" + processedPageNumber;
             }
         }
 
@@ -175,12 +173,12 @@ public class CommunityViewController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/write/{boardType}")
-    public String viewWritePage(@PathVariable(name = "boardType") String boardType,
+    @GetMapping("/write/{boardId}")
+    public String viewWritePage(@PathVariable(name = "boardId") Integer boardId,
                                 @AuthenticationPrincipal PrincipalDetails principal,
                                 Model model) {
         // 현재 게시판의 정보
-        BoardDto boardDto = boardService.getBoardDto(boardType);
+        BoardDto boardDto = boardService.getBoardDto(boardId);
         model.addAttribute("board", boardDto);
 
         // 현재 게시글을 작성하는 사용자가 '공지사항'을 올릴 권한이 있는지에 대한 정보 제공.
@@ -194,14 +192,13 @@ public class CommunityViewController {
     }
 
     @PreAuthorize("isAuthenticated() and ((#postAuthorId == authentication.principal.userId) or hasRole('ROLE_ADMIN'))")
-    @GetMapping("/rewrite/{postAuthorId}/{boardType}/{postId}")
+    @GetMapping("/rewrite/{postAuthorId}/{postId}")
     public String viewWritePageForReWrite(@PathVariable(name = "postAuthorId") Integer postAuthorId,
-                                          @PathVariable(name = "boardType") String boardType,
                                           @PathVariable(name = "postId") Integer postId,
                                           @AuthenticationPrincipal PrincipalDetails principal,
                                           Model model) {
         // 현재 게시판의 정보
-        BoardDto boardDto = boardService.getBoardDto(boardType);
+        BoardDto boardDto = postService.getBoardDto(postId);
         model.addAttribute("board", boardDto);
 
         // 게시글 수정을 위해 수정하려는 게시글의 이전 정보를 제공.

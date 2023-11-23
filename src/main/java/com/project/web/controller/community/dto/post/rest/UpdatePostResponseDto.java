@@ -5,12 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class UpdatePostResponseDto {
-    private final String boardType;
     private final String postId;
 
     @Builder
-    public UpdatePostResponseDto(String boardType, Integer postId){
-        this.boardType = boardType;
+    public UpdatePostResponseDto(Integer postId) {
         this.postId = postId.toString();
     }
 }

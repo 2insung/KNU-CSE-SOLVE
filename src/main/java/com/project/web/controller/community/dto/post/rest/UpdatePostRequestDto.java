@@ -13,9 +13,6 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class UpdatePostRequestDto {
-    @NotBlank(message = "게시판 타입을 입력해주세요.")
-    private String boardType;
-
     @NotNull(message = "게시글 아이디를 입력해주세요.")
     private Integer postId;
 

@@ -12,10 +12,6 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 public class SaveBoardRequestDto {
-    @NotBlank(message = "게시판 타입을 입력해주세요.")
-    @Size(min = 5, max = 50, message = "게시판 타입은 5~50자 내로 입력해주세요.")
-    private String boardType;
-
     @NotBlank(message = "게시판 이름을 입력해주세요.")
     @Size(min = 4, max = 20, message = "게시판 이름은 4~20자 내로 입력해주세요.")
     private String boardAlias;

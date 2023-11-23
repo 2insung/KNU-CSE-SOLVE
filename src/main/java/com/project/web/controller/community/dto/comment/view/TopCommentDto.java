@@ -14,19 +14,19 @@ public class TopCommentDto {
     private final String createdAt;
     private final Boolean isDeleted;
     // Entity : Board
-    private final String boardType;
+    private final Integer boardId;
     private final String boardAlias;
     // Entity : PostContent
     private final String postTitle;
 
     @Builder
-    public TopCommentDto(Integer postId, String body, LocalDateTime createdAt, Boolean isDeleted, String boardType,
+    public TopCommentDto(Integer postId, String body, LocalDateTime createdAt, Boolean isDeleted, Integer boardId,
                          String boardAlias, String postTitle) {
         this.postId = postId;
         this.body = body;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
         this.isDeleted = isDeleted;
-        this.boardType = boardType;
+        this.boardId = boardId;
         this.boardAlias = boardAlias;
         this.postTitle = postTitle;
     }

@@ -36,7 +36,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select c.id, c.member_id, c.post_id, c.is_deleted, c.body, c.created_at, b.type, b.alias, pc.title " +
+            value = "select c.id, c.member_id, c.post_id, c.is_deleted, c.body, c.created_at, b.alias, pc.title " +
                     "from (select tc.id from comment tc where tc.member_id = :memberId order by tc.created_at desc limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
                     "inner join post p on c.post_id = p.id " +
@@ -50,7 +50,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
       * 댓글의 생성일의 내림차순 기준 상위 limit개의 댓글을 출력함.
     */
     @Query(nativeQuery = true,
-            value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.type, b.alias, pc.title " +
+            value = "select c.post_id, c.is_deleted, c.body, c.created_at, b.id, b.alias, pc.title " +
                     "from comment c " +
                     "inner join post p on c.post_id = p.id " +
                     "inner join post_content pc on p.id = pc.post_id " +

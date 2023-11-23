@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class SaveBoardResponseDto {
-    private final String boardType;
+    private final Boolean isSuccess;
 
     @Builder
-    public SaveBoardResponseDto(String boardType){
-        this.boardType = boardType;
+    public SaveBoardResponseDto(Boolean isSuccess){
+        this.isSuccess = isSuccess;
     }
 }

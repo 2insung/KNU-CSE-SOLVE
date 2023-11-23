@@ -115,8 +115,7 @@ public class MyService {
                     LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
                     String resultTitle = (String) result[3];
                     Integer resultBoardId = (Integer) result[4];
-                    String resultBoardType = (String) result[5];
-                    String resultBoardAlias = (String) result[6];
+                    String resultBoardAlias = (String) result[5];
                     Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return MyPostDto.builder()
@@ -125,7 +124,6 @@ public class MyService {
                             .createdAt(resultCreatedAt)
                             .title(resultTitle)
                             .boardId(resultBoardId)
-                            .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
                             .isMine(isMine)
                             .build();
@@ -160,7 +158,6 @@ public class MyService {
         }
 
         List<Object[]> results = commentRepository.findMyCommentDtosByMemberId(memberId, pageSize, pageSize * (pageNumber - 1));
-
         return results.stream()
                 .map((result) -> {
                     Integer resultId = (Integer) result[0];
@@ -169,9 +166,8 @@ public class MyService {
                     Boolean resultIsDeleted = (Boolean) result[3];
                     String resultBody = (String) result[4];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[5]).toLocalDateTime();
-                    String resultBoardType = (String) result[6];
-                    String resultBoardAlias = (String) result[7];
-                    String resultTitle = (String) result[8];
+                    String resultBoardAlias = (String) result[6];
+                    String resultPostTitle = (String) result[7];
                     Boolean isMine = userId != null && userId.equals(resultAuthorId);
 
                     return MyCommentDto.builder()
@@ -181,9 +177,8 @@ public class MyService {
                             .isDeleted(resultIsDeleted)
                             .body(resultBody)
                             .createdAt(resultCreatedAt)
-                            .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
-                            .postTitle(resultTitle)
+                            .postTitle(resultPostTitle)
                             .isMine(isMine)
                             .build();
                 })
@@ -225,8 +220,7 @@ public class MyService {
                     Integer resultPostId = (Integer) result[1];
                     LocalDateTime resultCreatedAt = ((Timestamp) result[2]).toLocalDateTime();
                     String resultTitle = (String) result[3];
-                    String resultBoardType = (String) result[4];
-                    String resultBoardAlias = (String) result[5];
+                    String resultBoardAlias = (String) result[4];
                     Boolean isMine = userId != null && userId.equals(resultMemberId);
 
                     return MyScrapDto.builder()
@@ -234,7 +228,6 @@ public class MyService {
                             .postId(resultPostId)
                             .createdAt(resultCreatedAt)
                             .title(resultTitle)
-                            .boardType(resultBoardType)
                             .boardAlias(resultBoardAlias)
                             .isMine(isMine)
                             .build();

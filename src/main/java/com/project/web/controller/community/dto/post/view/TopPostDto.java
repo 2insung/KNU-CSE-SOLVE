@@ -13,14 +13,11 @@ public class TopPostDto {
     private final String createdAt;
     // domain : PostContent
     private final String title;
-    // domain : Board
-    private final String boardType;
 
     @Builder
-    public TopPostDto(Integer id, LocalDateTime createdAt, String title, String boardType) {
+    public TopPostDto(Integer id, LocalDateTime createdAt, String title) {
         this.id = id;
         this.createdAt = TimeFormattingUtil.localDateTimeFormatting(createdAt);
         this.title = title;
-        this.boardType = boardType;
     }
 }

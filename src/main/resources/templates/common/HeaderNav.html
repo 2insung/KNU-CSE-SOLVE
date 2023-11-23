@@ -11,7 +11,7 @@
             <div id="boardMenuList" class="board-list">
                 <dl th:each="boardMenu : ${boardMenuList}">
                     <dt th:each="boardPreview : ${boardMenu.boardPreviewList}">
-                        <a th:href="@{/board/{boardType}(boardType=${boardPreview.type})}"
+                        <a th:href="@{/board/{boardId}(boardId=${boardPreview.id})}"
                            th:text="${boardPreview.alias}"></a>
                     </dt>
                 </dl>

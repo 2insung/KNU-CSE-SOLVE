@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class SavePostResponseDto {
-    private final String boardType;
+    private final Integer boardId;
 
     @Builder
-    public SavePostResponseDto(String boardType){
-        this.boardType = boardType;
+    public SavePostResponseDto(Integer boardId){
+        this.boardId = boardId;
     }
 }

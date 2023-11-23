@@ -37,20 +37,17 @@ public class CommunityRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        String boardType = savePostRequestDto.getBoardType();
+        Integer boardId = savePostRequestDto.getBoardId();
         String title = savePostRequestDto.getPostTitle();
         String body = savePostRequestDto.getPostBody();
         Boolean isNotice = savePostRequestDto.getPostIsNotice();
 
-        // post 저장, 저장 후 request를 통해 제공받은 boardType을 반환. (redirect를 위함)
-        BoardDto boardDto = boardService.getBoardDto(boardType);
-        Integer boardId = boardDto.getId();
         Integer userId = principal.getUserId();
         postService.savePost(userId, boardId, title, body, isNotice);
 
         return ResponseEntity.ok(
                 SavePostResponseDto.builder()
-                        .boardType(boardType)
+                        .boardId(boardId)
                         .build()
         );
     }
@@ -65,7 +62,6 @@ public class CommunityRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        String boardType = updatePostRequestDto.getBoardType();
         Integer postId = updatePostRequestDto.getPostId();
         String title = updatePostRequestDto.getPostTitle();
         String body = updatePostRequestDto.getPostBody();
@@ -73,12 +69,10 @@ public class CommunityRestController {
 
         // 입력받은 boardType이 존재하는지 확인 후, post를 update함.
         // save-post와 달리 boardId가 필요하지 않음. 게시글의 수정은 postId만 필요함. (게시글의 수정은 게시판의 게시글 개수에 영향을 끼치지 않기 때문.)
-        boardService.existsByType(boardType);
         postService.updatePost(postId, title, body, isNotice);
 
         return ResponseEntity.ok(
                 UpdatePostResponseDto.builder()
-                        .boardType(boardType)
                         .postId(postId)
                         .build()
         );
@@ -94,17 +88,15 @@ public class CommunityRestController {
             throw new Error400Exception(errorMessage);
         }
 
-        String boardType = deletePostRequestDto.getBoardType();
+        Integer boardId = deletePostRequestDto.getBoardId();
         Integer postId = deletePostRequestDto.getPostId();
 
         // post 삭제, 삭제 후 request를 통해 제공받은 boardType을 반환. (redirect를 위함)
-        BoardDto boardDto = boardService.getBoardDto(boardType);
-        Integer boardId = boardDto.getId();
         postService.deletePost(boardId, postId);
 
         return ResponseEntity.ok(
                 DeletePostResponseDto.builder()
-                        .boardType(boardType)
+                        .boardId(boardId)
                         .build()
         );
     }
@@ -232,16 +224,15 @@ public class CommunityRestController {
         }
 
         // 게시판의 생성은 어드민에게만 권한이 있음.
-        String type = saveBoardRequestDto.getBoardType();
         String description = saveBoardRequestDto.getBoardDescription();
         String alias = saveBoardRequestDto.getBoardAlias();
         String category = saveBoardRequestDto.getBoardCategory();
 
-        boardService.saveBoard(type, alias, description, category);
+        boardService.saveBoard(alias, description, category);
 
         return ResponseEntity.ok(
                 SaveBoardResponseDto.builder()
-                        .boardType(type)
+                        .isSuccess(true)
                         .build()
         );
     }

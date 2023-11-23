@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 public class BoardPreviewDto {
     // Entity : Board
-    private final String type;
+    private final Integer id;
     private final String alias;
     private final String category;
 
     @Builder
-    public BoardPreviewDto(String type, String alias, String category){
-        this.type = type;
+    public BoardPreviewDto(Integer id, String alias, String category){
+        this.id = id;
         this.alias = alias;
         this.category = category;
     }

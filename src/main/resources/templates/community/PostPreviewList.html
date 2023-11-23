@@ -10,7 +10,7 @@
                     </div>
                     <div class="notice-post-preview-content-wrapper">
                         <div class="notice-post-preview-title">
-                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id})}"
+                            <a th:href="@{/post/{postId}(postId=${postPreview.id})}"
                                th:text="${postPreview.title}"></a>
                         </div>
                     </div>
@@ -24,10 +24,10 @@
                     <div class="post-preview-content-wrapper">
                         <div class="post-preview-title">
                             <a th:if="${boardIsViewHotPostPreviewList}"
-                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id}, hot=true, page=${postPageNumber})}"
+                               th:href="@{/post/{postId}(postId=${postPreview.id}, hot=true, page=${postPageNumber})}"
                                th:text="${postPreview.title}"></a>
                             <a th:unless="${boardIsViewHotPostPreviewList}"
-                               th:href="@{/board/{boardType}/post/{postId}(boardType=${board.type}, postId=${postPreview.id}, page=${postPageNumber})}"
+                               th:href="@{/post/{postId}(postId=${postPreview.id}, page=${postPageNumber})}"
                                th:text="${postPreview.title}"></a>
                         </div>
                         <div class="post-preview-summary" th:text="${postPreview.summary}"></div>
@@ -66,7 +66,7 @@
         <ul>
             <li th:each="pageNumber, stat : ${postPageNumberList}" th:if="${pageNumber != null}">
                 <a th:if="${!boardIsViewHotPostPreviewList}"
-                   th:href="@{/board/{boardType}(boardType=${boardType}, page=${pageNumber})}">
+                   th:href="@{/board/{boardId}(boardId=${board.id}, page=${pageNumber})}">
                     <div th:if="${stat.first}" class="board-arrow-left">◀</div>
                     <div th:if="${!stat.first && !stat.last}"
                          th:text="${pageNumber}"
@@ -74,7 +74,7 @@
                     <div th:if="${stat.last}" class="board-arrow-right">▶</div>
                 </a>
                 <a th:if="${boardIsViewHotPostPreviewList}"
-                   th:href="@{/board/{boardType}(boardType=${boardType}, hot=true, page=${pageNumber})}">
+                   th:href="@{/board/{boardId}(boardId=${board.id}, hot=true, page=${pageNumber})}">
                     <div th:if="${stat.first}" class="board-arrow-left">◀</div>
                     <div th:if="${!stat.first && !stat.last}"
                          th:text="${pageNumber}"

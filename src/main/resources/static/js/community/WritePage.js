@@ -9,7 +9,7 @@ $(document).ready(function () {
     })
 })
 
-function savePost(boardType) {
+function savePost(boardId) {
     if (confirm("등록하시겠습니까?")) {
         var title = $("#title").val()
         var content = CKEDITOR.instances.content.getData();
@@ -35,7 +35,7 @@ function savePost(boardType) {
                 url: "/api/save-post",
                 type: "POST",
                 data: JSON.stringify({
-                    boardType: boardType,
+                    boardId: boardId,
                     postTitle: title,
                     postBody: content,
                     postIsNotice: isNotice
@@ -46,7 +46,7 @@ function savePost(boardType) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", token);
                 },
                 success: function (response) {
-                    window.location.href = "/board/" + response.boardType
+                    window.location.href = "/board/" + response.boardId
                 },
                 error: function (error) {
                     if (error.status === 401 || error.status === 403) {
@@ -64,7 +64,7 @@ function savePost(boardType) {
     }
 }
 
-function updatePost(boardType, postId, postAuthorId) {
+function updatePost(postId, postAuthorId) {
     if (confirm("수정하시겠습니까?")) {
         var title = $("#title").val()
         var content = CKEDITOR.instances.content.getData();
@@ -90,7 +90,6 @@ function updatePost(boardType, postId, postAuthorId) {
                 url: "/api/update-post",
                 type: "PATCH",
                 data: JSON.stringify({
-                    boardType: boardType,
                     postId: postId,
                     postAuthorId: postAuthorId,
                     postTitle: title,
@@ -103,7 +102,7 @@ function updatePost(boardType, postId, postAuthorId) {
                     xhr.setRequestHeader("X-CSRF-TOKEN", token);
                 },
                 success: function (response) {
-                    window.location.href = "/board/" + response.boardType + "/post/" + response.postId
+                    window.location.href = "/post/" + response.postId
                 },
                 error: function (error) {
                     if (error.status === 401 || error.status === 403) {

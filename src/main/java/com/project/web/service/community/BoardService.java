@@ -21,29 +21,18 @@ public class BoardService {
     private final BoardStatRepository boardStatRepository;
 
     /*
-      boardType으로 존재하는 게시판인지 true/false로 반환하는 함수.
-    */
-    @Transactional(readOnly = true)
-    public void existsByType(String boardType) {
-        if (!boardRepository.existsByType(boardType)) {
-            throw new Error500Exception("존재하지 않는 게시판입니다.");
-        }
-    }
-
-    /*
       게시판 정보 출력 함수.
      * 현재 게시판의 정보를 출력하는 함수.
      * 게시판의 게시글 수에 대한 정보도 제공함.
     */
     @Transactional(readOnly = true)
-    public BoardDto getBoardDto(String boardType) {
-        BoardStat boardStat = boardStatRepository.findWithBoardByBoardType(boardType)
+    public BoardDto getBoardDto(Integer boardId) {
+        BoardStat boardStat = boardStatRepository.findWithBoardByBoardId(boardId)
                 .orElseThrow(() -> new Error500Exception("존재하지 않는 게시판입니다."));
         Board board = boardStat.getBoard();
 
         return BoardDto.builder()
                 .id(board.getId())
-                .type(board.getType())
                 .alias(board.getAlias())
                 .description(board.getDescription())
                 .postCount(boardStat.getPostCount())
@@ -62,7 +51,7 @@ public class BoardService {
         return boardList.stream()
                 .map((board) ->
                         BoardPreviewDto.builder()
-                                .type(board.getType())
+                                .id(board.getId())
                                 .alias(board.getAlias())
                                 .category(board.getCategory())
                                 .build()
@@ -81,7 +70,7 @@ public class BoardService {
         return boardList.stream()
                 .map((board) ->
                         BoardPreviewDto.builder()
-                                .type(board.getType())
+                                .id(board.getId())
                                 .alias(board.getAlias())
                                 .category(board.getCategory())
                                 .build()
@@ -94,17 +83,12 @@ public class BoardService {
      * 새로운 게시판을 저장하는 함수.
     */
     @Transactional
-    public void saveBoard(String type, String alias, String description, String category) {
-        if (boardRepository.existsByType(type)) {
-            throw new Error500Exception("존재하는 타입입니다.");
-        }
-
+    public void saveBoard(String alias, String description, String category) {
         if (boardRepository.existsByAlias(alias)) {
             throw new Error500Exception("존재하는 이름입니다.");
         }
 
         Board board = Board.builder()
-                .type(type)
                 .alias(alias)
                 .description(description)
                 .category(category)

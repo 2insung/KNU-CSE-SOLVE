@@ -53,7 +53,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select p.id, p.member_id, p.created_at, pc.title, b.id as board_id, b.type, b.alias " +
+            value = "select p.id, p.member_id, p.created_at, pc.title, b.id as board_id, b.alias " +
                     "from (select tp.id from post tp where tp.member_id = :memberId order by tp.created_at desc limit :limit offset :offset) as temp " +
                     "inner join post p on p.id = temp.id " +
                     "inner join post_content pc on p.id = pc.post_id " +
@@ -74,14 +74,24 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      게시글(Post) 출력 함수.
      * '/board/{type}/post/{postId}?page=xxx...' 요청 시 Post 관련 정보 출력.
     */
-    @Query("select p.id, p.member.id, p.isNotice, p.isHot, p.createdAt, p.category, pc.title, pc.body, pc.updatedAt, ps.hitCount, ps.recommendCount, ps.commentCount, ps.totalCommentCount, ps.scrapCount, b.type, md.nickname, md.profileImage " +
+    @Query("select p.id, p.member.id, p.isNotice, p.isHot, p.createdAt, p.category, pc.title, pc.body, pc.updatedAt, ps.hitCount, ps.recommendCount, ps.commentCount, ps.totalCommentCount, ps.scrapCount, md.nickname, md.profileImage " +
             "from Post p " +
             "inner join PostContent pc on pc.post = p " +
             "inner join PostStat ps on ps.post = p " +
-            "inner join Board b on p.board = b " +
             "inner join MemberDetail md on p.member = md.member " +
             "where p.id = :postId")
     Optional<Object> findPostDtoByPostId(Integer postId);
+
+    /*
+     게시판 출력 함수.
+     * '/post/{postId}?page=xxx...' 요청 시 Board 관련 정보 출력.
+    */
+    @Query("select b.id, b.alias, b.description, bs.postCount, bs.hotPostCount " +
+            "from Post p " +
+            "inner join Board b on p.board = b " +
+            "inner join BoardStat bs on bs.board = b " +
+            "where p.id = :postId")
+    Optional<Object> findBoardDtoByPostId(Integer postId);
 
     /*
      게시글의 isDeleted 속성 업데이트 함수.
@@ -104,7 +114,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * 상위 limit개의 게시글(생성시간 기준)을 출력하는 함수.
     */
     @Query(nativeQuery = true,
-            value = "select p.id, p.created_at, pc.title, b.type " +
+            value = "select p.id, p.created_at, pc.title " +
                     "from post p " +
                     "inner join post_content pc on pc.post_id = p.id " +
                     "inner join board b on p.board_id = b.id " +
@@ -118,7 +128,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * 모든 게시판 중에 상위 인기글(인기글 등록 시간 기준) limit개를 출력하는 함수.
     */
     @Query(nativeQuery = true,
-            value = "select p.id, p.created_at, pc.title, ps.recommend_count, ps.comment_count, b.type " +
+            value = "select p.id, p.created_at, pc.title, ps.recommend_count, ps.comment_count " +
                     "from post p " +
                     "inner join board b on p.board_id = b.id  " +
                     "inner join post_content pc on pc.post_id = p.id " +
@@ -127,5 +137,4 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "order by p.hot_registered_at desc " +
                     "limit :limit")
     List<Object[]> findTopHotPostDtos(Integer limit);
-
 }

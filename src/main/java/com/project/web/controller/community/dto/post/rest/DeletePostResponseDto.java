@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class DeletePostResponseDto {
-    private final String boardType;
+    private final Integer boardId;
 
     @Builder
-    public DeletePostResponseDto(String boardType){
-        this.boardType = boardType;
+    public DeletePostResponseDto(Integer boardId){
+        this.boardId = boardId;
     }
 }

@@ -10,11 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer> {
-    Boolean existsByType(String type);
-
     Boolean existsByAlias(String alias);
-
-    Optional<Board> findByType(String type);
 
     /*
      상위 count개 게시판 출력

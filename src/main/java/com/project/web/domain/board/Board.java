@@ -16,9 +16,6 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "type", unique = true, nullable = false)
-    private String type;
-
     @Column(name = "alias", unique = true, nullable = false)
     private String alias;
 
@@ -29,9 +26,8 @@ public class Board {
     private String category;
 
     @Builder
-    public Board(Integer id, String type, String alias, String description, String category) {
+    public Board(Integer id, String alias, String description, String category) {
         this.id = id;
-        this.type = type;
         this.alias = alias;
         this.description = description;
         this.category = category;

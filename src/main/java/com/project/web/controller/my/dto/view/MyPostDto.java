@@ -16,20 +16,18 @@ public class MyPostDto {
     private final String title;
     //domain : Board
     private final Integer boardId;
-    private final String boardType;
     private final String boardAlias;
     //현재 사용자가 작성한 Post인지.
     private final Boolean isMine;
 
     @Builder
     public MyPostDto(Integer id, Integer authorId, LocalDateTime createdAt, String title, Integer boardId,
-                     String boardType, String boardAlias, Boolean isMine) {
+                     String boardAlias, Boolean isMine) {
         this.id = id;
         this.authorId = authorId;
         this.createdAt = TimeFormattingUtil.localDateTimeFormattingAll(createdAt);
         this.title = title;
         this.boardId = boardId;
-        this.boardType = boardType;
         this.boardAlias = boardAlias;
         this.isMine = isMine;
     }

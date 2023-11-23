@@ -24,6 +24,6 @@ public interface BoardStatRepository extends JpaRepository<BoardStat, Integer> {
      * 게시판의 통계를 출력함.
      * board의 속성도 사용하기 위해서 fetch join함. 
     */
-    @Query("select bs from BoardStat bs join fetch bs.board where bs.board.type = :boardType")
-    Optional<BoardStat> findWithBoardByBoardType(String boardType);
+    @Query("select bs from BoardStat bs join fetch bs.board where bs.board.id = :boardId")
+    Optional<BoardStat> findWithBoardByBoardId(Integer boardId);
 }

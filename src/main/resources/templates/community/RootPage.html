@@ -35,7 +35,7 @@
                         <li th:each="post : ${topHotPostList}">
                             <div class="top-div">
                                 <a th:text="${post.title}"
-                                   th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
+                                   th:href="@{/post/{postId}(postId=${post.id})}"></a>
                                 <span th:text="${post.createdAt}"></span>
                             </div>
                             <div class="bottom-div">
@@ -101,7 +101,7 @@
                                     <div class="alias" th:text="${comment.boardAlias}"></div>
                                 </div>
                                 <div class="title">
-                                    <a th:href="@{/board/{boardType}/post/{postId}(boardType=${comment.boardType}, postId=${comment.postId})}"
+                                    <a th:href="@{/post/{postId}(postId=${comment.postId})}"
                                        th:text="${comment.postTitle}"></a>
                                 </div>
                                 <div th:unless="${comment.isDeleted}" class="body" th:text="${comment.body}"></div>
@@ -118,13 +118,13 @@
                 <div class="post-list-header">
                     <div class="post-list-header-text">
                         <a th:text="${topBoard.alias}"
-                           th:href="@{/board/{boardType}(boardType=${topBoard.type})}"></a>
+                           th:href="@{/board/{boardId}(boardId=${topBoard.id})}"></a>
                     </div>
                 </div>
                 <ul>
                     <li th:each="post : ${topBoard.topPostDtos}">
                         <a th:text="${post.title}"
-                           th:href="@{/board/{boardType}/post/{postId}(boardType=${post.boardType}, postId=${post.id})}"></a>
+                           th:href="@{/post/{postId}(postId=${post.id})}"></a>
                     </li>
                 </ul>
             </div>

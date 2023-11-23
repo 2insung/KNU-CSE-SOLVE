@@ -27,7 +27,7 @@
                             </button>
                         </div>
                         <div class="title">
-                            <a th:href="@{/board/{boardType}/post/{postId}(boardType=${myScrap.boardType}, postId=${myScrap.postId})}"
+                            <a th:href="@{/post/{postId}(postId=${myScrap.postId})}"
                                th:text="${myScrap.title}"></a>
                         </div>
                         <div class="createdAt" th:text="${myScrap.createdAt}"></div>
