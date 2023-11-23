@@ -159,9 +159,6 @@ main {
     font-size: 12px;
 }
 
-
-
-
 .user-wrapper .user-button{
     padding: 5px;
     height: 30px;
@@ -215,8 +212,8 @@ main {
 
 .comment-wrapper{
     padding: 5px 5px;
+    height: 67px;
 }
-
 
 .comment-wrapper .comment-header{
     display: flex;
@@ -259,7 +256,6 @@ main {
     font-size: 11px;
 }
 
-
 .comment-list-wrapper ul li{
     border-bottom: 1px solid #837ed7;
 }
@@ -267,7 +263,6 @@ main {
 .comment-list-wrapper ul li:last-of-type{
     border-bottom: 0px;
 }
-
 
 .root .bottom-section {
     margin-top: 20px;
