@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 // 로그인 및 회원가입 뷰 반환
 @Controller
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthViewController {
     @GetMapping("/login")
     public String viewLoginPage(@RequestParam(name = "error", required = false) String error,
                                 @RequestParam(name = "exception", required = false) String exception,

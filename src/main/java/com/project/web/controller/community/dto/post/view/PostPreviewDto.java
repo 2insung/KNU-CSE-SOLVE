@@ -18,11 +18,9 @@ public class PostPreviewDto {
     private final String title;
     private final String summary;
     private final String thumbnail;
-    // domain : PostHitCount
+    // domain : PostStat
     private final Integer hitCount;
-    // domain : PostRecommendCount
     private final Integer recommendCount;
-    // domain : PostCommentCount
     private final Integer commentCount;
     // domain : MemberDetail
     private final String authorNickname;

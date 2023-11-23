@@ -18,7 +18,7 @@ import java.util.List;
 // My 관련 뷰 반환
 @Controller
 @RequiredArgsConstructor
-public class MyController {
+public class MyViewController {
     private final MyService myService;
 
     @GetMapping("/my/{memberId}")

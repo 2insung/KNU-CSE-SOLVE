@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class BoardPreviewDto {
-    // domain : Board
+    // Entity : Board
     private final String type;
     private final String alias;
     private final String category;

@@ -19,10 +19,10 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
      * from 절 안의 서브 쿼리를 작성하기 위해서 네이티브 쿼리 사용.
     */
     @Query(nativeQuery = true,
-            value = "select c.id, c.member_id, c.post_id, c.parent_member_id, c.is_post_author, c.is_root, c.is_root_child, c.is_deleted, c.body, c.created_at, crc.recommend_count, md.nickname as authorNickname, md.profile_image,  md2.nickname as parentAuthorNickname " +
+            value = "select c.id, c.member_id, c.post_id, c.parent_member_id, c.is_post_author, c.is_root, c.is_root_child, c.is_deleted, c.body, c.created_at, cs.recommend_count, md.nickname as authorNickname, md.profile_image,  md2.nickname as parentAuthorNickname " +
                     "from (select tc.id from comment tc where tc.post_id = :postId order by tc.group_created_at, tc.root_comment_id, tc.created_at limit :limit offset :offset) as temp " +
                     "inner join comment c on c.id = temp.id " +
-                    "inner join comment_recommend_count crc on c.id = crc.comment_id " +
+                    "inner join comment_stat cs on c.id = cs.comment_id " +
                     "inner join member_detail md on c.member_id = md.member_id " +
                     "inner join member_detail md2 on c.parent_member_id = md2.member_id " +
                     "order by c.group_created_at, c.root_comment_id, c.created_at")

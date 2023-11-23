@@ -4,18 +4,17 @@ import com.project.web.controller.community.dto.comment.view.CommentDto;
 import com.project.web.controller.community.dto.comment.view.TopCommentDto;
 import com.project.web.controller.community.dto.comment.rest.IncCommentRecommendResponseDto;
 import com.project.web.domain.comment.Comment;
-import com.project.web.domain.comment.CommentRecommendCount;
+import com.project.web.domain.comment.CommentStat;
 import com.project.web.domain.comment.CommentRecommendMember;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.post.Post;
-import com.project.web.exception.Error404Exception;
 import com.project.web.exception.Error500Exception;
-import com.project.web.repository.comment.CommentRecommendCountRepository;
+import com.project.web.repository.comment.CommentStatRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
 import com.project.web.repository.member.MemberRepository;
-import com.project.web.repository.post.PostCommentCountRepository;
 import com.project.web.repository.post.PostRepository;
+import com.project.web.repository.post.PostStatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +30,9 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-    private final PostCommentCountRepository postCommentCountRepository;
+    private final PostStatRepository postStatRepository;
     private final CommentRepository commentRepository;
-    private final CommentRecommendCountRepository commentRecommendCountRepository;
+    private final CommentStatRepository commentStatRepository;
     private final CommentRecommendMemberRepository commentRecommendMemberRepository;
 
     /*
@@ -145,13 +144,13 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
 
-        CommentRecommendCount commentRecommendCount = CommentRecommendCount.builder()
+        CommentStat commentStat = CommentStat.builder()
                 .comment(comment)
                 .recommendCount(0)
                 .build();
-        commentRecommendCountRepository.save(commentRecommendCount);
+        commentStatRepository.save(commentStat);
 
-        if (postCommentCountRepository.updateByPostId(postId, 1, 1) == 0) {
+        if (postStatRepository.updateCommentCountByPostId(postId, 1, 1) == 0) {
             throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
 
@@ -212,7 +211,7 @@ public class CommentService {
             }
 
             commentRecommendMemberRepository.deleteByCommentIds(deleteCommentIds);
-            commentRecommendCountRepository.deleteByCommentIds(deleteCommentIds);
+            commentStatRepository.deleteByCommentIds(deleteCommentIds);
             commentRepository.deleteByIds(deleteCommentIds);
         }
         else {
@@ -220,10 +219,9 @@ public class CommentService {
             dropTotalCommentCount = 0;
         }
 
-        if (postCommentCountRepository.updateByPostId(postId, dropCommentCount, dropTotalCommentCount) == 0) {
+        if (postStatRepository.updateCommentCountByPostId(postId, dropCommentCount, dropTotalCommentCount) == 0) {
             throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
-
     }
 
     /*
@@ -239,11 +237,11 @@ public class CommentService {
         Comment comment = commentRepository.getReferenceById(commentId);
 
         if (!commentRecommendMemberRepository.existsByCommentAndMemberId(commentId, userId)) {
-            if (commentRecommendCountRepository.updateByCommentId(commentId, 1) == 0) {
+            if (commentStatRepository.updateByCommentId(commentId, 1) == 0) {
                 throw new Error500Exception("존재하지 않는 댓글입니다.");
             }
 
-            CommentRecommendCount commentRecommendCount = commentRecommendCountRepository.findById(commentId)
+            CommentStat commentStat = commentStatRepository.findById(commentId)
                     .orElseThrow(() -> new Error500Exception("존재하지 않는 댓글입니다."));
 
             CommentRecommendMember commentRecommendMember = CommentRecommendMember.builder()
@@ -254,7 +252,7 @@ public class CommentService {
 
             return IncCommentRecommendResponseDto.builder()
                     .isSuccess(true)
-                    .recommendCount(commentRecommendCount.getRecommendCount())
+                    .recommendCount(commentStat.getRecommendCount())
                     .build();
         }
         else {

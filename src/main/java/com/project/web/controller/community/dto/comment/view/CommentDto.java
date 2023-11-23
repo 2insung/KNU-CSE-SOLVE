@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CommentDto {
-    // domain : Comment
+    // Entity : Comment
     private final Integer id;
     private final Integer authorId;
     private final Integer postId;
@@ -20,10 +20,10 @@ public class CommentDto {
     private final String body;
     private final String createdAt;
     private final Integer recommendCount;
-    // domain : MemberDetail(댓글 작성자)
+    // Entity : MemberDetail(댓글 작성자)
     private final String authorNickname;
     private final String authorProfileImage;
-    // domain : MemberDetail(대댓글의 달 경우 원댓글의 작성자)
+    // Entity : MemberDetail(대댓글의 달 경우 원댓글의 작성자)
     private final String parentAuthorNickname;
     // 현재 사용자가 작성한 Comment인지.
     private final Boolean isMine;

@@ -7,12 +7,10 @@ import com.project.web.domain.board.Board;
 import com.project.web.domain.member.Member;
 import com.project.web.domain.member.Role;
 import com.project.web.domain.post.*;
-import com.project.web.exception.Error400Exception;
-import com.project.web.exception.Error404Exception;
 import com.project.web.exception.Error500Exception;
-import com.project.web.repository.board.BoardPostCountRepository;
+import com.project.web.repository.board.BoardStatRepository;
 import com.project.web.repository.board.BoardRepository;
-import com.project.web.repository.comment.CommentRecommendCountRepository;
+import com.project.web.repository.comment.CommentStatRepository;
 import com.project.web.repository.comment.CommentRecommendMemberRepository;
 import com.project.web.repository.comment.CommentRepository;
 import com.project.web.repository.member.MemberRepository;
@@ -34,18 +32,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final BoardRepository boardRepository;
-    private final BoardPostCountRepository boardPostCountRepository;
+    private final BoardStatRepository boardStatRepository;
     private final PostRepository postRepository;
+    private final PostStatRepository postStatRepository;
     private final PostContentRepository postContentRepository;
-    private final PostHitCountRepository postHitCountRepository;
-    private final PostRecommendCountRepository postRecommendCountRepository;
-    private final PostCommentCountRepository postCommentCountRepository;
     private final PostRecommendMemberRepository postRecommendMemberRepository;
-    private final PostScrapCountRepository postScrapCountRepository;
     private final PostScrapMemberRepository postScrapMemberRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final CommentRecommendCountRepository commentRecommendCountRepository;
+    private final CommentStatRepository commentStatRepository;
     private final CommentRecommendMemberRepository commentRecommendMemberRepository;
 
     /*
@@ -226,32 +221,17 @@ public class PostService {
                 .build();
         postContentRepository.save(postContent);
 
-        PostHitCount postHitCount = PostHitCount.builder()
+        PostStat postStat = PostStat.builder()
                 .post(post)
                 .hitCount(0)
-                .build();
-        postHitCountRepository.save(postHitCount);
-
-        PostRecommendCount postRecommendCount = PostRecommendCount.builder()
-                .post(post)
                 .recommendCount(0)
-                .build();
-        postRecommendCountRepository.save(postRecommendCount);
-
-        PostCommentCount postCommentCount = PostCommentCount.builder()
-                .post(post)
                 .commentCount(0)
                 .totalCommentCount(0)
-                .build();
-        postCommentCountRepository.save(postCommentCount);
-
-        PostScrapCount postScrapCount = PostScrapCount.builder()
-                .post(post)
                 .scrapCount(0)
                 .build();
-        postScrapCountRepository.save(postScrapCount);
+        postStatRepository.save(postStat);
 
-        if (boardPostCountRepository.updateByBoardId(boardId, 1, 0) == 0) {
+        if (boardStatRepository.updateByBoardId(boardId, 1, 0) == 0) {
             throw new Error500Exception("존재하지 않는 게시판입니다.");
         }
     }
@@ -302,20 +282,17 @@ public class PostService {
 
         List<Integer> commentIds = commentRepository.findIdsByPostId(postId);
         commentRecommendMemberRepository.deleteByCommentIds(commentIds);
-        commentRecommendCountRepository.deleteByCommentIds(commentIds);
+        commentStatRepository.deleteByCommentIds(commentIds);
         commentRepository.deleteByIds(commentIds);
 
         postScrapMemberRepository.deleteByPostId(postId);
         postRecommendMemberRepository.deleteByPostId(postId);
-        postScrapCountRepository.deleteByPostId(postId);
-        postCommentCountRepository.deleteByPostId(postId);
-        postRecommendCountRepository.deleteByPostId(postId);
-        postHitCountRepository.deleteByPostId(postId);
+        postStatRepository.deleteByPostId(postId);
         postContentRepository.deleteByPostId(postId);
         postRepository.deleteByPostId(postId);
 
         Integer dropHotPostCount = post.getIsHot() ? -1 : 0;
-        if (boardPostCountRepository.updateByBoardId(boardId, -1, dropHotPostCount) == 0) {
+        if (boardStatRepository.updateByBoardId(boardId, -1, dropHotPostCount) == 0) {
             throw new Error500Exception("존재하지 않는 게시판입니다.");
         }
     }
@@ -336,12 +313,12 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public PostCommentCountDto getPostCommentCountDto(Integer postId) {
-        PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
+        PostStat postStat = postStatRepository.findByPostId(postId)
                 .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
         return PostCommentCountDto.builder()
-                .commentCount(postCommentCount.getCommentCount())
-                .totalCommentCount(postCommentCount.getTotalCommentCount())
+                .commentCount(postStat.getCommentCount())
+                .totalCommentCount(postStat.getTotalCommentCount())
                 .build();
     }
 
@@ -351,10 +328,10 @@ public class PostService {
     */
     @Transactional(readOnly = true)
     public Integer getTotalCommentCount(Integer postId) {
-        PostCommentCount postCommentCount = postCommentCountRepository.findByPostId(postId)
+        PostStat postStat = postStatRepository.findByPostId(postId)
                 .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
 
-        return postCommentCount.getTotalCommentCount();
+        return postStat.getTotalCommentCount();
     }
 
     /*
@@ -387,13 +364,13 @@ public class PostService {
     @Transactional
     public IncPostRecommendResponseDto incPostRecommend(Integer userId, Integer postId) {
         if (!postRecommendMemberRepository.existsByPostAndMemberId(postId, userId)) {
-            if (postRecommendCountRepository.updateByPostId(postId, 1) == 0) {
+            if (postStatRepository.updateRecommedCountByPostId(postId, 1) == 0) {
                 throw new Error500Exception("존재하지 않는 게시글입니다.");
             }
 
-            PostRecommendCount postRecommendCount = postRecommendCountRepository.findWithPostByPostId(postId)
+            PostStat postStat = postStatRepository.findWithPostByPostId(postId)
                     .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
-            Post post = postRecommendCount.getPost();
+            Post post = postStat.getPost();
             Member member = memberRepository.getReferenceById(userId);
 
             PostRecommendMember postRecommendMember = PostRecommendMember.builder()
@@ -402,7 +379,7 @@ public class PostService {
                     .build();
             postRecommendMemberRepository.save(postRecommendMember);
 
-            if (postRecommendCount.getRecommendCount() >= 1) {
+            if (postStat.getRecommendCount() >= 1) {
                 LocalDateTime now = LocalDateTime.now();
                 post.updateIsHot(true);
                 post.updateHotRegisteredAt(now);
@@ -411,14 +388,14 @@ public class PostService {
                     post.updateCategory("인기");
                 }
 
-                if (boardPostCountRepository.updateByBoardId(post.getBoard().getId(), 0, 1) == 0) {
+                if (boardStatRepository.updateByBoardId(post.getBoard().getId(), 0, 1) == 0) {
                     throw new Error500Exception("존재하지 않는 게시판입니다.");
                 }
             }
 
             return IncPostRecommendResponseDto.builder()
                     .isSuccess(true)
-                    .recommendCount(postRecommendCount.getRecommendCount())
+                    .recommendCount(postStat.getRecommendCount())
                     .build();
         }
         else {
@@ -435,7 +412,7 @@ public class PostService {
     */
     @Transactional
     public void incPostHit(Integer postId) {
-        if (postHitCountRepository.updateByPostId(postId, 1) == 0) {
+        if (postStatRepository.updateHitCountByPostId(postId, 1) == 0) {
             throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
     }
@@ -448,12 +425,12 @@ public class PostService {
     @Transactional
     public IncPostScrapResponseDto incPostScrap(Integer userId, Integer postId) {
         if (!postScrapMemberRepository.existsByPostAndMemberId(postId, userId)) {
-            if (postScrapCountRepository.updateByPostId(postId, 1) == 0) {
+            if (postStatRepository.updateScrapCountByPostId(postId, 1) == 0) {
                 throw new Error500Exception("존재하지 않는 게시글입니다.");
             }
-            PostScrapCount postScrapCount = postScrapCountRepository.findWithPostByPostId(postId)
+            PostStat postStat = postStatRepository.findWithPostByPostId(postId)
                     .orElseThrow(() -> new Error500Exception("존재하지 않는 게시글입니다."));
-            Post post = postScrapCount.getPost();
+            Post post = postStat.getPost();
             Member member = memberRepository.getReferenceById(userId);
 
             PostScrapMember postScrapMember = PostScrapMember.builder()
@@ -465,7 +442,7 @@ public class PostService {
 
             return IncPostScrapResponseDto.builder()
                     .isSuccess(true)
-                    .scrapCount(postScrapCount.getScrapCount())
+                    .scrapCount(postStat.getScrapCount())
                     .build();
         }
         else {
@@ -482,7 +459,7 @@ public class PostService {
             throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
 
-        if (postScrapCountRepository.updateByPostId(postId, -1) == 0) {
+        if (postStatRepository.updateScrapCountByPostId(postId, -1) == 0) {
             throw new Error500Exception("존재하지 않는 게시글입니다.");
         }
     }

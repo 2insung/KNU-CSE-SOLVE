@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 
 @Getter
 public class TopCommentDto {
-    // domain : Comment
+    // Entity : Comment
     private final Integer postId;
     private final String body;
     private final String createdAt;
     private final Boolean isDeleted;
-    // domain : Board
+    // Entity : Board
     private final String boardType;
     private final String boardAlias;
-    // domain : PostContent
+    // Entity : PostContent
     private final String postTitle;
 
     @Builder

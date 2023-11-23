@@ -129,7 +129,7 @@
                                             onclick="incCommentRecommend(this.getAttribute('data-commentId'))"
                                     >
                                         <span>추천</span>
-                                        <span th:id="'commentRecommendCount-' + ${comment.id}"
+                                        <span th:id="'commentStat-' + ${comment.id}"
                                               th:text="${comment.recommendCount}"></span>
                                     </button>
                                     <button type="button"

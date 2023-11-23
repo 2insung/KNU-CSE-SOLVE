@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class BoardDto {
-    // domain : Board
+    // Entity : Board
     private final Integer id;
     private final String type;
     private final String alias;

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 // Community(게시판/게시글/댓글) 관련 뷰 반환
 @Controller
 @RequiredArgsConstructor
-public class CommunityController {
+public class CommunityViewController {
     private final UserService userService;
     private final BoardService boardService;
     private final PostService postService;

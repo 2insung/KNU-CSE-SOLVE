@@ -3,10 +3,9 @@ package com.project.web.service.community;
 import com.project.web.controller.community.dto.board.view.BoardDto;
 import com.project.web.controller.community.dto.board.view.BoardPreviewDto;
 import com.project.web.domain.board.Board;
-import com.project.web.domain.board.BoardPostCount;
-import com.project.web.exception.Error404Exception;
+import com.project.web.domain.board.BoardStat;
 import com.project.web.exception.Error500Exception;
-import com.project.web.repository.board.BoardPostCountRepository;
+import com.project.web.repository.board.BoardStatRepository;
 import com.project.web.repository.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final BoardPostCountRepository boardPostCountRepository;
+    private final BoardStatRepository boardStatRepository;
 
     /*
       boardType으로 존재하는 게시판인지 true/false로 반환하는 함수.
@@ -38,17 +37,17 @@ public class BoardService {
     */
     @Transactional(readOnly = true)
     public BoardDto getBoardDto(String boardType) {
-        BoardPostCount boardPostCount = boardPostCountRepository.findWithBoardByBoardType(boardType)
+        BoardStat boardStat = boardStatRepository.findWithBoardByBoardType(boardType)
                 .orElseThrow(() -> new Error500Exception("존재하지 않는 게시판입니다."));
-        Board board = boardPostCount.getBoard();
+        Board board = boardStat.getBoard();
 
         return BoardDto.builder()
                 .id(board.getId())
                 .type(board.getType())
                 .alias(board.getAlias())
                 .description(board.getDescription())
-                .postCount(boardPostCount.getPostCount())
-                .hotPostCount(boardPostCount.getHotPostCount())
+                .postCount(boardStat.getPostCount())
+                .hotPostCount(boardStat.getHotPostCount())
                 .build();
     }
 
@@ -112,11 +111,11 @@ public class BoardService {
                 .build();
         boardRepository.save(board);
 
-        BoardPostCount boardPostCount = BoardPostCount.builder()
+        BoardStat boardStat = BoardStat.builder()
                 .board(board)
                 .postCount(0)
                 .hotPostCount(0)
                 .build();
-        boardPostCountRepository.save(boardPostCount);
+        boardStatRepository.save(boardStat);
     }
 }

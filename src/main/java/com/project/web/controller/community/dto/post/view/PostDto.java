@@ -8,25 +8,22 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostDto {
-    // domain : Post
+    // Entity : Post
     private final Integer id;
     private final Integer authorId;
     private final Boolean isNotice;
     private final Boolean isHot;
     private final String createdAt;
     private final String category;
-    // domain : PostContent
+    // Entity : PostContent
     private final String title;
     private final String body;
     private final String updatedAt;
-    // domain : PostHitCount
+    // Entity : PostStat
     private final Integer hitCount;
-    // domain : PostRecommendCount
     private final Integer recommendCount;
-    // domain : PostCommentCount
     private final Integer commentCount;
     private final Integer totalCommentCount;
-    // domain : PostScrapCount
     private final Integer scrapCount;
     // domain : Board
     private final String boardType;

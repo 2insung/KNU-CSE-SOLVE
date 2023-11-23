@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class PostCommentCountDto {
-    // domain : PostCommentCount
+    // Entity : PostStat
     private final Integer commentCount;
     private final Integer totalCommentCount;
 

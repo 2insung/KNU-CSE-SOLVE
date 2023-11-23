@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "board_post_count")
-public class BoardPostCount {
+@Table(name = "board_stat")
+public class BoardStat {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class BoardPostCount {
     private Integer hotPostCount;
 
     @Builder
-    public BoardPostCount(Integer id, Board board, Integer postCount, Integer hotPostCount) {
+    public BoardStat(Integer id, Board board, Integer postCount, Integer hotPostCount) {
         this.id = id;
         this.board = board;
         this.postCount = postCount;

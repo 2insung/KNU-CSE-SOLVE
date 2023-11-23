@@ -13,9 +13,8 @@ public class TopHotPostDto {
     private final String createdAt;
     // domain : PostContent
     private final String title;
-    // domain : PostRecommendCount
+    // domain : PostStat
     private final Integer recommendCount;
-    // domain : PostCommentCount
     private final Integer commentCount;
     // domain : Board
     private final String boardType;

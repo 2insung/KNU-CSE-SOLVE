@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "comment_recommend_count")
-public class CommentRecommendCount {
+@Table(name = "comment_stat")
+public class CommentStat {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class CommentRecommendCount {
     private Integer recommendCount;
 
     @Builder
-    public CommentRecommendCount(Integer id, Comment comment, Integer recommendCount) {
+    public CommentStat(Integer id, Comment comment, Integer recommendCount) {
         this.id = id;
         this.comment = comment;
         this.recommendCount = recommendCount;
