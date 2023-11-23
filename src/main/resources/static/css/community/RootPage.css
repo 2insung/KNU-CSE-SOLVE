@@ -190,12 +190,9 @@ main {
     color: white;
 }
 
-.right-section .comment-list-wrapper{
-    margin-top: 10px;
-    width: 390px;
-}
-
 .comment-list-wrapper{
+    margin-top: 12px;
+    width: 390px;
     box-sizing: border-box;
     border: 2px solid #837ed7;
     border-radius: 3px;
@@ -228,8 +225,14 @@ main {
     font-size: 11px;
 }
 
-.comment-wrapper .title{
+.comment-wrapper .title a{
     font-size: 13px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
 }
 
 .comment-wrapper .title a:hover{
