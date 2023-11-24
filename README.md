@@ -101,12 +101,7 @@ Database:                   MySQL community
 ## 화면 구성
 | 로그인 페이지 | 회원가입 페이지 | 
 | --- | --- |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/71038d2e-c8d0-413b-87bb-102fda6bfea2)
-
-
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/1e1405a0-9cce-4aa6-8a8b-304d0b9aa315)
-
-|
+|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/71038d2e-c8d0-413b-87bb-102fda6bfea2)|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/1e1405a0-9cce-4aa6-8a8b-304d0b9aa315)|
 
 
 ## API 설계
