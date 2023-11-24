@@ -30,7 +30,8 @@ Spring Boot Version :       v2.7.0
 JDK version :               JDK11
 Build Tool:                 Gradle 7.6.1
 ORM :                       Spring Data JPA
-Auth:                       Spirng Security 
+Auth:                       Spirng Security
+Session:                    Spring Session JDBC
 Template Engine:            Thymeleaf
 Database:                   MySQL community
 ```
