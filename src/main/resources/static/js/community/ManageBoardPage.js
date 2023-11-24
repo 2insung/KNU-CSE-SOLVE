@@ -2,17 +2,11 @@ var token = $("meta[name='_csrf']").attr("content")
 
 function saveBoard() {
     var alias = $("#alias").val()
-    var type = $("#type").val()
     var category = $("#category").val()
     var description = $("#description").val()
 
     if (alias === "") {
         alert("이름을 입력해주세요.")
-        return
-    }
-
-    if (type === "") {
-        alert("타입을 입력해주세요.")
         return
     }
 
@@ -26,12 +20,7 @@ function saveBoard() {
         return
     }
 
-    if (type.length < 5 || type.length > 50) {
-        alert("게시판 타입은 5~50자 내로 입력해주세요.")
-        return
-    }
-
-    if (alias.length < 5 || alias.length > 50) {
+    if (alias.length < 4 || alias.length > 20) {
         alert("게시판 이름은 4~20자 내로 입력해주세요.")
         return
     }
