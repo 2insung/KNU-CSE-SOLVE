@@ -120,7 +120,9 @@ Database:                   MySQL community
 |![image](https://github.com/2insung/springAWS2/assets/84179188/d4c39bcf-e83e-4e80-b9ab-4671d29fce67)|![image](https://github.com/2insung/springAWS2/assets/84179188/4def4a9c-fa3c-4ebd-b8de-3fac1ead708e)|
 | 사용자 계정 비활성화 페이지 | 모든 게시판 페이지 |
 |![image](https://github.com/2insung/springAWS2/assets/84179188/ab756086-b0af-4622-a1b9-46ea7bb46da7) | ![image](https://github.com/2insung/springAWS2/assets/84179188/d48c8269-b572-463e-ab8b-bbf9b22328f5) |
-
+| 루트 페이지 | 루트 페이지(2) |
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/40f07b46-135a-4426-9b14-4362cb3ce9a1)
+ |  ![image](https://github.com/2insung/springAWS2/assets/84179188/472b62d9-25a1-4ee0-87b1-08f5a7f88763) |
 
 ## API 설계
 ### 커뮤니티 관련 api
