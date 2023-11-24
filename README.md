@@ -101,8 +101,7 @@ Database:                   MySQL community
 ## 화면 구성
 | 로그인 페이지 | 회원가입 페이지 | 
 | --- | --- |
-| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/0fd3c91d-345a-4af9-a0e9-fc6879191418)
-| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/6937ebcb-f7d6-448a-a9e5-763c1278499f)|
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/0fd3c91d-345a-4af9-a0e9-fc6879191418)| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/c9a118b5-0335-4e18-b559-e8774cd88c68)|
 | 루트 페이지 | 루트 페이지(2) |
 |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/4ed66944-f1fd-44a9-9226-f66fffff1400)
  | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/a0612541-1c6a-493d-a803-125e0f5328f1)
