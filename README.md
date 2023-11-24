@@ -133,7 +133,7 @@ Database:                   MySQL community
 | 게시글 작성 페이지 | 게시글 수정 페이지 |
 |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/5da542d1-fb10-4f89-bb09-4717a10c334b) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/d1988415-3264-442c-a69f-64c83668048d) |
 | 마이페이지 | 사용자 작성글 페이지 |
-| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/41d2efc1-ebab-4ca0-80d8-6cf1b33b7d5d) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/36d5f66b-0c57-43fe-b5a5-b45b27581e8d) |
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/b959a6df-3a5a-46dc-92d7-2c9606d545fb) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/36d5f66b-0c57-43fe-b5a5-b45b27581e8d) |
 | 사용자 작성댓글 페이지 | 사용자 스크랩 페이지 |
 | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/c08fb6f9-3d1b-4542-a832-8566a8dd7668) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/4a9c6b13-2e7e-4459-ac41-4e8d94284379) |
 | 사용자 정보 수정 페이지 | 사용자 비밀번호 변경 페이지|
