@@ -102,42 +102,7 @@ Database:                   MySQL community
 | 로그인 페이지 | 회원가입 페이지 | 
 | --- | --- |
 | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/0fd3c91d-345a-4af9-a0e9-fc6879191418)| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/c9a118b5-0335-4e18-b559-e8774cd88c68)|
-| 루트 페이지 | 루트 페이지(2) |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/4ed66944-f1fd-44a9-9226-f66fffff1400)
- | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/a0612541-1c6a-493d-a803-125e0f5328f1)
- |
-| 게시판 페이지 | 게시판 페이지(2)|
-| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/36a394df-7b04-4a81-a2cf-b5cb0405548c)
- | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/f8473ffc-2cb2-4961-b7bf-bb18b3487230)
- |
-| 게시판 페이지(3) | 게시판 페이지(4)|
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/5fab2736-69d5-44ec-9928-dd16b1fc2c5b)
- | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/a97f22cb-323f-4fcf-b936-ba8f2d7f4a01)
- |
-| 게시글 페이지 | 게시글 페이지 (2)|
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/dada84df-b719-4fae-8578-67d7df501e63)
- |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/d5e3c124-343c-4b98-9571-1a29af6d7ed6)
- |
-| 게시글 작성 페이지 | 게시글 수정 페이지 |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/680c5b54-21e8-4f0b-aeee-3f3bb8ddfeee)
- | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/a3c683bc-c993-4beb-af88-b1496bdbbcfe)
- |
-| 마이페이지 | 사용자 작성글 페이지 |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/79f2a4a2-fa5e-4fe2-993d-90113ff64cce)
- |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/f2367c3a-ba97-44f8-99f9-6f1ef9e5eefc)
- |
-| 사용자 작성댓글 페이지 | 사용자 스크랩 페이지 |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/eabd4fa6-87b3-45cc-9324-826c0f4571bc)
- |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/e8d04fc2-9b42-4e59-b214-c10c32981743)
- |
-| 사용자 정보 수정 페이지 | 사용자 비밀번호 변경 페이지|
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/53994037-c5a2-404d-b789-8cdab1625a54)
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/4b901511-e6db-46f8-b6f7-7623ac19409e)
-|
-| 사용자 계정 비활성화 페이지 | 모든 게시판 페이지 |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/706ef097-3b91-4515-b94b-b59d285e3d32)
- | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/6e90b5eb-1a58-4a24-9329-ca8e1615e578)
- |
+
 
 ## API 설계
 ### 커뮤니티 관련 api
