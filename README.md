@@ -131,14 +131,15 @@ Database:                   MySQL community
 | 게시글 페이지 | 게시글 페이지 (2)|
 |![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/c5127620-cc12-4282-ab15-afcf24a695d9) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/aac95cc0-273c-47cf-9e0e-c07400a1b960) |
 | 게시글 작성 페이지 | 게시글 수정 페이지 |
-|![image](https://github.com/2insung/springAWS2/assets/84179188/5a55130b-6d24-4797-ae57-8e46b8ee647f) | ![image](https://github.com/2insung/springAWS2/assets/84179188/94913c2a-cf7b-4570-a176-85797a59e0cd) |
+|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/5da542d1-fb10-4f89-bb09-4717a10c334b) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/d1988415-3264-442c-a69f-64c83668048d) |
 | 마이페이지 | 사용자 작성글 페이지 |
-|![image](https://github.com/2insung/springAWS2/assets/84179188/9b54b2de-1ca4-4653-997a-e5a6c3d44402) | ![image](https://github.com/2insung/springAWS2/assets/84179188/ea88003a-72e4-471e-bb0e-0eeacd42aef2) |
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/41d2efc1-ebab-4ca0-80d8-6cf1b33b7d5d) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/36d5f66b-0c57-43fe-b5a5-b45b27581e8d) |
 | 사용자 작성댓글 페이지 | 사용자 스크랩 페이지 |
-|![image](https://github.com/2insung/springAWS2/assets/84179188/1ec9f115-3836-4f81-9318-c200f8f8b4a4) | ![image](https://github.com/2insung/springAWS2/assets/84179188/d4e19bee-9f62-42d4-adac-b026104e263f) |
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/c08fb6f9-3d1b-4542-a832-8566a8dd7668) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/4a9c6b13-2e7e-4459-ac41-4e8d94284379) |
 | 사용자 정보 수정 페이지 | 사용자 비밀번호 변경 페이지|
-|![image](https://github.com/2insung/springAWS2/assets/84179188/d4c39bcf-e83e-4e80-b9ab-4671d29fce67)|![image](https://github.com/2insung/springAWS2/assets/84179188/4def4a9c-fa3c-4ebd-b8de-3fac1ead708e)|
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/70e7051b-eb6f-4e6e-9db2-1a745b2027a7) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/18498e52-25ba-4604-ade0-95a66904de35) |
 | 사용자 계정 비활성화 페이지 | 모든 게시판 페이지 |
+| ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/da3803ae-4b15-4505-af2a-52e39b964790) | ![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/290b6b71-3d2c-4a60-9cb2-c8720f40af19) |
 
 ## API 설계
 ### 커뮤니티 관련 api
