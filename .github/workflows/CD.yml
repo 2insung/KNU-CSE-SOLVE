@@ -6,7 +6,7 @@ on:
 
 env:
   S3_BUCKET_NAME: web-project-2
-  PROJECT_NAME: WebProject
+  PROJECT_NAME: KNU-CSE-SOLVE
 
 jobs:
   build:
@@ -52,9 +52,9 @@ jobs:
       - name: Deploy
         run: |
           aws deploy create-deployment \
-          --application-name WebProject \
+          --application-name KNU-CSE-SOLVE \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name web-project-prod \
+          --deployment-group-name KNU-CSE-SOLVE-PROD \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=web-project-2,bundleType=zip,key=WebProject/$GITHUB_SHA.zip \
+          --s3-location bucket=web-project-2,bundleType=zip,key=KNU-CSE-SOLVE/$GITHUB_SHA.zip \
           --region ap-northeast-2 \

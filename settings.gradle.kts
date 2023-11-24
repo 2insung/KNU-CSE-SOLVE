@@ -1,2 +1,2 @@
-rootProject.name = "WebProject"
+rootProject.name = "KNU-CSE-SOLVE"
 

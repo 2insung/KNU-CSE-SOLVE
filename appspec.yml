@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/WebProject/
+    destination: /home/ec2-user/KNU-CSE-SOLVE/
     overwrite: yes
 
 permissions:
