@@ -101,7 +101,25 @@ Database:                   MySQL community
 ## 화면 구성
 | 로그인 페이지 | 회원가입 페이지 | 
 | --- | --- |
-|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/71038d2e-c8d0-413b-87bb-102fda6bfea2)|![image](https://github.com/2insung/KNU-CSE-SOLVE/assets/84179188/1e1405a0-9cce-4aa6-8a8b-304d0b9aa315)|
+| ![image](https://github.com/2insung/springAWS2/assets/84179188/fac750d0-ffae-4708-95a1-823291e1532d) | ![image](https://github.com/2insung/springAWS2/assets/84179188/438c5741-8a08-408d-a6ae-b4c83fd13497) |
+| 루트 페이지 | 루트 페이지(2) |
+| ![image](https://github.com/2insung/springAWS2/assets/84179188/f8516793-564d-479e-8278-17dcb2f5b362) |  ![image](https://github.com/2insung/springAWS2/assets/84179188/472b62d9-25a1-4ee0-87b1-08f5a7f88763) |
+| 게시판 페이지 | 게시판 페이지(2)|
+| ![image](https://github.com/2insung/springAWS2/assets/84179188/5bcdcc89-7493-42e6-b92c-e5d287cce9e9) | ![image](https://github.com/2insung/springAWS2/assets/84179188/8f3105e4-1389-44ad-aa99-b0de966c9c75) |
+| 게시판 페이지(3) | 게시판 페이지(4)|
+|![image](https://github.com/2insung/springAWS2/assets/84179188/f35bc681-6120-478b-a90a-2bc954c258a7) | ![image](https://github.com/2insung/springAWS2/assets/84179188/450b8bb9-75d3-4fca-bb1a-bc1dd393fa0e) |
+| 게시글 페이지 | 게시글 페이지 (2)|
+|![image](https://github.com/2insung/springAWS2/assets/84179188/d4509917-7d9d-468a-93bc-db0548707718) | ![image](https://github.com/2insung/springAWS2/assets/84179188/7f607245-ceb6-467a-8524-ed028bd95cce) |
+| 게시글 작성 페이지 | 게시글 수정 페이지 |
+|![image](https://github.com/2insung/springAWS2/assets/84179188/5a55130b-6d24-4797-ae57-8e46b8ee647f) | ![image](https://github.com/2insung/springAWS2/assets/84179188/94913c2a-cf7b-4570-a176-85797a59e0cd) |
+| 마이페이지 | 사용자 작성글 페이지 |
+|![image](https://github.com/2insung/springAWS2/assets/84179188/9b54b2de-1ca4-4653-997a-e5a6c3d44402) | ![image](https://github.com/2insung/springAWS2/assets/84179188/ea88003a-72e4-471e-bb0e-0eeacd42aef2) |
+| 사용자 작성댓글 페이지 | 사용자 스크랩 페이지 |
+|![image](https://github.com/2insung/springAWS2/assets/84179188/1ec9f115-3836-4f81-9318-c200f8f8b4a4) | ![image](https://github.com/2insung/springAWS2/assets/84179188/d4e19bee-9f62-42d4-adac-b026104e263f) |
+| 사용자 정보 수정 페이지 | 사용자 비밀번호 변경 페이지|
+|![image](https://github.com/2insung/springAWS2/assets/84179188/d4c39bcf-e83e-4e80-b9ab-4671d29fce67)|![image](https://github.com/2insung/springAWS2/assets/84179188/4def4a9c-fa3c-4ebd-b8de-3fac1ead708e)|
+| 사용자 계정 비활성화 페이지 | 모든 게시판 페이지 |
+|![image](https://github.com/2insung/springAWS2/assets/84179188/ab756086-b0af-4622-a1b9-46ea7bb46da7) | ![image](https://github.com/2insung/springAWS2/assets/84179188/d48c8269-b572-463e-ab8b-bbf9b22328f5) |
 
 
 ## API 설계
