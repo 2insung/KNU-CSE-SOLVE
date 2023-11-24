@@ -66,7 +66,6 @@ public class CommunityRestController {
         String body = updatePostRequestDto.getPostBody();
         Boolean isNotice = updatePostRequestDto.getPostIsNotice();
 
-        // 입력받은 boardType이 존재하는지 확인 후, post를 update함.
         // save-post와 달리 boardId가 필요하지 않음. 게시글의 수정은 postId만 필요함. (게시글의 수정은 게시판의 게시글 개수에 영향을 끼치지 않기 때문.)
         postService.updatePost(postId, title, body, isNotice);
 
@@ -90,7 +89,7 @@ public class CommunityRestController {
         Integer boardId = deletePostRequestDto.getBoardId();
         Integer postId = deletePostRequestDto.getPostId();
 
-        // post 삭제, 삭제 후 request를 통해 제공받은 boardType을 반환. (redirect를 위함)
+        // post 삭제, 삭제 후 request를 통해 제공받은 boardId을 반환. (redirect를 위함)
         postService.deletePost(boardId, postId);
 
         return ResponseEntity.ok(
