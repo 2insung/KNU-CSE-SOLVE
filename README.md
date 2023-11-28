@@ -146,7 +146,7 @@ Database:                   MySQL community
 ## API 설계
 ### 커뮤니티 관련 api
 #### view
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | GET | / | RootPage로 이동 |
 | GET | /board/{boardId}?page={page} | 게시판의 게시글의 page번째 페이지로 이동 |
@@ -160,7 +160,7 @@ Database:                   MySQL community
 | GET | /all-board | 모든 게시판 페이지로 이동 |
 | GET | /board-menu | 상위 n개의 게시판 미리보기를 출력 |
 #### rest
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | POST | /api/save-post | 게시글을 저장 |
 | PATCH | /api/update-post | 게시글을 수정 |
@@ -173,7 +173,7 @@ Database:                   MySQL community
 | POST | /api/save-board | 게시판을 저장 |
 ### 마이페이지 관련 api
 #### view
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | GET | /my/{memberId} | 사용자의 마이페이지로 이동 |
 | GET | /my/post/{memberId}?page={page} | 사용자가 작성한 게시글의 page 번째 페이지로 이동 |
@@ -183,7 +183,7 @@ Database:                   MySQL community
 | GET | /my-edit/pw/{memberId} | 사용자의 비밀번호 수정 페이지로 이동 |
 | GET | /my-edit/withdraw/{memberId} | 사용자의 계정 활성화 여부 수정 페이지로 이동 |
 #### rest
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | POST | /api/update-my | 사용자 프로필 정보 수정 |
 | DELETE | /api/delete-my-post | 사용자 작성 게시글 삭제 |
@@ -193,12 +193,12 @@ Database:                   MySQL community
 | PATCH | /api/withdraw | 사용자 계정 비활성화 |
 ### 사용자 인증 관련 api
 #### view
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | GET | /login | 로그인 페이지로 이동 |
 | GET | /signup | 회원가입 페이지로 이동 |
 #### rest
-| Method | URL | 기능 |
+| Method | URI | 기능 |
 | --- | --- | --- |
 | POST | /login | 스프링 시큐리티 로그인 |
 | POST | /logout | 스프링 시큐리티 로그아웃 |
